@@ -1,0 +1,366 @@
+{
+ "gazebo_command": "ros2 launch oomwoo_gazebo world.launch.py headless:=true robot_model:=oomwoo_one world:=/ws/src/oomwoo_health_kit/bench/worlds/empty_systems.world x_pose:=0.0 y_pose:=0.0 enable_lidar:=false enable_ranges:=false enable_tof:=false enable_cameras:=false enable_imu:=false",
+ "speed_m_s": 0.2,
+ "max_age_sec": 0.15,
+ "rate_hz": 20.0,
+ "gazebo_ready": true,
+ "gazebo_startup_wall_s": 3.2,
+ "idle_rtf_15s": 1.0,
+ "idle_rtf_note": "sim time / wall time from /clock samples, Gazebo + bridge only, 5 sensors disabled",
+ "topology": {
+  "ros_cmd_vel_publishers": [
+   "mcu_standin"
+  ],
+  "ros_cmd_vel_subscribers": [
+   "ros_gz_bridge",
+   "bench_probe"
+  ],
+  "ros_topic_info_cmd_vel": [
+   "\u001b[37;1m2026-11-10 08:26:05.286 \u001b[31;1m[\u001b[37;1mRTPS_TRANSPORT_SHM\u001b[31;1m Error] \u001b[37mFailed to create segment b04c1a93b54ff059: boost::interprocess_exception::library_error\u001b[34;1m -> Function \u001b[36mcompute_per_allocation_extra_size\u001b[m",
+   "\u001b[37;1m2026-11-10 08:26:05.287 \u001b[31;1m[\u001b[37;1mRTPS_TRANSPORT_SHM\u001b[31;1m Error] \u001b[37mFailed to create Shared Memory Manager for domain fastrtps: boost::interprocess_exception::library_error\u001b[34;1m -> Function \u001b[36mcreate\u001b[m",
+   "\u001b[37;1m2026-11-10 08:26:05.287 \u001b[31;1m[\u001b[37;1mRTPS_PARTICIPANT\u001b[31;1m Error] \u001b[37mUnable to Register SHM Transport. SHM Transport is not supported in the current platform.\u001b[34;1m -> Function \u001b[36mRTPSParticipantImpl\u001b[m",
+   "Type: geometry_msgs/msg/Twist",
+   "",
+   "Publisher count: 1",
+   "",
+   "Node name: mcu_standin",
+   "Node namespace: /",
+   "Topic type: geometry_msgs/msg/Twist",
+   "Topic type hash: RIHS01_9c45bf16fe0983d80e3cfe750d6835843d265a9a6c46bd2e609fcddde6fb8d2a",
+   "Endpoint type: PUBLISHER",
+   "GID: 01.0f.c9.63.57.58.53.01.00.00.00.00.00.00.14.03",
+   "QoS profile:",
+   "  Reliability: RELIABLE",
+   "  History (Depth): UNKNOWN",
+   "  Durability: VOLATILE",
+   "  Lifespan: Infinite",
+   "  Deadline: Infinite",
+   "  Liveliness: AUTOMATIC",
+   "  Liveliness lease duration: Infinite",
+   "",
+   "Subscription count: 1",
+   "",
+   "Node name: ros_gz_bridge",
+   "Node namespace: /",
+   "Topic type: geometry_msgs/msg/Twist",
+   "Topic type hash: RIHS01_9c45bf16fe0983d80e3cfe750d6835843d265a9a6c46bd2e609fcddde6fb8d2a",
+   "Endpoint type: SUBSCRIPTION",
+   "GID: 01.0f.c9.63.0c.58.66.7f.00.00.00.00.00.00.1b.04",
+   "QoS profile:",
+   "  Reliability: RELIABLE",
+   "  History (Depth): UNKNOWN",
+   "  Durability: VOLATILE",
+   "  Lifespan: Infinite",
+   "  Deadline: Infinite",
+   "  Liveliness: AUTOMATIC",
+   "  Liveliness lease duration: Infinite"
+  ],
+  "gz_topic_info_cmd_vel": [
+   "Publishers [Address, Message Type]:",
+   "  tcp://172.17.0.5:35287, gz.msgs.Twist",
+   "Subscribers [Address, Message Type]:",
+   "  tcp://172.17.0.5:39821, gz.msgs.Twist"
+  ],
+  "gazebo_log_diffdrive": [
+   "[gazebo-1] \u001b[1;32m[Msg] \u001b[0m\u001b[1;32mDiffDrive subscribing to twist messages on [\u001b[0m\u001b[1;32mcmd_vel\u001b[0m\u001b[1;32m]\u001b[0m\u001b[1;32m\u001b[0m"
+  ],
+  "ros_cmd_vel_only_stand_in_publishes": true,
+  "ros_cmd_vel_only_bridge_subscribes": false
+ },
+ "trips": [
+  {
+   "clock_source": "steady",
+   "target_rtf": 1.0,
+   "sim_window_s": 60.0,
+   "armed": true,
+   "sim_elapsed_s": 60.11,
+   "wall_elapsed_s": 60.12,
+   "measured_rtf": 1.0,
+   "false_trips": 0,
+   "trips_seen_in_state_msgs": 0,
+   "mcu_soft_stops_total": 0,
+   "mcu_resets_total": 0,
+   "clock_fault": false,
+   "aggregator_fault_entries": 0,
+   "zero_cmd_msgs_in_window": 0,
+   "heartbeats": 1202,
+   "heartbeat_max_gap_wall_ms": 52.2,
+   "heartbeat_max_gap_sim_ms": 50.0,
+   "final_state": "run"
+  },
+  {
+   "clock_source": "ros",
+   "target_rtf": 1.0,
+   "sim_window_s": 60.0,
+   "armed": true,
+   "sim_elapsed_s": 60.11,
+   "wall_elapsed_s": 60.13,
+   "measured_rtf": 1.0,
+   "false_trips": 0,
+   "trips_seen_in_state_msgs": 0,
+   "mcu_soft_stops_total": 0,
+   "mcu_resets_total": 0,
+   "clock_fault": false,
+   "aggregator_fault_entries": 0,
+   "zero_cmd_msgs_in_window": 0,
+   "heartbeats": 1203,
+   "heartbeat_max_gap_wall_ms": 51.9,
+   "heartbeat_max_gap_sim_ms": 50.0,
+   "final_state": "run"
+  },
+  {
+   "clock_source": "steady",
+   "target_rtf": 0.5,
+   "sim_window_s": 60.0,
+   "armed": true,
+   "sim_elapsed_s": 60.07,
+   "wall_elapsed_s": 120.14,
+   "measured_rtf": 0.5,
+   "false_trips": 0,
+   "trips_seen_in_state_msgs": 0,
+   "mcu_soft_stops_total": 0,
+   "mcu_resets_total": 0,
+   "clock_fault": false,
+   "aggregator_fault_entries": 0,
+   "zero_cmd_msgs_in_window": 0,
+   "heartbeats": 1201,
+   "heartbeat_max_gap_wall_ms": 101.5,
+   "heartbeat_max_gap_sim_ms": 50.0,
+   "final_state": "run"
+  },
+  {
+   "clock_source": "ros",
+   "target_rtf": 0.5,
+   "sim_window_s": 60.0,
+   "armed": true,
+   "sim_elapsed_s": 60.07,
+   "wall_elapsed_s": 120.14,
+   "measured_rtf": 0.5,
+   "false_trips": 0,
+   "trips_seen_in_state_msgs": 0,
+   "mcu_soft_stops_total": 0,
+   "mcu_resets_total": 0,
+   "clock_fault": false,
+   "aggregator_fault_entries": 0,
+   "zero_cmd_msgs_in_window": 0,
+   "heartbeats": 1201,
+   "heartbeat_max_gap_wall_ms": 100.5,
+   "heartbeat_max_gap_sim_ms": 50.0,
+   "final_state": "run"
+  },
+  {
+   "clock_source": "steady",
+   "target_rtf": 0.25,
+   "sim_window_s": 60.0,
+   "armed": true,
+   "sim_elapsed_s": 60.04,
+   "wall_elapsed_s": 240.18,
+   "measured_rtf": 0.25,
+   "false_trips": 155,
+   "trips_seen_in_state_msgs": 155,
+   "mcu_soft_stops_total": 155,
+   "mcu_resets_total": 0,
+   "clock_fault": false,
+   "aggregator_fault_entries": 0,
+   "zero_cmd_msgs_in_window": 4219,
+   "heartbeats": 1200,
+   "heartbeat_max_gap_wall_ms": 201.0,
+   "heartbeat_max_gap_sim_ms": 50.0,
+   "final_state": "soft_stop"
+  },
+  {
+   "clock_source": "ros",
+   "target_rtf": 0.25,
+   "sim_window_s": 60.0,
+   "armed": true,
+   "sim_elapsed_s": 60.04,
+   "wall_elapsed_s": 240.18,
+   "measured_rtf": 0.25,
+   "false_trips": 0,
+   "trips_seen_in_state_msgs": 0,
+   "mcu_soft_stops_total": 0,
+   "mcu_resets_total": 0,
+   "clock_fault": false,
+   "aggregator_fault_entries": 0,
+   "zero_cmd_msgs_in_window": 0,
+   "heartbeats": 1201,
+   "heartbeat_max_gap_wall_ms": 201.3,
+   "heartbeat_max_gap_sim_ms": 50.0,
+   "final_state": "run"
+  },
+  {
+   "clock_source": "steady",
+   "target_rtf": 0.1,
+   "sim_window_s": 30.0,
+   "armed": false
+  },
+  {
+   "clock_source": "ros",
+   "target_rtf": 0.1,
+   "sim_window_s": 30.0,
+   "armed": true,
+   "sim_elapsed_s": 30.02,
+   "wall_elapsed_s": 300.19,
+   "measured_rtf": 0.1,
+   "false_trips": 0,
+   "trips_seen_in_state_msgs": 0,
+   "mcu_soft_stops_total": 0,
+   "mcu_resets_total": 0,
+   "clock_fault": false,
+   "aggregator_fault_entries": 0,
+   "zero_cmd_msgs_in_window": 0,
+   "heartbeats": 600,
+   "heartbeat_max_gap_wall_ms": 500.6,
+   "heartbeat_max_gap_sim_ms": 50.0,
+   "final_state": "run"
+  }
+ ],
+ "set_physics_replies": [
+  {
+   "rtf": 0.5,
+   "reply": "data: true"
+  },
+  {
+   "rtf": 0.25,
+   "reply": "data: true"
+  },
+  {
+   "rtf": 0.1,
+   "reply": "data: true"
+  }
+ ],
+ "stops": {
+  "armed": true,
+  "runs": [
+   {
+    "run": 1,
+    "kill_to_zero_cmd_wall_ms": 342.5,
+    "truth": {
+     "distance_m": 0.0789,
+     "sim_time_to_standstill_s": 0.426,
+     "wall_time_to_standstill_s": 0.425,
+     "distance_before_zero_cmd_m": null,
+     "final_rest_spread_m": 0.0
+    },
+    "wheel": {
+     "distance_m": 0.0688,
+     "sim_time_to_standstill_s": 0.346,
+     "wall_time_to_standstill_s": 0.345,
+     "distance_before_zero_cmd_m": null,
+     "final_rest_spread_m": 0.0
+    },
+    "rtf_during": 0.9992090467406981
+   },
+   {
+    "run": 2,
+    "kill_to_zero_cmd_wall_ms": 297.6,
+    "truth": {
+     "distance_m": 0.0699,
+     "sim_time_to_standstill_s": 0.388,
+     "wall_time_to_standstill_s": 0.388,
+     "distance_before_zero_cmd_m": null,
+     "final_rest_spread_m": 0.0
+    },
+    "wheel": {
+     "distance_m": 0.0598,
+     "sim_time_to_standstill_s": 0.308,
+     "wall_time_to_standstill_s": 0.308,
+     "distance_before_zero_cmd_m": null,
+     "final_rest_spread_m": 0.0
+    },
+    "rtf_during": 0.9998158443901074
+   },
+   {
+    "run": 3,
+    "kill_to_zero_cmd_wall_ms": 307.0,
+    "truth": {
+     "distance_m": 0.0717,
+     "sim_time_to_standstill_s": 0.397,
+     "wall_time_to_standstill_s": 0.397,
+     "distance_before_zero_cmd_m": null,
+     "final_rest_spread_m": 0.0
+    },
+    "wheel": {
+     "distance_m": 0.0616,
+     "sim_time_to_standstill_s": 0.317,
+     "wall_time_to_standstill_s": 0.317,
+     "distance_before_zero_cmd_m": null,
+     "final_rest_spread_m": 0.0
+    },
+    "rtf_during": 0.9987116399899634
+   },
+   {
+    "run": 4,
+    "kill_to_zero_cmd_wall_ms": 309.1,
+    "truth": {
+     "distance_m": 0.0721,
+     "sim_time_to_standstill_s": 0.399,
+     "wall_time_to_standstill_s": 0.399,
+     "distance_before_zero_cmd_m": null,
+     "final_rest_spread_m": 0.0
+    },
+    "wheel": {
+     "distance_m": 0.062,
+     "sim_time_to_standstill_s": 0.319,
+     "wall_time_to_standstill_s": 0.319,
+     "distance_before_zero_cmd_m": null,
+     "final_rest_spread_m": 0.0
+    },
+    "rtf_during": 0.9999969697200953
+   },
+   {
+    "run": 5,
+    "kill_to_zero_cmd_wall_ms": 303.8,
+    "truth": {
+     "distance_m": 0.0711,
+     "sim_time_to_standstill_s": 0.394,
+     "wall_time_to_standstill_s": 0.394,
+     "distance_before_zero_cmd_m": null,
+     "final_rest_spread_m": 0.0
+    },
+    "wheel": {
+     "distance_m": 0.061,
+     "sim_time_to_standstill_s": 0.314,
+     "wall_time_to_standstill_s": 0.314,
+     "distance_before_zero_cmd_m": null,
+     "final_rest_spread_m": 0.0
+    },
+    "rtf_during": 0.9999983993482936
+   }
+  ],
+  "notes": [],
+  "clock_source": "steady",
+  "summary": {
+   "truth_distance_m": {
+    "n": 5,
+    "min": 0.0699,
+    "median": 0.0717,
+    "max": 0.0789
+   },
+   "truth_sim_time_to_standstill_s": {
+    "n": 5,
+    "min": 0.388,
+    "median": 0.397,
+    "max": 0.426
+   },
+   "truth_wall_time_to_standstill_s": {
+    "n": 5,
+    "min": 0.388,
+    "median": 0.397,
+    "max": 0.425
+   },
+   "wheel_distance_m": {
+    "n": 5,
+    "min": 0.0598,
+    "median": 0.0616,
+    "max": 0.0688
+   },
+   "kill_to_zero_cmd_wall_ms": {
+    "n": 5,
+    "min": 297.6,
+    "median": 307.0,
+    "max": 342.5
+   }
+  }
+ }
+}
