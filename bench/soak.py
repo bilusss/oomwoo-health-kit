@@ -9,6 +9,10 @@ memory removed first), 30 s warm-up, a steady-state window (default 10 min) coun
 cycles (default 40) alternating the two critical components. One JSON line per finished cell is appended, flushed and
 fsynced to results/soak.jsonl, so a crash loses at most the cell in progress. Events go to results/soak.log.
 
+Transport profiles: --dds-profiles default,udp_only,shm_hc60 makes the Fast DDS profile (bench/profiles/*.xml) a
+cell dimension; it is applied through FASTRTPS_DEFAULT_PROFILES_FILE in the environment of every spawned process and of
+this process (so of the probe). The grid can be restricted with --loads, --max-age, --rates.
+
 Validity: a steady window is valid only if the stand-in is in RUN at its end and the aggregate-heartbeat count and the
 probe's cmd_vel count are each >= 95% of nominal (20 Hz); otherwise it carries "valid": false and no trip count. A cell
 is invalid (valid=false, reason recorded) if /dev/shm free drops below 64 MiB or the stack cannot be armed.
@@ -59,6 +63,50 @@ REARM_TAIL_S = 5.0
 SETUP_ALLOWANCE_S = 90.0
 PER_KILL_ALLOWANCE_S = 8.0
 LOCK_PATH = "/tmp/ohk_soak.lock"
+HB_GAP_S = 0.2  # aggregate-heartbeat gap that counts as a transport stall signature
+
+# DDS transport profiles. Fast DDS 2.14 (Jazzy) reads FASTRTPS_DEFAULT_PROFILES_FILE (FASTDDS_DEFAULT_PROFILES_FILE
+# only exists from Fast DDS 3). The files declare is_default_profile participants whose transports apply to every
+# participant in a process that inherits the variable; RMW_FASTRTPS_USE_QOS_FROM_XML only controls whether endpoint
+# QoS comes from XML (the stack leaves it unset, so QoS stays as in code) and is not needed for transport settings.
+# Measured (Jazzy, rmw_fastrtps_cpp 8.4.4, Fast DDS 2.14.7): with ROS_AUTOMATIC_DISCOVERY_RANGE=LOCALHOST the rmw adds its
+# own built-in SHM transport to every participant whatever the XML says, so udp_only still created /dev/shm segments
+# and shm_hc60 ran a second SHM transport with the default 1000 ms health check. Non-default profiles therefore run
+# with the default discovery range (SUBNET); the DDS domain id still isolates the stack, and shm_hc60's own UDP
+# descriptor is whitelisted to 127.0.0.1.
+# default_subnet is the control for that change: default transports, discovery range as the non-default profiles.
+DISCOVERY_RANGE = {"default": "LOCALHOST", "default_subnet": "SUBNET", "udp_only": "SUBNET", "shm_hc60": "SUBNET"}
+PROFILE_DIR = os.path.join(HERE, "profiles")
+PROFILES = {
+    "default": None,
+    "default_subnet": None,
+    "udp_only": os.path.join(PROFILE_DIR, "fastdds_udp_only.xml"),
+    "shm_hc60": os.path.join(PROFILE_DIR, "fastdds_shm_hc60.xml"),
+}
+# Whether /dev/shm should contain fastrtps_* files while the stack runs: True/False = enforced, None = not checked.
+PROFILE_EXPECTS_SHM = {"default": None, "default_subnet": None, "udp_only": False, "shm_hc60": True}
+
+
+def profile_sha256(name):
+    path = PROFILES[name]
+    if not path:
+        return None
+    import hashlib
+
+    with open(path, "rb") as f:
+        return hashlib.sha256(f.read()).hexdigest()
+
+
+def apply_profile(name):
+    """Set/unset the profile variable in this process; Procs and the probe's rclpy inherit os.environ."""
+    for var in ("FASTRTPS_DEFAULT_PROFILES_FILE", "FASTDDS_DEFAULT_PROFILES_FILE"):
+        os.environ.pop(var, None)
+    if PROFILES[name]:
+        os.environ["FASTRTPS_DEFAULT_PROFILES_FILE"] = PROFILES[name]
+
+
+def shm_file_count():
+    return len(glob.glob("/dev/shm/fastrtps_*"))
 
 LOAD_DESCRIPTION = {
     "idle": "no load",
@@ -256,8 +304,9 @@ class Load:
 class Stack:
     """Load + aggregator + stand-in + roster + components + probe. Everything it starts, stop() ends."""
 
-    def __init__(self, load, max_age, rate, domain):
+    def __init__(self, load, max_age, rate, domain, profile="default"):
         self.load, self.max_age, self.rate, self.domain = load, max_age, rate, domain
+        self.profile = profile
         self.procs = self.probe = self.ex = None
         self.up = False
 
@@ -268,12 +317,14 @@ class Stack:
         from oomwoo_health_kit.qos import live_heartbeat_qos
 
         clean_shm()
+        apply_profile(self.profile)  # before any child is spawned and before rclpy.init in this process
         os.environ["ROS_DOMAIN_ID"] = str(self.domain)
-        os.environ["ROS_AUTOMATIC_DISCOVERY_RANGE"] = "LOCALHOST"
+        os.environ["ROS_AUTOMATIC_DISCOVERY_RANGE"] = DISCOVERY_RANGE[self.profile]
         self.up = True
         self.load.start()
         time.sleep(0.5)
         self.procs = b.Procs(self.domain)
+        self.procs.env["ROS_AUTOMATIC_DISCOVERY_RANGE"] = DISCOVERY_RANGE[self.profile]
         b.kit_nodes(self.procs, self.max_age, self.rate, mcu_extra=("-p", f"soft_stop_timeout_s:={SOFT_STOP_S}"))
         rclpy.init()
         self.probe = b.make_probe()
@@ -394,6 +445,7 @@ class KillLoop:
         self.pauses = 0
         self.failures = 0
         self.notes = []
+        self.hb_gaps = []  # (start, end) of aggregate-heartbeat gaps > HB_GAP_S seen by the probe during the loop
 
     def harvest(self, stack):
         """Fold the live stack's counters and observations in, just before it is stopped."""
@@ -405,7 +457,9 @@ class KillLoop:
         self.base = (0, 0)
         p = stack.probe
         with p.lock:
-            states, stacks, comps = list(p.states), list(p.stacks), list(p.comp_hbs)
+            states, stacks, comps, hbs = list(p.states), list(p.stacks), list(p.comp_hbs), list(p.hbs)
+        hbs = [t for t in hbs if t >= self.t_start]
+        self.hb_gaps += [(x, y) for x, y in zip(hbs, hbs[1:]) if y - x > HB_GAP_S]
         for t, s in states:
             if s.get("state") != "soft_stop" or t < self.t_start:
                 continue
@@ -451,8 +505,20 @@ class KillLoop:
                 "aggregator_blamed_critical": blamed,
                 "aggregator_stack_at_event": at, "aggregator_stack_recent": ctx,
             })
+        # Gaps > 0.2 s are expected right after each kill (heartbeat withheld while a critical component is down);
+        # claim the first such gap per kill, the rest are the transport-stall signature.
+        gclaimed, unclaimed = set(), []
+        for gi, (x, y) in enumerate(sorted(self.hb_gaps)):
+            hit = next((i for i, k in enumerate(self.kills) if i not in gclaimed and k - 0.2 <= x <= k + 1.0), None)
+            if hit is not None:
+                gclaimed.add(hit)
+            else:
+                unclaimed.append({"time": iso_mono(x, self.off), "gap_ms": round((y - x) * 1000, 1)})
         good = [x for x in self.latencies if x is not None]
         out = {
+            "hb_gaps_over_200ms_total": len(self.hb_gaps),
+            "hb_gaps_over_200ms_not_after_a_kill": len(unclaimed),
+            "hb_gaps_over_200ms_not_after_a_kill_listed": unclaimed[:30],
             "kills": len(self.kills),
             "kills_skipped_not_steady": len(self.skipped),
             "kill_times": [iso_mono(k, self.off) for k in self.kills],
@@ -582,14 +648,16 @@ def git_rev(path):
 
 
 def run_cell(cfg, args, windows, log, meta):
-    load, max_age, rate = cfg
+    profile, load, max_age, rate = cfg
     Ctx.paused_s = 0.0
     rec = dict(meta, load=load, load_description=LOAD_DESCRIPTION[load], max_age_sec=max_age, rate_hz=rate,
                soft_stop_s=SOFT_STOP_S, warmup_s=args.warmup_s, window_s=args.window_s,
                kills_requested=args.kills, load_procs=LOAD_PROCS[load],
+               dds_profile=profile, dds_profile_file=PROFILES[profile], dds_profile_sha256=profile_sha256(profile),
+               ros_automatic_discovery_range=DISCOVERY_RANGE[profile],
                loadavg_start=[round(x, 2) for x in os.getloadavg()], started=now().isoformat(timespec="seconds"),
                valid=True)
-    stack = Stack(Load(load), max_age, rate, args.domain)
+    stack = Stack(Load(load), max_age, rate, args.domain, profile)
     t0 = time.monotonic()
     try:
         clean_shm(log)
@@ -606,6 +674,13 @@ def run_cell(cfg, args, windows, log, meta):
         rec["kill_loop"], invalid = kill_loop(stack, rate, args.kills, windows, log)
         if invalid:
             raise CellInvalid(invalid)
+        # the profile must really be in effect: files in /dev/shm while the stack is still running
+        rec["shm_fastrtps_files_end"] = shm_file_count()
+        expect = PROFILE_EXPECTS_SHM[profile]
+        if expect is False and rec["shm_fastrtps_files_end"] > 0:
+            raise CellInvalid(f"profile {profile} not in effect: {rec['shm_fastrtps_files_end']} fastrtps_* files in /dev/shm")
+        if expect is True and rec["shm_fastrtps_files_end"] == 0:
+            raise CellInvalid(f"profile {profile} not in effect: no fastrtps_* files in /dev/shm")
     except CellInvalid as e:
         rec["valid"] = False
         rec["invalid_reason"] = str(e)
@@ -613,6 +688,7 @@ def run_cell(cfg, args, windows, log, meta):
     finally:
         try:
             rec["shm_free_end_bytes"] = shm_free()
+            rec.setdefault("shm_fastrtps_files_end", shm_file_count())
         finally:
             stack.stop()
             clean_shm()
@@ -651,6 +727,13 @@ def parse_cell(s):
         raise SystemExit(f"bad --cell {s!r}; expected LOAD:MAX_AGE:RATE, e.g. cpu:0.10:50")
 
 
+def csv(s, conv):
+    try:
+        return [conv(x) for x in s.split(",") if x]
+    except ValueError:
+        raise SystemExit(f"bad list {s!r}")
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--passes", type=int, default=0, help="number of passes over all cells (default 0 = forever)")
@@ -660,6 +743,12 @@ def main():
                     help="30 s windows, 5 s warm-up, 3 kills, 3 cells (one per load mode), one pass; writes soak_smoke.*")
     ap.add_argument("--cell", action="append", default=[], metavar="LOAD:MAX_AGE:RATE",
                     help="run only these cells (repeatable), e.g. cpu:0.10:50")
+    ap.add_argument("--dds-profiles", default="default", metavar="LIST",
+                    help="comma-separated DDS transport profiles, a cell dimension: " + ",".join(PROFILES) +
+                         " (default: default)")
+    ap.add_argument("--loads", default=None, metavar="LIST", help="restrict the grid, e.g. idle,cpu,mixed")
+    ap.add_argument("--max-age", default=None, metavar="LIST", help="restrict the grid, e.g. 0.15 or 0.10,0.15")
+    ap.add_argument("--rates", default=None, metavar="LIST", help="restrict the grid, e.g. 20 or 20,50")
     ap.add_argument("--window-s", type=float, default=None, help=f"steady window per cell (default {WINDOW_S:.0f})")
     ap.add_argument("--warmup-s", type=float, default=None, help=f"armed warm-up before the window (default {WARMUP_S:.0f})")
     ap.add_argument("--kills", type=int, default=None, help=f"kill cycles per cell (default {KILLS})")
@@ -682,11 +771,24 @@ def main():
     except OSError:
         raise SystemExit("another soak.py is already running (lock held on " + LOCK_PATH + ")")
 
-    cells = [(l, m, r) for l in LOADS for m in MAX_AGES for r in RATES]
-    if args.smoke:
-        cells = [("idle", 0.15, 20), ("cpu", 0.10, 50), ("mixed", 0.25, 20)]
+    profiles = csv(args.dds_profiles, str)
+    bad = [x for x in profiles if x not in PROFILES]
+    if bad or not profiles:
+        raise SystemExit(f"unknown --dds-profiles {bad}; choose from {list(PROFILES)}")
+    for x in profiles:
+        if PROFILES[x] and not os.path.exists(PROFILES[x]):
+            raise SystemExit(f"missing profile file {PROFILES[x]}")
+    loads = csv(args.loads, str) if args.loads else LOADS
+    ages = csv(args.max_age, float) if args.max_age else MAX_AGES
+    rates = csv(args.rates, int) if args.rates else RATES
+    if any(l not in LOADS for l in loads):
+        raise SystemExit(f"--loads must be from {LOADS}")
+    base_cells = [(l, m, r) for l in loads for m in ages for r in rates]
+    if args.smoke and not (args.loads or args.max_age or args.rates):
+        base_cells = [("idle", 0.15, 20), ("cpu", 0.10, 50), ("mixed", 0.25, 20)]
     if args.cell:
-        cells = [parse_cell(c) for c in args.cell]
+        base_cells = [parse_cell(c) for c in args.cell]
+    cells = [(pr, *c) for pr in profiles for c in base_cells]
 
     for sig in (signal.SIGTERM, signal.SIGINT, signal.SIGHUP):
         signal.signal(sig, _on_signal)
@@ -696,7 +798,7 @@ def main():
     agg = os.environ.get("OHK_AGG_COMMIT") or git_rev("/ws/src/health-monitor")
     kit = os.environ.get("OHK_KIT_COMMIT") or git_rev(KIT_ROOT)
     log(f"start run_id={run_id} pid={os.getpid()} cells={len(cells)} passes={passes or 'forever'} "
-        f"warmup_s={args.warmup_s} window_s={args.window_s} kills={args.kills} domain={args.domain} seed={seed} "
+        f"profiles={profiles} warmup_s={args.warmup_s} window_s={args.window_s} kills={args.kills} domain={args.domain} seed={seed} "
         f"quiet_windows={[(s.isoformat(timespec='minutes'), e.isoformat(timespec='minutes')) for s, e in windows.w]} "
         f"aggregator={agg} kit={kit} shm_free_mb={shm_free() / 1e6:.0f}")
     longest = 0.0
@@ -706,12 +808,12 @@ def main():
             p += 1
             order = list(cells)
             random.Random(seed + p).shuffle(order)
-            log(f"pass {p} order (seed {seed + p}): " + " ".join(f"{l}:{m}:{r}" for l, m, r in order))
+            log(f"pass {p} order (seed {seed + p}): " + " ".join(f"{pr}/{l}:{m}:{r}" for pr, l, m, r in order))
             for idx, cfg in enumerate(order):
                 est = max(args.warmup_s + args.window_s + args.kills * PER_KILL_ALLOWANCE_S + SETUP_ALLOWANCE_S,
                           1.15 * longest)
                 wait_for_slot(est, windows, log)
-                log(f"pass {p} cell {idx + 1}/{len(order)} load={cfg[0]} max_age={cfg[1]} rate={cfg[2]}")
+                log(f"pass {p} cell {idx + 1}/{len(order)} profile={cfg[0]} load={cfg[1]} max_age={cfg[2]} rate={cfg[3]}")
                 meta = {"run_id": run_id, "pass": p, "cell_index": idx, "cell_order_seed": seed + p,
                         "aggregator_commit": agg, "kit_commit": kit}
                 rec = run_cell(cfg, args, windows, log, meta)
@@ -722,7 +824,9 @@ def main():
                     os.fsync(f.fileno())
                 kl = rec.get("kill_loop", {})
                 log(f"  done in {rec['duration_s']:.0f} s (+{rec['paused_s']:.0f} s paused): valid={rec['valid']} "
-                    f"unexplained_soft_stops={kl.get('unexplained_soft_stops')} skipped={kl.get('kills_skipped_not_steady')} "
+                    f"unexplained_soft_stops={kl.get('unexplained_soft_stops')} "
+                    f"hb_gaps>0.2s_not_after_kill={kl.get('hb_gaps_over_200ms_not_after_a_kill')} "
+                    f"shm_files={rec.get('shm_fastrtps_files_end')} skipped={kl.get('kills_skipped_not_steady')} "
                     f"shm_free_mb={rec['shm_free_end_bytes'] / 1e6:.0f}")
         log("finished all passes")
     except Shutdown as e:

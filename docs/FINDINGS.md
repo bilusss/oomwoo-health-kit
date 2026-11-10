@@ -1,8 +1,66 @@
-> Note, 2026-11-10: every measurement below was taken with the earlier stand-in settings (0.2 s soft stop, 2.0 s CPU
-> reset). The kit now uses 0.15 s / 300 s, following the firmware bring-up policy (makerspet/oomwoo-firmware#1);
-> those are experimental simulation settings, not a recommendation. Re-measurement with 0.15 s and longer load tests
-> (10 min windows, 40 kill/restart cycles per cell) is in progress; raw lines go to results/soak.jsonl.
-> The existing numbers are unchanged.
+> Note, 2026-11-10: the M3 measurements further down were taken with the earlier stand-in settings (0.2 s soft stop,
+> 2.0 s CPU reset). The kit now uses 0.15 s / 300 s, following the firmware bring-up policy
+> (makerspet/oomwoo-firmware#1); those are experimental simulation settings, not a recommendation. The M3 numbers are
+> unchanged, but the section directly below supersedes two of their conclusions.
+
+# Addendum 2026-11-10: soak with the 150 ms soft stop, and a transport stall after a node joins
+
+Raw data: `results/soak_pass1_softstop150.jsonl` (soak), `results/diag/` (diagnosis), `results/diag/review/` (independent
+re-check). Scripts: `bench/soak.py`, `bench/diag/`. Aggregator `b2b9796`, Fast DDS 2.14.7 with its default SHM + UDP
+transports, one PC, container with 1 GiB `/dev/shm`.
+
+## Soak, pass 1
+18 cells: roster max_age 0.10 / 0.15 / 0.25 s x 20 / 50 Hz x idle / 12 busy loops / mixed (10 busy loops, one memory
+rewriter, one throttled disk writer; not memory pressure). Per cell: 30 s warm-up, a 10-minute steady window, then 40
+SIGKILL/restart cycles. All 18 cells were valid.
+
+- Steady windows: 0 false trips in all 18 (3 hours in total). Zero events in T hours only bounds the rate below about 3/T
+  per hour at 95%, so below about one per hour here.
+- Kill to zero velocity, median per cell: 192-221 ms at max_age 0.10 s, 244-281 ms at 0.15 s, 348-385 ms at 0.25 s.
+- Restart cycles: 95 soft stops not caused by a kill, in 720 cycles (13%), a median 0.34 s after the stand-in re-armed.
+  They were spread evenly over load (idle 25, cpu 34, mixed 36) and max_age (31 / 34 / 30), so neither explains them.
+  A few kills landed during such a stop and show latencies of 10-140 ms; those are not real detect-to-stop times.
+
+## Cause of the restart-tail stops
+Each traced case was a 333 ms sleep in the Fast DDS shared-memory port health check (`healthy_check_timeout_ms`, default
+1000, divided by 3 per failed check; verified in the 2.14.7 source), taken when one node first sends to another node's
+port. It runs in a receive/event thread and holds the participant's send lock, so that node's publishes stall for about
+0.33 s and then arrive in a burst. In 11 of 11 traced flap cycles such a sleep overlapped the gap: 7 in the aggregator,
+4 in the restarted component. The aggregator and the stand-in reacted correctly to a real delivery gap.
+
+| Condition (idle, max_age 0.15 s, 20 Hz) | Soft stops after re-arm |
+|---|---|
+| soft stop 0.15 s, restart of a critical node | 28 of 200 cycles |
+| soft stop 0.20 s | 23 of 100 |
+| soft stop 0.30 s | 22 of 80 |
+| unrelated silent node started, then stopped cleanly (SIGINT), no critical node touched | 9 of 70 |
+| same node, SIGKILLed | 2 of 70 |
+| UDP only (SHM transport disabled) | 2 of 100 |
+| SHM kept, `healthy_check_timeout_ms` = 60 | 0 of 80 |
+
+- A longer deadline did not reduce it: the stall is longer than every deadline tried.
+- It is triggered by a node joining, not by SIGKILL: the stalls began 2.2-2.45 s after the unrelated node started, before
+  it was stopped.
+- Rates varied between runs from 6% to 28%; no rate here is portable.
+- Caveat on the last two table rows: those runs used `ROS_AUTOMATIC_DISCOVERY_RANGE=LOCALHOST`, under which the rmw adds
+  its own SHM transport whatever the XML profile says, so "UDP only" still had SHM and the 60 ms setting did not apply to
+  every transport. Treat both rows as preliminary; `bench/soak.py --dds-profiles` re-measures them with the profiles
+  verified in effect (checked through `/dev/shm`), and results will be added here.
+- Not claimed: a Fast DDS bug, that all 95 soak stops were traced, or that disabling SHM is free (large messages lose
+  zero-copy; cost not measured; 2 of 100 remained, untraced). `healthy_check_timeout_ms` = 60 was tested idle only; under
+  load it may wrongly declare ports dead. Untested: load, ARM, Fast DDS 3.x, other RMWs, the micro-ROS agent.
+
+Consequence: with this middleware configuration, any heartbeat deadline under about 0.4 s is sensitive to nodes joining
+the graph, so a restarted node can cause a second stop shortly after motion is re-enabled.
+
+## What this supersedes below
+- "55 kill/restart cycles, none unexplained" (M3, Part A): superseded. That pass saw zero; the difference is not explained
+  (untested differences: 64 MiB `/dev/shm` never cleaned, no warm-up, one DDS domain for all cells).
+- The two 43 / 47 ms kills in the first M3 kill pass fit this stall.
+- The 358-383 ms loaded heartbeat gaps in the M3 table were attributed to probe delay; they match this stall instead
+  (not verified).
+- Kill latencies, the slow-sim-clock result and the stopping distance stand, but a stop budget should allow about
+  0.33 s more for a stall.
 
 # M3 findings: load, jitter, sim clock, stopping distance
 
