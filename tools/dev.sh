@@ -18,10 +18,19 @@ EXEC=(docker exec -u "$UIDGID" -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 -e PYTE
 SRC='source /opt/ros/jazzy/setup.bash'
 WS='[ -f /ws/install/setup.bash ] && source /ws/install/setup.bash'
 
+SHM_BYTES=$((1024*1024*1024))  # Fast DDS leaks ~0.5 MB of /dev/shm per SIGKILLed participant; Docker's default is 64 MiB
+
 up() {
+  # An existing container created with a smaller /dev/shm is removed and recreated (the ohk-ws volume is kept).
+  # Detection: docker inspect .HostConfig.ShmSize (bytes; the Docker default is 67108864).
+  if docker container inspect "$NAME" >/dev/null 2>&1 \
+     && [ "$(docker inspect -f '{{.HostConfig.ShmSize}}' "$NAME")" -lt "$SHM_BYTES" ]; then
+    echo "recreating $NAME: /dev/shm is $(docker inspect -f '{{.HostConfig.ShmSize}}' "$NAME") bytes, need $SHM_BYTES" >&2
+    docker rm -f "$NAME" >/dev/null
+  fi
   if ! docker container inspect "$NAME" >/dev/null 2>&1; then
     docker volume create ohk-ws >/dev/null
-    docker run -d --name "$NAME" --init -v ohk-ws:/ws \
+    docker run -d --name "$NAME" --init --shm-size=1g -v ohk-ws:/ws \
       -v "$PROJECT:/ws/src/oomwoo_health_kit" \
       -e PYTHONDONTWRITEBYTECODE=1 "$IMAGE" sleep infinity >/dev/null
   elif [ "$(docker inspect -f '{{.State.Running}}' "$NAME")" != true ]; then
@@ -68,10 +77,23 @@ case "${1:-}" in
   test) shift; run_tests "$@" ;;
   soak-start) shift  # detached long run; survives this shell. Args go to bench/soak.py, e.g. --quiet-window A/B
     up
-    docker exec -d -u "$UIDGID" -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONUNBUFFERED=1 -e TZ="${TZ:-$(timedatectl show -p Timezone --value 2>/dev/null || echo UTC)}" -w /ws "$NAME" \
+    if "${EXEC[@]}" pgrep -f '[b]ench/soak.py' >/dev/null; then echo "soak already running (use soak-stop first)" >&2; exit 4; fi
+    kit="$(git -C "$PROJECT" rev-parse HEAD)$(git -C "$PROJECT" diff --quiet HEAD -- 2>/dev/null || echo -dirty)"
+    docker exec -d -u "$UIDGID" -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONUNBUFFERED=1 \
+      -e TZ="${TZ:-$(timedatectl show -p Timezone --value 2>/dev/null || echo UTC)}" \
+      -e OHK_KIT_COMMIT="$kit" -e OHK_AGG_COMMIT="$(agg_sha)" -w /ws "$NAME" \
       bash -c "$SRC && $WS && exec python3 /ws/src/oomwoo_health_kit/bench/soak.py $* >> /ws/src/oomwoo_health_kit/results/soak.out 2>&1"
-    echo "started; log: results/soak.log, data: results/soak.jsonl" ;;
-  soak-stop) "${EXEC[@]}" pkill -TERM -f bench/soak.py || echo "not running" ;;
+    echo "started (kit $kit); log: results/soak.log, data: results/soak.jsonl, stdout: results/soak.out" ;;
+  soak-stop)  # SIGTERM, wait up to 60 s, then SIGKILL; children die with the parent (PDEATHSIG); report leftovers
+    "${EXEC[@]}" bash -c '
+      pids=$(pgrep -f "[b]ench/soak.py" || true)
+      [ -n "$pids" ] || echo "soak not running"
+      for p in $pids; do kill -TERM $p 2>/dev/null || true; done
+      for i in $(seq 60); do pgrep -f "[b]ench/soak.py" >/dev/null || break; sleep 1; done
+      for p in $(pgrep -f "[b]ench/soak.py" || true); do echo "SIGKILL soak $p"; kill -KILL $p; done
+      sleep 1
+      left=$(pgrep -a -f "[o]omwoo_health_monitor/|[o]omwoo_health_kit/|while True: [p]ass|[o]hk_soak_" || true)
+      if [ -n "$left" ]; then echo "LEFTOVER processes (killing):"; echo "$left"; pkill -KILL -f "[o]omwoo_health_monitor/|[o]omwoo_health_kit/|while True: [p]ass|[o]hk_soak_" || true; else echo "no leftover processes"; fi' ;;
   shell) up; docker exec -it -u "$UIDGID" -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 -w /ws "$NAME" bash --rcfile <(echo "$SRC; $WS") ;;
   exec) up; "${EXEC[@]}" bash -c "$SRC && $WS && ${*:2}" ;;
   down) docker rm -f "$NAME" >/dev/null 2>&1 || true; docker volume rm ohk-ws >/dev/null 2>&1 || true ;;

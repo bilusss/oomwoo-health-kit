@@ -126,3 +126,7 @@ publishing anything without the owner's approval.
 - `bench/soak.py`: unattended long run without Gazebo (cells: idle / cpu / mixed load, max_age 0.10 / 0.15 / 0.25 s,
   20 / 50 Hz; a 10 min steady window and 40 kill/restart cycles each), one JSON line per cell in `results/soak.jsonl`,
   quiet windows, `--smoke`. Start it detached with `tools/dev.sh soak-start`, stop it with `tools/dev.sh soak-stop`.
+- Soak hygiene: container created with `--shm-size=1g` (recreated if smaller), stale Fast DDS shm removed before every
+  stack start, cell invalid if /dev/shm free < 64 MiB; steady windows are valid only if the stand-in ends in RUN and
+  heartbeat and cmd_vel counts are >= 95% of nominal; kills are skipped (and counted) when the system is not steady;
+  children die with `soak.py` (PR_SET_PDEATHSIG); `soak-start` refuses a second instance.

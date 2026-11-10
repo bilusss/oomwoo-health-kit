@@ -18,6 +18,13 @@ from ament_index_python.packages import get_package_prefix
 LOAD_PROCS = 12  # this PC: 6 cores / 12 threads; never go above 12
 
 
+def die_with_parent():
+    """preexec_fn: SIGKILL this child if the process that spawned it dies (PR_SET_PDEATHSIG = 1)."""
+    import ctypes
+
+    ctypes.CDLL("libc.so.6").prctl(1, int(signal.SIGKILL))
+
+
 def exe(pkg, name):
     return os.path.join(get_package_prefix(pkg), "lib", pkg, name)
 
@@ -33,7 +40,8 @@ class Procs:
     def start(self, name, argv, extra_env=None, quiet=True):
         out = subprocess.DEVNULL if quiet else None
         env = dict(self.env, **(extra_env or {}))
-        self.by_name[name] = subprocess.Popen(argv, env=env, start_new_session=True, stdout=out, stderr=out)
+        self.by_name[name] = subprocess.Popen(argv, env=env, start_new_session=True, stdout=out, stderr=out,
+                                                 preexec_fn=die_with_parent)
         return self.by_name[name]
 
     def pid(self, name):
