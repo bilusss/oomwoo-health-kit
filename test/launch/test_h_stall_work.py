@@ -13,5 +13,5 @@ class TestStallWorkPath(h.OhkCase):
         self.wait_run()
         t0, lat = self.signal_and_time_stop("critical_a", signal.SIGUSR1)
         self.record("h_stall_work", latency_ms=lat * 1000)
-        self.assertLess(lat, 0.45)
+        self.assertLess(lat, h.FAULT_TO_STOP_MAX_S)
         self.assert_blames("critical_a", t0)

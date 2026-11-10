@@ -43,10 +43,17 @@ ROS tests run in Docker (`makerspet/oomwoo:jazzy-dev`; the pinned aggregator is 
 
     tools/dev.sh build    # colcon build in the ohk-dev container
     tools/dev.sh test     # unit + launch tests; latencies in $OHK_RESULTS
+    OHK_AGG_REF=<sha> tools/dev.sh build && OHK_AGG_REF=<sha> tools/dev.sh test   # another aggregator ref, e.g. a PR head
     tools/dev.sh shell    # then: ros2 launch oomwoo_health_kit health_loop_demo.launch.py
     tools/dev.sh down
 
 ## Status and limits
+
+The stand-in timeouts (150 ms soft stop, 300 s CPU-reset supervision) are experimental simulation settings that
+follow the firmware bring-up policy in makerspet/oomwoo-firmware#1: an MCU-local 150 ms safe-stop deadline, no CPU
+reset on a short heartbeat gap, and CPU-reset supervision as a separate mechanism (about five minutes initially).
+The real cutoff and reset policy belongs to the firmware / IO-board contract. Timing on the ROS clock is a simulation
+convenience, not equivalent to the MCU's own clock. The aggregator under test is selectable with `OHK_AGG_REF`.
 
 Simulation only. The stand-in is Python on the same host, not firmware, and the sample sizes
 are small; see the Limits section of the findings.

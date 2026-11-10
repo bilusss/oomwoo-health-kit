@@ -5,10 +5,12 @@ import pytest
 from oomwoo_health_kit.mcu_standin import McuStandin, McuState, Velocity, ZERO_VELOCITY
 
 CMD = Velocity(0.3, 0.5)
+# Timing tests use explicit values (the pre-M4 numbers); the real defaults are asserted in test_defaults.
+TIMING = {"soft_stop_timeout_s": 0.2, "cpu_reset_timeout_s": 2.0}
 
 
 def armed(**kw) -> McuStandin:
-    mcu = McuStandin(**kw)
+    mcu = McuStandin(**{**TIMING, **kw})
     for t in (0.0, 0.1, 0.2):
         mcu.heartbeat(t)
     assert mcu.state is McuState.RUN
@@ -17,7 +19,7 @@ def armed(**kw) -> McuStandin:
 
 def test_defaults_and_initial_state():
     mcu = McuStandin()
-    assert (mcu.soft_stop_timeout_s, mcu.cpu_reset_timeout_s, mcu.rearm_count) == (0.2, 2.0, 3)
+    assert (mcu.soft_stop_timeout_s, mcu.cpu_reset_timeout_s, mcu.rearm_count) == (0.15, 300.0, 3)
     assert mcu.state is McuState.UNARMED
     assert mcu.transitions == []
     assert (mcu.heartbeats_received, mcu.heartbeats_ignored, mcu.soft_stops, mcu.resets) == (0, 0, 0, 0)
@@ -28,8 +30,9 @@ def test_defaults_and_initial_state():
     [
         {"soft_stop_timeout_s": 0.0},
         {"soft_stop_timeout_s": -1.0},
-        {"soft_stop_timeout_s": 2.0},
-        {"soft_stop_timeout_s": 3.0},
+        {"soft_stop_timeout_s": 2.0, "cpu_reset_timeout_s": 2.0},
+        {"soft_stop_timeout_s": 3.0, "cpu_reset_timeout_s": 2.0},
+        {"soft_stop_timeout_s": 0.15, "cpu_reset_timeout_s": 0.1},
         {"rearm_count": 0},
     ],
 )
@@ -39,13 +42,13 @@ def test_parameter_validation(kwargs):
 
 
 def test_unarmed_stays_unarmed_without_heartbeat():
-    mcu = McuStandin()
+    mcu = McuStandin(**TIMING)
     assert mcu.update(100.0).state is McuState.UNARMED
     assert mcu.gate(100.0, CMD) == ZERO_VELOCITY
 
 
 def test_arms_after_rearm_count_heartbeats():
-    mcu = McuStandin()
+    mcu = McuStandin(**TIMING)
     mcu.heartbeat(0.0)
     mcu.heartbeat(0.1)
     assert mcu.state is McuState.UNARMED
@@ -59,7 +62,7 @@ def test_arms_after_rearm_count_heartbeats():
 
 
 def test_rearm_count_one_arms_on_first_heartbeat():
-    mcu = McuStandin(rearm_count=1)
+    mcu = McuStandin(**TIMING, rearm_count=1)
     mcu.heartbeat(5.0)
     assert mcu.state is McuState.RUN
 
@@ -131,7 +134,7 @@ def test_broken_streak_restarts():
 
 
 def test_gap_exactly_soft_timeout_keeps_streak():
-    mcu = McuStandin()
+    mcu = McuStandin(**TIMING)
     for t in (0.0, 0.2, 0.4):
         mcu.heartbeat(t)
     assert mcu.state is McuState.RUN
@@ -155,7 +158,7 @@ def test_out_of_order_heartbeat_ignored_and_counted():
 
 
 def test_out_of_order_does_not_advance_streak():
-    mcu = McuStandin()
+    mcu = McuStandin(**TIMING)
     mcu.heartbeat(0.0)
     mcu.heartbeat(0.1)
     mcu.heartbeat(0.05)
@@ -180,7 +183,7 @@ def test_counters_and_transition_log():
 
 @pytest.mark.parametrize("state_setup", ["unarmed", "soft_stop", "cpu_reset"])
 def test_gate_zero_in_every_non_run_state(state_setup):
-    mcu = McuStandin()
+    mcu = McuStandin(**TIMING)
     if state_setup != "unarmed":
         mcu = armed()
         mcu.update(1.0 if state_setup == "soft_stop" else 10.0)
@@ -219,7 +222,7 @@ def test_nan_heartbeat_does_not_poison_gate_when_stale():
 
 
 def test_non_finite_gives_no_streak_credit():
-    mcu = McuStandin()
+    mcu = McuStandin(**TIMING)
     mcu.heartbeat(0.0)
     mcu.heartbeat(0.1)
     mcu.heartbeat(math.nan)

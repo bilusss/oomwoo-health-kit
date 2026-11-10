@@ -19,8 +19,8 @@ class McuStandinNode(Node):
     def __init__(self) -> None:
         super().__init__("mcu_standin")
         self.declare_parameter("clock_source", "steady")
-        self.declare_parameter("soft_stop_timeout_s", 0.2)
-        self.declare_parameter("cpu_reset_timeout_s", 2.0)
+        self.declare_parameter("soft_stop_timeout_s", 0.15)
+        self.declare_parameter("cpu_reset_timeout_s", 300.0)
         self.declare_parameter("rearm_count", 3)
         src = self.get_parameter("clock_source").value
         if src not in ("steady", "ros"):

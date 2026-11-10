@@ -16,7 +16,7 @@ class TestProcessFrozen(h.OhkCase):
         self.wait_run()
         t0, lat = self.signal_and_time_stop("critical_a", signal.SIGSTOP)
         self.record("c_hang", latency_ms=lat * 1000)
-        self.assertLess(lat, 0.45)
+        self.assertLess(lat, h.FAULT_TO_STOP_MAX_S)
         self.assert_blames("critical_a", t0)
         # stay frozen well short of CPU_RESET; motion must stay zero
         time.sleep(0.8)

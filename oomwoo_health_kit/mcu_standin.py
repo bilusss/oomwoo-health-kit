@@ -47,8 +47,8 @@ class McuStandin:
 
     def __init__(
         self,
-        soft_stop_timeout_s: float = 0.2,
-        cpu_reset_timeout_s: float = 2.0,
+        soft_stop_timeout_s: float = 0.15,
+        cpu_reset_timeout_s: float = 300.0,
         rearm_count: int = 3,
     ) -> None:
         if not 0.0 < soft_stop_timeout_s < cpu_reset_timeout_s:

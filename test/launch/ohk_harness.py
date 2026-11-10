@@ -24,6 +24,14 @@ os.environ["ROS_DOMAIN_ID"] = str(20 + os.getpid() % 200)
 os.environ["ROS_AUTOMATIC_DISCOVERY_RANGE"] = "LOCALHOST"
 
 MAX_AGE = 0.15
+SOFT_STOP_S = 0.15  # stand-in default (experimental simulation setting)
+TICK_S = 0.01  # stand-in update timer
+# Latency model, kill/hang/stall -> first zero Twist: aggregator max_age + stand-in soft stop + one tick + margin.
+MARGIN_S = 0.10
+FAULT_TO_STOP_MAX_S = MAX_AGE + SOFT_STOP_S + TICK_S + MARGIN_S
+# Aggregator killed: heartbeats just stop, so soft stop + one tick + margin.
+AGG_KILLED_STOP_MAX_S = SOFT_STOP_S + TICK_S + 0.05
+AGG_KILLED_RESET_TIMEOUT_S = 2.0  # explicit short value: the default (300 s) would make test f take minutes
 RESULTS = os.environ.get("OHK_RESULTS", "/tmp/ohk_results.json")
 ACTIONS = {}
 
@@ -35,8 +43,10 @@ def build_description(
     roster=True,
     roster_critical=None,
     timer_beating=(),
+    mcu_params=None,
 ):
-    """`started`: component ids to launch (default all); `roster_critical`: ids in roster."""
+    """`started`: component ids to launch (default all); `roster_critical`: ids in roster;
+    `mcu_params`: extra stand-in parameters (e.g. a short cpu_reset_timeout_s)."""
     ACTIONS.clear()
     started = list(critical) + list(advisory) if started is None else list(started)
     roster_critical = list(critical) if roster_critical is None else list(roster_critical)
@@ -47,7 +57,7 @@ def build_description(
         ld.add_action(ACTIONS[name])
 
     add("health_monitor", package="oomwoo_health_monitor", executable="health_monitor_node")
-    add("mcu_standin", package="oomwoo_health_kit", executable="mcu_standin_node")
+    add("mcu_standin", package="oomwoo_health_kit", executable="mcu_standin_node", parameters=[dict(mcu_params or {})])
     if roster:
         add(
             "roster_publisher",

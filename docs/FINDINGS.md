@@ -1,3 +1,9 @@
+> Note, 2026-11-10: every measurement below was taken with the earlier stand-in settings (0.2 s soft stop, 2.0 s CPU
+> reset). The kit now uses 0.15 s / 300 s, following the firmware bring-up policy (makerspet/oomwoo-firmware#1);
+> those are experimental simulation settings, not a recommendation. Re-measurement with 0.15 s and longer load tests
+> (10 min windows, 40 kill/restart cycles per cell) is in progress; raw lines go to results/soak.jsonl.
+> The existing numbers are unchanged.
+
 # M3 findings: load, jitter, sim clock, stopping distance
 
 All numbers come from `results/*.json`; anything not listed was not measured. One PC (6 cores / 12 threads), container
@@ -107,8 +113,8 @@ controller in `oomwoo_one/config/navigation.yaml`. Other speeds: not measured.
 | Component rate | 20 Hz | zero trips at 10, 20, 50 Hz when max_age >= 0.15; 20 Hz gives 3 periods per 0.15 s |
 | Roster max_age_sec | 0.15 s | lowest tested with margin: 0.10 also had zero trips, but one 60 s run per cell |
 | Aggregator period | 50 ms (fixed in code) | idle max heartbeat gap 50.4-50.9 ms |
-| MCU soft stop | 0.2 s (unchanged) | not swept; no soft stop in any steady-state cell; zero margin for a steady clock at RTF 0.25 |
-| MCU CPU reset | 2.0 s (unchanged) | not swept; the 1984-1994 ms measurement confirms the implementation only |
+| MCU soft stop | not a recommendation (measured at 0.2 s) | set by the firmware policy (makerspet/oomwoo-firmware#1: 150 ms); this table only shows that no soft stop occurred in any steady-state cell at 0.2 s |
+| MCU CPU reset | not a recommendation (measured at 2.0 s) | set by the firmware policy (separate supervision, about five minutes initially); the 1984-1994 ms measurement confirms the implementation only |
 | Stand-in clock in sim | ros | steady clock false-trips at RTF 0.25 |
 
 Detect-to-stop budget at max_age 0.15 s, 20 Hz (kill -> zero Twist, min / median / max): 286 / 290 / 340 ms loaded (Part A),

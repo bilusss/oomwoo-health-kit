@@ -1,10 +1,16 @@
 #!/usr/bin/env bash
-# Dev container for the ROS parts of oomwoo-health-kit. Usage: tools/dev.sh {up|build|test|shell|down|exec CMD...}
+# Dev container for the ROS parts of oomwoo-health-kit. Usage: tools/dev.sh {up|build|test|soak-start|soak-stop|shell|down|exec CMD...}
+#
+# OHK_AGG_REF selects the aggregator (xbattlax/health-monitor) commit under test; default b2b9796.
+# Any commit sha, branch or tag works; PR heads are fetched too, e.g. for PR #2:
+#   OHK_AGG_REF=2f39ac0405664ce07b7123e6d46d354747c6e14a tools/dev.sh build && ... test
+# `build` rebuilds the aggregator from scratch when the ref changed since the last build; `test` refuses to run
+# against a build from a different ref.
 set -euo pipefail
 NAME=ohk-dev
 IMAGE=makerspet/oomwoo:jazzy-dev
 AGG_URL=https://github.com/xbattlax/health-monitor.git
-AGG_COMMIT=b2b9796
+AGG_COMMIT="${OHK_AGG_REF:-b2b9796}"
 PROJECT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 UIDGID="$(id -u):$(id -g)"
 # Run as the host user so nothing in the bind mount becomes root-owned.
@@ -23,15 +29,51 @@ up() {
   fi
   docker exec -u root "$NAME" bash -c 'chown '"$UIDGID"' /ws /ws/src'
   "${EXEC[@]}" bash -c "[ -d /ws/src/health-monitor/.git ] || git clone -q $AGG_URL /ws/src/health-monitor
-    git -C /ws/src/health-monitor checkout -q $AGG_COMMIT"
+    cd /ws/src/health-monitor
+    git rev-parse -q --verify '$AGG_COMMIT^{commit}' >/dev/null 2>&1 \
+      || git fetch -q origin '+refs/heads/*:refs/remotes/origin/*' '+refs/pull/*/head:refs/remotes/origin/pr/*'
+    git checkout -q '$AGG_COMMIT'"
+}
+
+agg_sha() { "${EXEC[@]}" git -C /ws/src/health-monitor rev-parse HEAD; }
+built_sha() { "${EXEC[@]}" bash -c 'cat /ws/.agg_built 2>/dev/null || true'; }
+
+build() {
+  up
+  local want have
+  want="$(agg_sha)"; have="$(built_sha)"
+  echo "aggregator ref: $AGG_COMMIT ($want)"
+  if [ "$want" != "$have" ]; then
+    "${EXEC[@]}" bash -c 'rm -rf /ws/build/oomwoo_health_monitor /ws/install/oomwoo_health_monitor'
+  fi
+  "${EXEC[@]}" bash -c "$SRC && colcon build --parallel-workers 6 --event-handlers console_direct+ $*"
+  "${EXEC[@]}" bash -c "echo $want > /ws/.agg_built"
+}
+
+run_tests() {
+  up
+  local want have
+  want="$(agg_sha)"; have="$(built_sha)"
+  echo "aggregator ref: $AGG_COMMIT ($want)"
+  if [ "$want" != "$have" ]; then
+    echo "installed build is from aggregator ${have:-<none>}; run: OHK_AGG_REF=$AGG_COMMIT tools/dev.sh build" >&2
+    exit 3
+  fi
+  "${EXEC[@]}" bash -c "$SRC && $WS && export OHK_RESULTS=\${OHK_RESULTS:-/tmp/ohk_results.json} && colcon test --packages-select oomwoo_health_kit --parallel-workers 1 --event-handlers console_direct+ $*; rc=\$?; colcon test-result --verbose; exit \$rc"
 }
 
 case "${1:-}" in
   up) up ;;
-  build) up; "${EXEC[@]}" bash -c "$SRC && colcon build --parallel-workers 6 --event-handlers console_direct+ ${*:2}" ;;
-  test) up; "${EXEC[@]}" bash -c "$SRC && $WS && export OHK_RESULTS=\${OHK_RESULTS:-/tmp/ohk_results.json} && colcon test --packages-select oomwoo_health_kit --parallel-workers 1 --event-handlers console_direct+ ${*:2}; rc=\$?; colcon test-result --verbose; exit \$rc" ;;
+  build) shift; build "$@" ;;
+  test) shift; run_tests "$@" ;;
+  soak-start) shift  # detached long run; survives this shell. Args go to bench/soak.py, e.g. --quiet-window A/B
+    up
+    docker exec -d -u "$UIDGID" -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 -e PYTHONUNBUFFERED=1 -e TZ="${TZ:-$(timedatectl show -p Timezone --value 2>/dev/null || echo UTC)}" -w /ws "$NAME" \
+      bash -c "$SRC && $WS && exec python3 /ws/src/oomwoo_health_kit/bench/soak.py $* >> /ws/src/oomwoo_health_kit/results/soak.out 2>&1"
+    echo "started; log: results/soak.log, data: results/soak.jsonl" ;;
+  soak-stop) "${EXEC[@]}" pkill -TERM -f bench/soak.py || echo "not running" ;;
   shell) up; docker exec -it -u "$UIDGID" -e HOME=/tmp -e PYTHONDONTWRITEBYTECODE=1 -w /ws "$NAME" bash --rcfile <(echo "$SRC; $WS") ;;
   exec) up; "${EXEC[@]}" bash -c "$SRC && $WS && ${*:2}" ;;
   down) docker rm -f "$NAME" >/dev/null 2>&1 || true; docker volume rm ohk-ws >/dev/null 2>&1 || true ;;
-  *) echo "usage: $0 {up|build|test|shell|exec CMD|down}" >&2; exit 2 ;;
+  *) echo "usage: $0 {up|build|test|soak-start [soak.py args]|soak-stop|shell|exec CMD|down}" >&2; exit 2 ;;
 esac
