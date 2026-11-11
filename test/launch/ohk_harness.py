@@ -17,7 +17,7 @@ from rclpy.executors import SingleThreadedExecutor
 from rclpy.node import Node as RclNode
 from std_msgs.msg import String
 
-from oomwoo_health_kit.qos import latched_state_qos, live_heartbeat_qos
+from oomwoo_health_kit.qos import latched_state_qos, live_heartbeat_qos, mcu_heartbeat_qos
 
 # Isolate every test process group on its own DDS domain, localhost only.
 os.environ["ROS_DOMAIN_ID"] = str(20 + os.getpid() % 200)
@@ -44,15 +44,19 @@ def build_description(
     roster_critical=None,
     timer_beating=(),
     mcu_params=None,
+    sim_time=False,
 ):
     """`started`: component ids to launch (default all); `roster_critical`: ids in roster;
-    `mcu_params`: extra stand-in parameters (e.g. a short cpu_reset_timeout_s)."""
+    `mcu_params`: extra stand-in parameters (e.g. a short cpu_reset_timeout_s);
+    `sim_time`: use_sim_time on every node (the test must then publish /clock)."""
     ACTIONS.clear()
     started = list(critical) + list(advisory) if started is None else list(started)
     roster_critical = list(critical) if roster_critical is None else list(roster_critical)
     ld = launch.LaunchDescription()
 
     def add(name, **kw):
+        if sim_time:
+            kw["parameters"] = [*kw.get("parameters", []), {"use_sim_time": True}]
         ACTIONS[name] = Node(name=name, **kw)
         ld.add_action(ACTIONS[name])
 
@@ -93,12 +97,23 @@ class Probe(RclNode):
         self.states = []  # (monotonic_t, dict)
         self.stacks = []  # (monotonic_t, dict) from oomwoo/health/stack
         self.comp_details = []  # (monotonic_t, component_id, detail)
+        self.comp_stamps = []  # (monotonic_t, component_id, stamp_sec)
+        self.mcu_hbs = []  # (monotonic_t, dict) aggregate MCU heartbeats from the aggregator
         self._pub = self.create_publisher(Twist, "cmd_vel_in", 10)
         self.create_subscription(Twist, "cmd_vel", self._on_cmd, 10)
         self.create_subscription(String, "oomwoo/health/mcu_state", self._on_state, latched_state_qos())
         self.create_subscription(String, "oomwoo/health/stack", self._on_stack, latched_state_qos())
         self.create_subscription(String, "oomwoo/health/component", self._on_comp, live_heartbeat_qos())
+        self.create_subscription(String, "oomwoo/health/mcu_heartbeat", self._on_mcu_hb, mcu_heartbeat_qos())
         self.create_timer(0.05, self._tick)
+
+    def _on_mcu_hb(self, m):
+        try:
+            d = json.loads(m.data)
+        except ValueError:
+            d = {}
+        with self.lock:
+            self.mcu_hbs.append((time.monotonic(), d))
 
     def _tick(self):
         m = Twist()
@@ -118,6 +133,7 @@ class Probe(RclNode):
         d = json.loads(m.data)
         with self.lock:
             self.comp_details.append((time.monotonic(), d["component_id"], d.get("detail", "")))
+            self.comp_stamps.append((time.monotonic(), d["component_id"], d.get("stamp_sec")))
 
     def _on_state(self, m):
         with self.lock:
@@ -182,6 +198,10 @@ class OhkCase(unittest.TestCase):
 
         self.wait_for(started, 10, f"{name} start")
         return ACTIONS[name].process_details["pid"]
+
+    def mcu_hbs_since(self, t):
+        with self.probe.lock:
+            return [h for h in self.probe.mcu_hbs if h[0] >= t]
 
     def stacks_since(self, t):
         with self.probe.lock:

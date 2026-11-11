@@ -100,8 +100,8 @@ publishing anything without the owner's approval.
 - `tools/dev.sh {up|build|test|shell|exec|down}` drives the `ohk-dev` container (image
   `makerspet/oomwoo:jazzy-dev`) as the host uid, so the project has no root files; build,
   install and log live in the `ohk-ws` volume at `/ws`. Aggregator cloned there; `OHK_AGG_REF` selects the ref (default `b2b9796`, PR heads are fetched) and `build` rebuilds the aggregator when it changes.
-- `qos.py`: roster/stack/`mcu_state` reliable, transient-local, depth 1; component and MCU
-  heartbeats reliable, volatile, depth 10 (contract names no depth; matches the aggregator).
+- `qos.py`: roster/stack/`mcu_state` reliable, transient-local, depth 1; component heartbeats reliable, volatile,
+  depth 10; MCU heartbeat reliable, volatile, depth 1 (history depths as in the upstream contract, see M5).
 - `mcu_standin_node`: `oomwoo/health/mcu_heartbeat` + `cmd_vel_in` in, `cmd_vel` +
   `oomwoo/health/mcu_state` (JSON, one message per core transition) out; 100 Hz update timer;
   zero Twist on every non-RUN entry. `clock_source` = `steady` (default) or `ros`; with `ros`,
@@ -114,8 +114,8 @@ publishing anything without the owner's approval.
   in series: worst case about max_age + soft_stop + 10 ms tick + DDS latency. The aggregator
   default 0.5 s still stops the robot, later (about 0.71 s with the earlier 0.2 s soft stop, about 0.67 s with
   0.15 s; computed); 0.15 s keeps it under 0.4 s (launch-test bound: max_age + soft stop + one tick + 0.1 s margin).
-- `test/launch/`: scenarios a-j, each a real multi-process launch on its own `ROS_DOMAIN_ID`
-  (j: frozen `/clock`, stand-in only). Latencies (signal -> first zero Twist) go to
+- `test/launch/`: scenarios a-k, each a real multi-process launch on its own `ROS_DOMAIN_ID`
+  (j: frozen `/clock`, stand-in only; k: frozen `/clock`, aggregator). Latencies (signal -> first zero Twist) go to
   `$OHK_RESULTS`; re-arm time is quantised to the 20 Hz probe. Host pytest skips `test/launch`.
 
 ## M4 (as built)
@@ -130,3 +130,21 @@ publishing anything without the owner's approval.
   stack start, cell invalid if /dev/shm free < 64 MiB; steady windows are valid only if the stand-in ends in RUN and
   heartbeat and cmd_vel counts are >= 95% of nominal; kills are skipped (and counted) when the system is not steady;
   children die with `soak.py` (PR_SET_PDEATHSIG); `soak-start` refuses a second instance.
+
+## M5 (as built, 2026-11-11)
+
+- Soak transport fix: Fast DDS reads `FASTRTPS_DEFAULT_PROFILES_FILE` once per process, so the long-lived probe in
+  `soak.py` kept default transports in `udp_only` / `shm_hc60` cells. Each cell now runs in a fresh child
+  (`soak.py --worker`, environment set before rclpy is imported); the parent never imports rclpy. JSONL format, quiet
+  windows, lock and cleanup are unchanged, and the strict check stays (`udp_only` with any `fastrtps_*` file in
+  `/dev/shm` is invalid). Smoke: `udp_only` shows 0 files and is valid.
+- Contract alignment (upstream `SOFTWARE_INTERFACES.md`, "Stack Health Monitor Draft"): history depths roster/stack 1,
+  component heartbeat 10, MCU heartbeat 1. `qos.mcu_heartbeat_qos()` (depth 1) is used by the stand-in subscriber, the
+  probes and test j. Sequences start at 1 in both kit and aggregator. Open differences, kit side: the stand-in does not
+  drop an MCU heartbeat by `stamp_sec` age (bridge rule in the contract; the stand-in judges arrival only). Aggregator
+  side: it publishes the MCU heartbeat with depth 10 (contract: 1); at `b2b9796` it has no clock guard.
+- Test k (`test_k_frozen_clock_aggregator.py`): all nodes on `use_sim_time`, stand-in `clock_source=steady`, `/clock`
+  stops after RUN. Components keep beating on wall time with frozen stamps. Result on `b2b9796` and on the PR #2 head
+  alike: no MCU heartbeat and no stack message after the freeze (the aggregator's ROS timer does not fire without
+  `/clock`, so the PR's `clock_stalled` guard is never reached), the robot stops. The last latched stack message stays
+  `healthy`. `EXPECTED_FAIL` in the test lists refs known to violate the contract (empty now).

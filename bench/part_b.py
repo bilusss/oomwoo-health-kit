@@ -105,7 +105,7 @@ class Run:
         from rosgraph_msgs.msg import Clock
         from std_msgs.msg import String
 
-        from oomwoo_health_kit.qos import live_heartbeat_qos
+        from oomwoo_health_kit.qos import live_heartbeat_qos, mcu_heartbeat_qos
 
         self.rclpy = rclpy
         self.probe = b.make_probe(cmd_speed=SPEED)
@@ -134,7 +134,7 @@ class Run:
         p.create_subscription(Clock, "/clock", on_clock, 100)
         p.create_subscription(Odometry, "/odom", mk("truth"), 100)
         p.create_subscription(Odometry, "/odom_wheel", mk("wheel"), 100)
-        p.create_subscription(String, "oomwoo/health/mcu_heartbeat", on_hb, live_heartbeat_qos())
+        p.create_subscription(String, "oomwoo/health/mcu_heartbeat", on_hb, mcu_heartbeat_qos())
         self.ex, _ = b.spin_in_thread(p)
 
     def close(self):

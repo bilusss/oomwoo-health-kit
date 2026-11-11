@@ -14,10 +14,20 @@ def latched_state_qos() -> QoSProfile:
 
 
 def live_heartbeat_qos() -> QoSProfile:
-    """Component and MCU heartbeats: reliable, volatile (never replayed)."""
+    """Component heartbeats: reliable, volatile (never replayed), depth 10 (all components share one topic)."""
     return QoSProfile(
         history=HistoryPolicy.KEEP_LAST,
         depth=10,
+        reliability=ReliabilityPolicy.RELIABLE,
+        durability=DurabilityPolicy.VOLATILE,
+    )
+
+
+def mcu_heartbeat_qos() -> QoSProfile:
+    """Aggregate MCU heartbeat: reliable, volatile, depth 1 (a stalled subscriber must not catch up on old beats)."""
+    return QoSProfile(
+        history=HistoryPolicy.KEEP_LAST,
+        depth=1,
         reliability=ReliabilityPolicy.RELIABLE,
         durability=DurabilityPolicy.VOLATILE,
     )

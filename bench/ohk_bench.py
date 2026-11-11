@@ -120,7 +120,7 @@ def make_probe(sim_time=False, cmd_speed=0.2, publish_cmd=True):
     from rclpy.node import Node
     from std_msgs.msg import String
 
-    from oomwoo_health_kit.qos import latched_state_qos, live_heartbeat_qos
+    from oomwoo_health_kit.qos import latched_state_qos, live_heartbeat_qos, mcu_heartbeat_qos
 
     class Probe(Node):
         def __init__(self):
@@ -131,7 +131,7 @@ def make_probe(sim_time=False, cmd_speed=0.2, publish_cmd=True):
             self.create_subscription(Twist, "cmd_vel", self._on_cmd, 10)
             self.create_subscription(String, "oomwoo/health/mcu_state", self._on_state, latched_state_qos())
             self.create_subscription(String, "oomwoo/health/stack", self._on_stack, latched_state_qos())
-            self.create_subscription(String, "oomwoo/health/mcu_heartbeat", self._on_hb, live_heartbeat_qos())
+            self.create_subscription(String, "oomwoo/health/mcu_heartbeat", self._on_hb, mcu_heartbeat_qos())
             self.speed = cmd_speed
             if publish_cmd:
                 self.create_timer(0.05, self._tick)

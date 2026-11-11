@@ -27,7 +27,7 @@ def make_probe(cmd=True):
     from geometry_msgs.msg import Twist
     from rclpy.node import Node
     from std_msgs.msg import String
-    from oomwoo_health_kit.qos import latched_state_qos, live_heartbeat_qos
+    from oomwoo_health_kit.qos import latched_state_qos, live_heartbeat_qos, mcu_heartbeat_qos
 
     class P(Node):
         def __init__(self):
@@ -40,7 +40,7 @@ def make_probe(cmd=True):
             self.create_subscription(Twist, "cmd_vel", self.on_cmd, 10)
             self.create_subscription(String, "oomwoo/health/mcu_state", self.on_state, latched_state_qos())
             self.create_subscription(String, "oomwoo/health/stack", self.on_stack, latched_state_qos())
-            self.create_subscription(String, "oomwoo/health/mcu_heartbeat", self.on_mcu, live_heartbeat_qos())
+            self.create_subscription(String, "oomwoo/health/mcu_heartbeat", self.on_mcu, mcu_heartbeat_qos())
             self.create_subscription(String, "oomwoo/health/component", self.on_comp, live_heartbeat_qos())
             if cmd:
                 self.create_timer(0.05, self.tick)

@@ -26,7 +26,7 @@ def generate_test_description():
 class TestFrozenClock(h.OhkCase):
     def test_frozen_clock_forces_zero_and_is_reported(self):
         clock_pub = self.probe.create_publisher(Clock, "/clock", 10)
-        hb_pub = self.probe.create_publisher(String, "oomwoo/health/mcu_heartbeat", h.live_heartbeat_qos())
+        hb_pub = self.probe.create_publisher(String, "oomwoo/health/mcu_heartbeat", h.mcu_heartbeat_qos())
         state = {"t": 1000.0, "run": True}
 
         def tick():

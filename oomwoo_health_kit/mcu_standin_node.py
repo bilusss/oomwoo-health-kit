@@ -9,7 +9,7 @@ from rclpy.node import Node
 from std_msgs.msg import String
 
 from oomwoo_health_kit.mcu_standin import McuState, McuStandin, Velocity
-from oomwoo_health_kit.qos import latched_state_qos, live_heartbeat_qos
+from oomwoo_health_kit.qos import latched_state_qos, mcu_heartbeat_qos
 
 HEARTBEAT_TOPIC = "oomwoo/health/mcu_heartbeat"
 STATE_TOPIC = "oomwoo/health/mcu_state"
@@ -37,7 +37,7 @@ class McuStandinNode(Node):
         self._last_advance = time.monotonic()
         self._cmd_pub = self.create_publisher(Twist, "cmd_vel", 10)
         self._state_pub = self.create_publisher(String, STATE_TOPIC, latched_state_qos())
-        self.create_subscription(String, HEARTBEAT_TOPIC, self._on_heartbeat, live_heartbeat_qos())
+        self.create_subscription(String, HEARTBEAT_TOPIC, self._on_heartbeat, mcu_heartbeat_qos())
         self.create_subscription(Twist, "cmd_vel_in", self._on_cmd, 10)
         self._publish_state("start")
         self.create_timer(0.01, self._on_timer)

@@ -10,8 +10,10 @@ cycles (default 40) alternating the two critical components. One JSON line per f
 fsynced to results/soak.jsonl, so a crash loses at most the cell in progress. Events go to results/soak.log.
 
 Transport profiles: --dds-profiles default,udp_only,shm_hc60 makes the Fast DDS profile (bench/profiles/*.xml) a
-cell dimension; it is applied through FASTRTPS_DEFAULT_PROFILES_FILE in the environment of every spawned process and of
-this process (so of the probe). The grid can be restricted with --loads, --max-age, --rates.
+cell dimension; it is applied through FASTRTPS_DEFAULT_PROFILES_FILE. Fast DDS reads that variable once per process, so
+every cell runs in a fresh child process (this script re-executed with --worker) whose environment (profile file, domain
+id, discovery range) is set before rclpy / Fast DDS is imported; the probe participant and all spawned nodes therefore
+share the cell's profile. The parent never imports rclpy. The grid can be restricted with --loads, --max-age, --rates.
 
 Validity: a steady window is valid only if the stand-in is in RUN at its end and the aggregate-heartbeat count and the
 probe's cmd_vel count are each >= 95% of nominal (20 Hz); otherwise it carries "valid": false and no trip count. A cell
@@ -734,7 +736,69 @@ def csv(s, conv):
         raise SystemExit(f"bad list {s!r}")
 
 
+def run_cell_isolated(cfg, args, windows, log, meta):
+    """Run one cell in a fresh child process whose environment is final before rclpy is imported."""
+    profile = cfg[0]
+    fd, spec_path = tempfile.mkstemp(prefix="ohk_cell_", suffix=".json", dir="/tmp")
+    out_path = spec_path + ".out"
+    with os.fdopen(fd, "w") as f:
+        json.dump({"cfg": list(cfg), "meta": meta, "smoke": args.smoke, "out": out_path, "quiet_windows": args.quiet_window,
+                   "args": {k: getattr(args, k) for k in ("warmup_s", "window_s", "kills", "domain")}}, f)
+    env = dict(os.environ, ROS_DOMAIN_ID=str(args.domain), ROS_AUTOMATIC_DISCOVERY_RANGE=DISCOVERY_RANGE[profile])
+    for var in ("FASTRTPS_DEFAULT_PROFILES_FILE", "FASTDDS_DEFAULT_PROFILES_FILE"):
+        env.pop(var, None)
+    if PROFILES[profile]:
+        env["FASTRTPS_DEFAULT_PROFILES_FILE"] = PROFILES[profile]
+    child = subprocess.Popen([sys.executable, os.path.abspath(__file__), "--worker", spec_path], env=env,
+                             preexec_fn=b.die_with_parent)
+    try:
+        rc = child.wait()
+    except BaseException:  # Shutdown (SIGTERM etc.): let the child clean up its stack, then escalate
+        try:
+            child.send_signal(signal.SIGTERM)
+            child.wait(60)
+        except Exception:
+            child.kill()
+            child.wait()
+        raise
+    finally:
+        if os.path.exists(spec_path):
+            os.unlink(spec_path)
+    try:
+        if rc in (130, 143):
+            raise Shutdown("SIGTERM" if rc == 143 else "SIGINT")
+        if rc != 0 or not os.path.exists(out_path):
+            raise RuntimeError(f"cell worker exited with status {rc} and wrote no record")
+        with open(out_path) as f:
+            return json.load(f)
+    finally:
+        if os.path.exists(out_path):
+            os.unlink(out_path)
+
+
+def worker_main(spec_path):
+    """Child process: run one cell with the environment the parent set; write the record to the spec's out path."""
+    with open(spec_path) as f:
+        spec = json.load(f)
+    a = spec["args"]
+    args = argparse.Namespace(warmup_s=a["warmup_s"], window_s=a["window_s"], kills=a["kills"], domain=a["domain"])
+    log = Logger(os.path.join(RES, "soak_smoke.log" if spec["smoke"] else "soak.log"))
+    windows = Windows(spec["quiet_windows"])
+    for sig in (signal.SIGTERM, signal.SIGINT, signal.SIGHUP):
+        signal.signal(sig, _on_signal)
+    try:
+        rec = run_cell(tuple(spec["cfg"]), args, windows, log, spec["meta"])
+    except Shutdown as e:
+        log(f"cell worker stopping on {e}; the cell in progress is not recorded")
+        return 143 if str(e) == "SIGTERM" else 130
+    with open(spec["out"], "w") as f:
+        json.dump(rec, f)
+    return 0
+
+
 def main():
+    if len(sys.argv) == 3 and sys.argv[1] == "--worker":
+        return worker_main(sys.argv[2])
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--passes", type=int, default=0, help="number of passes over all cells (default 0 = forever)")
     ap.add_argument("--quiet-window", action="append", default=[], metavar="START/END",
@@ -816,7 +880,7 @@ def main():
                 log(f"pass {p} cell {idx + 1}/{len(order)} profile={cfg[0]} load={cfg[1]} max_age={cfg[2]} rate={cfg[3]}")
                 meta = {"run_id": run_id, "pass": p, "cell_index": idx, "cell_order_seed": seed + p,
                         "aggregator_commit": agg, "kit_commit": kit}
-                rec = run_cell(cfg, args, windows, log, meta)
+                rec = run_cell_isolated(cfg, args, windows, log, meta)
                 longest = max(longest, rec["duration_s"])
                 with open(out_path, "a") as f:
                     f.write(json.dumps(rec) + "\n")
