@@ -44,14 +44,37 @@ port. It runs in a receive/event thread and holds the participant's send lock, s
 - Rates varied between runs from 6% to 28%; no rate here is portable.
 - Caveat on the last two table rows: those runs used `ROS_AUTOMATIC_DISCOVERY_RANGE=LOCALHOST`, under which the rmw adds
   its own SHM transport whatever the XML profile says, so "UDP only" still had SHM and the 60 ms setting did not apply to
-  every transport. Treat both rows as preliminary; `bench/soak.py --dds-profiles` re-measures them with the profiles
-  verified in effect (checked through `/dev/shm`), and results will be added here.
+  every transport. They are superseded by the transport comparison below.
 - Not claimed: a Fast DDS bug, that all 95 soak stops were traced, or that disabling SHM is free (large messages lose
   zero-copy; cost not measured; 2 of 100 remained, untraced). `healthy_check_timeout_ms` = 60 was tested idle only; under
   load it may wrongly declare ports dead. Untested: load, ARM, Fast DDS 3.x, other RMWs, the micro-ROS agent.
 
 Consequence: with this middleware configuration, any heartbeat deadline under about 0.4 s is sensitive to nodes joining
 the graph, so a restarted node can cause a second stop shortly after motion is re-enabled.
+
+## Transport comparison, soak passes 1-4 (2026-11-11)
+Raw data: `results/soak_transport_passes1-4.jsonl`. max_age 0.15 s, 20 Hz, soft stop 0.15 s; per cell a 10-minute steady
+window and 40 SIGKILL/restart cycles; 4 passes, so 160 cycles per profile and load. Profiles: `default` (no XML, as in pass 1
+above), `default_subnet` (no XML, discovery range SUBNET: the control for the other two), `shm_hc60` (SHM kept,
+`healthy_check_timeout_ms` = 60), `udp_only` (`bench/profiles/`).
+
+| Profile | Discovery range | Extra stops, idle | cpu | mixed | Total | Heartbeat gaps > 0.2 s not after a kill | `fastrtps_*` files in /dev/shm at cell end |
+|---|---|---|---|---|---|---|---|
+| default | LOCALHOST | 14 / 160 | 29 / 160 | 35 / 160 | 78 / 480 (16.2%) | 112 | 42-42 |
+| default_subnet | SUBNET | 9 / 160 | 26 / 160 | 17 / 160 | 52 / 480 (10.8%) | 74 | 42-44 |
+| shm_hc60 | SUBNET | 2 / 160 | 1 / 160 | 6 / 160 | 9 / 480 (1.9%) | 12 | 42-44 |
+| udp_only | SUBNET | 0 / 160 | 0 / 160 | 0 / 160 | 0 / 480 (0.0%) | 0 | 6-6 |
+
+- Steady windows: 0 false trips in all 48 cells (8 hours in total).
+- `shm_hc60` against its control `default_subnet`: 9 against 52 extra stops in 480 cycles each, under load as well as idle.
+  It reduces the effect about six-fold and does not remove it. The 9 remaining stops are all in the re-arm tail with the
+  aggregator reporting one critical component stale; their cause is not traced.
+- `udp_only`: 0 extra stops and 0 gaps in 480 cycles, but the script's own validity check flags every one of these cells,
+  because 6 `fastrtps_*` files were present in `/dev/shm` (42-44 with SHM in use). Which process creates them is not yet
+  identified, so "UDP only removes the stall" is not established; the numbers are shown for completeness.
+- `default` against `default_subnet`: 78 against 52. Run-to-run variation is large (6-28% in earlier runs), so this is
+  not evidence that the discovery range matters; both show the stall.
+- Median kill-to-zero latency was 220-276 ms in every valid cell, so the 60 ms health check did not slow detection.
 
 ## What this supersedes below
 - "55 kill/restart cycles, none unexplained" (M3, Part A): superseded. That pass saw zero; the difference is not explained
