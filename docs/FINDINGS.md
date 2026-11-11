@@ -53,7 +53,7 @@ Consequence: with this middleware configuration, any heartbeat deadline under ab
 the graph, so a restarted node can cause a second stop shortly after motion is re-enabled.
 
 ## Transport comparison, soak passes 1-4 (2026-11-11)
-Raw data: `results/soak_transport_passes1-4.jsonl`. max_age 0.15 s, 20 Hz, soft stop 0.15 s; per cell a 10-minute steady
+Raw data: `results/soak_transport_passes1-5.jsonl` (the table uses passes 1-4; pass 5 is included as raw data). max_age 0.15 s, 20 Hz, soft stop 0.15 s; per cell a 10-minute steady
 window and 40 SIGKILL/restart cycles; 4 passes, so 160 cycles per profile and load. Profiles: `default` (no XML, as in pass 1
 above), `default_subnet` (no XML, discovery range SUBNET: the control for the other two), `shm_hc60` (SHM kept,
 `healthy_check_timeout_ms` = 60), `udp_only` (`bench/profiles/`).
@@ -69,9 +69,13 @@ above), `default_subnet` (no XML, discovery range SUBNET: the control for the ot
 - `shm_hc60` against its control `default_subnet`: 9 against 52 extra stops in 480 cycles each, under load as well as idle.
   It reduces the effect about six-fold and does not remove it. The 9 remaining stops are all in the re-arm tail with the
   aggregator reporting one critical component stale; their cause is not traced.
-- `udp_only`: 0 extra stops and 0 gaps in 480 cycles, but the script's own validity check flags every one of these cells,
-  because 6 `fastrtps_*` files were present in `/dev/shm` (42-44 with SHM in use). Which process creates them is not yet
-  identified, so "UDP only removes the stall" is not established; the numbers are shown for completeness.
+- `udp_only`: 0 extra stops and 0 gaps in 480 cycles. The script's validity check flags these cells because 6
+  `fastrtps_*` files were present in `/dev/shm` (42-44 with SHM in use). Checked on a live cell: the files are mapped only by
+  the benchmark's own probe process, which keeps default transports in every cell (Fast DDS reads the profile once per
+  process, and the probe process outlives the cells); the aggregator, stand-in, roster publisher and components map none,
+  and the count does not grow over 40 restarts. So the path component -> aggregator -> stand-in ran over UDP only, and the
+  result holds for that path, with the caveat that the measuring probe was still an SHM participant. The same caveat
+  applies to `shm_hc60`: the probe used the default 1000 ms health check there.
 - `default` against `default_subnet`: 78 against 52. Run-to-run variation is large (6-28% in earlier runs), so this is
   not evidence that the discovery range matters; both show the stall.
 - Median kill-to-zero latency was 220-276 ms in every valid cell, so the 60 ms health check did not slow detection.
