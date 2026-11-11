@@ -80,6 +80,25 @@ above), `default_subnet` (no XML, discovery range SUBNET: the control for the ot
   not evidence that the discovery range matters; both show the stall.
 - Median kill-to-zero latency was 220-276 ms in every valid cell, so the 60 ms health check did not slow detection.
 
+## Rerun with the probe on the cell's profile (2026-11-11)
+Raw data: `results/soak_transport_rerun_2026-11-11.jsonl`. Same cells as the comparison above, but each cell now runs in a
+fresh process, so the measuring probe uses the cell's Fast DDS profile as well. 5 passes, 200 SIGKILL/restart cycles per
+profile and load, all 45 cells valid; `udp_only` cells had 0 `fastrtps_*` files in `/dev/shm`, the others 42-44.
+
+| Profile | Extra stops, idle | cpu | mixed | Total | Heartbeat gaps > 0.2 s not after a kill |
+|---|---|---|---|---|---|
+| default_subnet | 9 / 200 | 25 / 200 | 24 / 200 | 58 / 600 (9.7%) | 83 |
+| shm_hc60 | 0 / 200 | 0 / 200 | 0 / 200 | 0 / 600 | 0 |
+| udp_only | 0 / 200 | 0 / 200 | 0 / 200 | 0 / 600 | 0 |
+
+- Steady windows: 0 false trips in all 45 cells (7.5 hours). Median kill-to-zero latency 213-277 ms per cell in all three.
+- The control reproduces the earlier rate (52 / 480 before, 58 / 600 now).
+- `udp_only` is now confirmed with every participant on UDP.
+- `shm_hc60` went from 9 / 480 to 0 / 600. The only change was the probe, which earlier still used the default 1000 ms
+  health check; that it caused the 9 earlier stops is an inference, not traced.
+- Zero in 600 cycles bounds the rate below about 0.5% at 95%; it does not show the effect is gone. Still one x86 PC,
+  Python nodes, max_age 0.15 s at 20 Hz only, no large topics, no micro-ROS agent.
+
 ## What this supersedes below
 - "55 kill/restart cycles, none unexplained" (M3, Part A): superseded. That pass saw zero; the difference is not explained
   (untested differences: 64 MiB `/dev/shm` never cleaned, no warm-up, one DDS domain for all cells).
