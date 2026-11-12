@@ -17,8 +17,11 @@ SIGKILL/restart cycles. All 18 cells were valid.
 - Steady windows: 0 false trips in all 18 (3 hours in total). Zero events in T hours only bounds the rate below about 3/T
   per hour at 95%, so below about one per hour here.
 - Kill to zero velocity, median per cell: 192-221 ms at max_age 0.10 s, 244-281 ms at 0.15 s, 348-385 ms at 0.25 s.
-- Restart cycles: 95 soft stops not caused by a kill, in 720 cycles (13%), a median 0.34 s after the stand-in re-armed.
-  They were spread evenly over load (idle 25, cpu 34, mixed 36) and max_age (31 / 34 / 30), so neither explains them.
+- Restart cycles: 103 soft stops not caused by a kill, in 720 cycles (14%), by the stand-in's cumulative counter; 95 of
+  them have a detail record, and those came a median 0.34 s after the stand-in re-armed. By load: idle 25, cpu 36,
+  mixed 42. By max_age: 31 / 36 / 36. They occur idle and at every max_age, so neither is the cause, but they are more
+  frequent under load (see the wide grid below). Corrected 2026-11-12: this line first said 95 and "spread evenly",
+  counting only the stops with a detail record.
   A few kills landed during such a stop and show latencies of 10-140 ms; those are not real detect-to-stop times.
 
 ## Cause of the restart-tail stops
@@ -45,7 +48,7 @@ port. It runs in a receive/event thread and holds the participant's send lock, s
 - Caveat on the last two table rows: those runs used `ROS_AUTOMATIC_DISCOVERY_RANGE=LOCALHOST`, under which the rmw adds
   its own SHM transport whatever the XML profile says, so "UDP only" still had SHM and the 60 ms setting did not apply to
   every transport. They are superseded by the transport comparison below.
-- Not claimed: a Fast DDS bug, that all 95 soak stops were traced, or that disabling SHM is free (large messages lose
+- Not claimed: a Fast DDS bug, that all 103 soak stops were traced, or that disabling SHM is free (large messages lose
   zero-copy; cost not measured; 2 of 100 remained, untraced). `healthy_check_timeout_ms` = 60 was tested idle only; under
   load it may wrongly declare ports dead. Untested: load, ARM, Fast DDS 3.x, other RMWs, the micro-ROS agent.
 
@@ -98,6 +101,26 @@ profile and load, all 45 cells valid; `udp_only` cells had 0 `fastrtps_*` files 
   health check; that it caused the 9 earlier stops is an inference, not traced.
 - Zero in 600 cycles bounds the rate below about 0.5% at 95%; it does not show the effect is gone. Still one x86 PC,
   Python nodes, max_age 0.15 s at 20 Hz only, no large topics, no micro-ROS agent.
+
+## Wide grid for the 60 ms health check (2026-11-12, first 1.5 passes)
+Raw data: `results/soak_widegrid_part1_2026-11-12.jsonl`. Every participant on the cell's profile. max_age 0.10 / 0.15 /
+0.25 s x 20 / 50 Hz x idle / cpu / mixed, 40 SIGKILL/restart cycles per cell, 54 cells, all valid.
+
+| Profile | Extra stops | idle | cpu | mixed | Heartbeat gaps > 0.2 s not after a kill |
+|---|---|---|---|---|---|
+| default_subnet | 138 / 1200 (11.5%) | 24 / 400 (6%) | 47 / 360 (13%) | 67 / 440 (15%) | 182 |
+| shm_hc60 | 0 / 960 | 0 / 320 | 0 / 360 | 0 / 280 | 0 |
+
+- `shm_hc60` had no extra stop and no gap in any of the six max_age / rate combinations (120-200 cycles each).
+- With default transports the effect appears at every max_age and rate (7-16% per combination) and about twice as
+  often under load as idle; the same idle-to-load ratio shows in the rerun above (9, 25, 24 of 200).
+- Steady windows: 0 false trips in all 54 cells (9 hours).
+- Median kill-to-zero latency per cell with `shm_hc60`: 166-238 ms at max_age 0.10 s, 259-278 ms at 0.15 s, 331-391 ms
+  at 0.25 s; with default transports 193-242, 245-287, 316-373 ms.
+
+Totals with every participant on the profile under test (rerun plus wide grid): default transports 196 extra stops in
+1800 restart cycles (10.9%), `shm_hc60` 0 in 1560, `udp_only` 0 in 600. Zero in 1560 bounds the rate below about 0.2%
+at 95%.
 
 ## What this supersedes below
 - "55 kill/restart cycles, none unexplained" (M3, Part A): superseded. That pass saw zero; the difference is not explained
