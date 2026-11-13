@@ -1,0 +1,47 @@
+# OPTIONAL: job-following roster. Same components as nav_rosters.yaml, plus drive_path and controller, which are
+# silent by design between goals: advisory while idle, critical while a Nav2 goal is active.
+# Run: ros2 run oomwoo_health_kit job_roster --ros-args -p config_file:=<this file>
+#
+# Fail-safe rules (enforced by the loader): one task_id and identical component ids in every set (the aggregator
+# restarts its 0.25 s arming window and the stand-in soft-stops otherwise; allow_arming_restart: true overrides);
+# starts in the strictest set; a stricter set is applied at once, only relaxation is debounced; unknown state ->
+# strictest. The node adds component job_roster (critical everywhere) and heartbeats it, see docs/SPEC.md.
+# Known weakness: Nav2 is silent for a while after a goal is accepted (planning), and the driving set is critical
+# at once, so each goal start faults and stops once. Coverage/docking/teleop motion is not covered by this set;
+# use the static roster for that.
+debounce_s: 0.3                  # relaxation (driving -> idle) only
+plumbing_max_age_s: 0.5          # job_roster heartbeat, emitted at 10 Hz
+
+state_source:
+  type: nav2_actions             # or: topic (std_msgs/String, transient-local, on oomwoo/health/job_state)
+  active_state: driving
+  inactive_state: idle
+  settle_s: 3.0                  # no status message this long after the topic got a publisher = "no goal ever". A restart in the
+                                 # middle of a goal is fail-open if the latched status takes longer than this (seen: up to 1.8 s loaded)
+  status_topics:                 # any goal ACCEPTED/EXECUTING/CANCELING on one of these selects active_state
+    - /navigate_to_pose/_action/status
+    - /follow_path/_action/status
+
+rosters:
+  idle:
+    task_id: nav
+    components:
+      - {component_id: lidar,             critical: true,  max_age_sec: 0.6}
+      - {component_id: odom,              critical: true,  max_age_sec: 0.15}
+      - {component_id: localization,      critical: true,  max_age_sec: 1.0}
+      - {component_id: drive_supervision, critical: true,  max_age_sec: 0.15}
+      - {component_id: drive_path,        critical: false, max_age_sec: 0.15}   # /cmd_vel_smoothed 20 Hz
+      - {component_id: controller,        critical: false, max_age_sec: 0.6}    # /cmd_vel_nav 5 Hz
+      - {component_id: local_costmap,     critical: false, max_age_sec: 0.6}
+      - {component_id: global_costmap,    critical: false, max_age_sec: 1.5}
+  driving:
+    task_id: nav
+    components:
+      - {component_id: lidar,             critical: true,  max_age_sec: 0.6}
+      - {component_id: odom,              critical: true,  max_age_sec: 0.15}
+      - {component_id: localization,      critical: true,  max_age_sec: 1.0}
+      - {component_id: drive_supervision, critical: true,  max_age_sec: 0.15}
+      - {component_id: drive_path,        critical: true,  max_age_sec: 0.15}
+      - {component_id: controller,        critical: true,  max_age_sec: 0.6}
+      - {component_id: local_costmap,     critical: false, max_age_sec: 0.6}
+      - {component_id: global_costmap,    critical: false, max_age_sec: 1.5}

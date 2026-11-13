@@ -1,0 +1,65 @@
+# Topic-activity watches for the OOMWOO navigation stack (stack B, docs/M6_RECON.md section 2, RTF 1.0).
+# Run: ros2 run oomwoo_health_kit topic_heartbeat --ros-args -p config_file:=<this file> [-p use_sim_time:=true]
+#
+# One heartbeat per fresh message, rate-limited to max_emit_hz (default 20). Subscriptions are best-effort/volatile
+# (accepts reliable and best-effort publishers, never replays latched topics; transient_local is refused).
+# A message that waited in the queue longer than 1/max_emit_hz + queue_slack_s (default 0.05 s) gives no heartbeat.
+# A topic watch gives no heartbeat while the topic has more than max_publishers publishers (default 1): a second
+# writer could keep a dead node's heartbeat alive. Raising max_publishers weakens that watch (marked below).
+# component_id must match nav_rosters.yaml / nav_rosters_job.yaml.
+#
+# max_age_sec is in the roster. Rule: about 3 heartbeat periods (period = max(source period, 1/max_emit_hz)):
+# scan 5 Hz -> 0.6 s; footprints 5 Hz / 2 Hz -> 0.6 s / 1.5 s; drive path 20 Hz -> 0.15 s.
+# odom is 50 Hz and is NOT limited below its rate (max_emit_hz 50, period 0.02 s): max_age 0.15 s is then 7 periods,
+# three aggregator ticks (50 ms) of margin; at the old 20 Hz limit it was 3 periods and tripped under load.
+watches:
+  - component_id: lidar                 # ros_gz_bridge /scan, 5 Hz measured, single writer
+    topic: /scan
+    type: sensor_msgs/msg/LaserScan
+    stamp_max_age_s: 0.5                # missing/zero/older/future header.stamp -> level "degraded"
+
+  - component_id: odom                  # /odom, 50 Hz measured, single writer (the bridge)
+    topic: /odom
+    type: nav_msgs/msg/Odometry
+    max_emit_hz: 50
+    stamp_max_age_s: 0.5
+
+  - component_id: localization          # map->odom on /tf (slam_toolbox or AMCL). Rate NOT measured in M6_RECON
+    tf: {parent: map, child: odom}      # (only /pose 1.6 Hz while moving, silent idle), so its max_age is a guess.
+    max_emit_hz: 10                     # /tf has several writers by design; the (parent, child) pair is the filter,
+                                        # max_publishers is not applied to tf watches.
+
+  # Drive supervision, the default critical drive-chain component. Heartbeat only while the robot is stationary
+  # (odom twist below the thresholds) or a command newer than cmd_max_age_s was seen on cmd_topic. A robot that moves
+  # without a fresh command gives no heartbeat. cmd_topic is the command input of the MCU stand-in (remap
+  # cmd_vel_in:=/cmd_vel), where any writer's command counts, so max_publishers is not applied to it.
+  # Tune the thresholds to the robot's coast-down: motion that outlasts the last command by more than cmd_max_age_s
+  # is reported as a fault.
+  - component_id: drive_supervision
+    max_emit_hz: 25
+    motion_consistency:
+      odom_topic: /odom
+      cmd_topic: /cmd_vel
+      linear_threshold: 0.02            # m/s
+      angular_threshold: 0.05           # rad/s
+      cmd_max_age_s: 0.15
+      odom_max_age_s: 0.3
+
+  # The next two are only used by the optional job-following roster (nav_rosters_job.yaml).
+  - component_id: drive_path            # velocity_smoother /cmd_vel_smoothed, 20 Hz while it gets input, single writer.
+    topic: /cmd_vel_smoothed            # /cmd_vel has up to 8 writers (collision_monitor, docking, wall_clean, ...) and
+    type: geometry_msgs/msg/Twist       # must NOT be watched here. Alternative: remap collision_monitor's
+    max_emit_hz: 20                     # cmd_vel_out_topic to a private topic and watch that.
+
+  - component_id: controller            # controller_server /cmd_vel_nav, 5 Hz, only during a goal. 6 publishers share
+    topic: /cmd_vel_nav                 # the topic (behavior_server too, same container): max_publishers 6 WEAKENS this
+    type: geometry_msgs/msg/Twist       # watch, a behavior_server recovery command also keeps it alive.
+    max_publishers: 6
+
+  - component_id: local_costmap         # /local_costmap/published_footprint, 5 Hz (reliable, transient-local publisher)
+    topic: /local_costmap/published_footprint
+    type: geometry_msgs/msg/PolygonStamped
+
+  - component_id: global_costmap        # /global_costmap/published_footprint, 2 Hz
+    topic: /global_costmap/published_footprint
+    type: geometry_msgs/msg/PolygonStamped

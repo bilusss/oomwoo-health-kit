@@ -148,3 +148,38 @@ publishing anything without the owner's approval.
   alike: no MCU heartbeat and no stack message after the freeze (the aggregator's ROS timer does not fire without
   `/clock`, so the PR's `clock_stalled` guard is never reached), the robot stops. The last latched stack message stays
   `healthy`. `EXPECTED_FAIL` in the test lists refs known to violate the contract (empty now).
+
+## M6a design (as built, 2026-11-13, revised after review)
+
+Health loop on real nodes that cannot be modified (Nav2, slam_toolbox, ros_gz_bridge), by observing their outputs.
+
+- **Default: a static roster** (`config/nav_rosters.yaml`, `job_roster` with `state_source: static`): critical = lidar, odom,
+  localization, `drive_supervision`; advisory = costmaps. Why: with "hold last setpoint" MCU semantics a robot that moves while a
+  job-following roster says idle is unsupervised, and docking, wall-follow, coverage, recovery and teleop publish cmd_vel outside
+  the Nav2 actions. Supervising by motion needs no job state. Plumbing: if `topic_heartbeat` dies every component goes stale.
+- `topic_heartbeat` (`topic_heartbeat_node.py`, logic in ROS-free `topic_watch.py`): YAML watches: `topic`+`type`, `tf`, or
+  `motion_consistency` (odom + command topic: heartbeat only if the robot is stationary OR a command is newer than
+  `cmd_max_age_s`; moving without one, stale or non-finite odometry give none). Heartbeats come from subscription callbacks, never
+  a timer: when every publisher on the topic is silent and no queued messages remain, the heartbeats stop. Fail-open guards: more
+  than `max_publishers` (default 1) writers -> no heartbeat (count cached 0.5 s, refreshed from callbacks); a message older than
+  1/max_emit_hz + `queue_slack_s` by the publisher's source timestamp (Fast DDS receive stamp is taken at take time) is dropped,
+  so a stalled watcher cannot replay queued messages; `transient_local` refused; with `stamp_max_age_s` a missing, zero, old or
+  future header stamp is `degraded` (unhealthy for a critical component in the aggregator).
+- `job_roster` (optional job-following mechanism, `config/nav_rosters_job.yaml`): loader refuses sets with different task_id or ids
+  (the aggregator restarts its 0.25 s arming window otherwise) unless `allow_arming_restart`; starts in the strictest set; stricter
+  set at once, only relaxation debounced (0.3 s); unknown state -> strictest; String/status subscriptions transient-local.
+  Plumbing liveness: component `job_roster` (critical everywhere) beats at 10 Hz from the 20 ms re-validation loop, `degraded`
+  if an action status topic has no matched publisher or the posted roster differs from the committed state; a dead node stops
+  the robot after max_age 0.5 s + soft stop. The loop is a timer by design: it proves the node runs and its source exists, not that
+  the job state is right. A status topic counts as "no goal" only after `settle_s` (3 s) with a publisher but no latched message
+  (action servers publish no initial status); a restart mid-goal is fail-open if the latched status takes longer than that.
+- Aggregator (b2b9796): a roster whose task_id/id set changes restarts arming (0.3-0.5 s of zero cmd_vel); `degraded` is not in
+  {ok, healthy}, so it is `unhealthy_critical` on a critical component. Nav2 is silent while planning, so a job set that makes
+  drive_path critical at goal start faults at once; the static roster does not.
+- Honesty limits: an external watcher proves that a node produces output, not that it is correct (a node republishing stale data,
+  a localization stuck on a wrong pose, a controller emitting wrong commands pass), and cannot see a node that is silent by design
+  while idle. drive_supervision cannot tell a legitimate command from a wrong one and flags coasting longer than
+  `cmd_max_age_s` minus the command period. Numbers come from fake publishers on a loaded host, single runs; latencies measured
+  from the signal depend on message phase: worst case = wait for next message (<= source period) + max_age + aggregator tick 0.05
+  + soft stop 0.15 + stand-in tick 0.01, the tests add 0.1 s margin.
+- Tests l-t (`test/launch`, fakes in `ohk_fakes.py`); results JSON holds the measured values.
