@@ -151,35 +151,72 @@ publishing anything without the owner's approval.
 
 ## M6a design (as built, 2026-11-13, revised after review)
 
-Health loop on real nodes that cannot be modified (Nav2, slam_toolbox, ros_gz_bridge), by observing their outputs.
+Heartbeat sources for nodes that cannot be modified (Nav2, slam_toolbox, ros_gz_bridge), made by observing their outputs.
+Tests l-t use fake publishers; M6c ran the watcher, the static roster and the fault set on Gazebo + Nav2 + slam_toolbox (see M6c).
+Nothing here has run on hardware, with AMCL, docking, or any other job than the NavigateToPose loop.
 
 - **Default: a static roster** (`config/nav_rosters.yaml`, `job_roster` with `state_source: static`): critical = lidar, odom,
   localization, `drive_supervision`; advisory = costmaps. Why: with "hold last setpoint" MCU semantics a robot that moves while a
   job-following roster says idle is unsupervised, and docking, wall-follow, coverage, recovery and teleop publish cmd_vel outside
   the Nav2 actions. Supervising by motion needs no job state. Plumbing: if `topic_heartbeat` dies every component goes stale.
 - `topic_heartbeat` (`topic_heartbeat_node.py`, logic in ROS-free `topic_watch.py`): YAML watches: `topic`+`type`, `tf`, or
-  `motion_consistency` (odom + command topic: heartbeat only if the robot is stationary OR a command is newer than
-  `cmd_max_age_s`; moving without one, stale or non-finite odometry give none). Heartbeats come from subscription callbacks, never
+  `motion_consistency` (odom + the command topic the MCU receives; tracks the HELD SETPOINT, the last command value. Beat only if
+  a command newer than `cmd_max_age_s` exists, OR the held setpoint is zero (or none ever seen) and odom was under the thresholds
+  continuously for `settle_s` (0.1) or less than `coast_max_s` (1.0 default) passed since the setpoint became zero. A non-zero
+  held setpoint with no fresh command never beats, whatever odom says (held creep, stalled wheels with live odometry). Stale or
+  non-finite odometry or command values give none. The command subscription is reliable.) Heartbeats come from subscription callbacks, never
   a timer: when every publisher on the topic is silent and no queued messages remain, the heartbeats stop. Fail-open guards: more
   than `max_publishers` (default 1) writers -> no heartbeat (count cached 0.5 s, refreshed from callbacks); a message older than
-  1/max_emit_hz + `queue_slack_s` by the publisher's source timestamp (Fast DDS receive stamp is taken at take time) is dropped,
-  so a stalled watcher cannot replay queued messages; `transient_local` refused; with `stamp_max_age_s` a missing, zero, old or
+  1/max_emit_hz + `queue_slack_s` by the publisher's SOURCE timestamp is dropped (the receive stamp is never used: Fast DDS takes
+  it at take time). Zero source stamp -> header stamp (node clock must be the stamp clock); neither -> guard unavailable, logged
+  once per watch and noted in the heartbeat detail. Assumes publisher and watcher share one host clock. A stalled watcher
+  cannot replay queued messages; `tf` watches have NO writer guard (/tf has many writers by design); `transient_local` refused; with `stamp_max_age_s` a missing, zero, old or
   future header stamp is `degraded` (unhealthy for a critical component in the aggregator).
 - `job_roster` (optional job-following mechanism, `config/nav_rosters_job.yaml`): loader refuses sets with different task_id or ids
   (the aggregator restarts its 0.25 s arming window otherwise) unless `allow_arming_restart`; starts in the strictest set; stricter
   set at once, only relaxation debounced (0.3 s); unknown state -> strictest; String/status subscriptions transient-local.
   Plumbing liveness: component `job_roster` (critical everywhere) beats at 10 Hz from the 20 ms re-validation loop, `degraded`
   if an action status topic has no matched publisher or the posted roster differs from the committed state; a dead node stops
-  the robot after max_age 0.5 s + soft stop. The loop is a timer by design: it proves the node runs and its source exists, not that
-  the job state is right. A status topic counts as "no goal" only after `settle_s` (3 s) with a publisher but no latched message
+  the robot after max_age 0.5 s + soft stop. The loop is a timer by design: it proves the node runs and the status topics still
+  have a MATCHED publisher endpoint, not that the job state is right nor that the action server is alive: a SIGKILLed server stays
+  matched for its DDS lease (about 20 s), a SIGSTOPped one indefinitely. Dead or frozen Nav2 is caught by drive_supervision. A status topic counts as "no goal" only after `settle_s` (3 s) with a publisher but no latched message
   (action servers publish no initial status); a restart mid-goal is fail-open if the latched status takes longer than that.
 - Aggregator (b2b9796): a roster whose task_id/id set changes restarts arming (0.3-0.5 s of zero cmd_vel); `degraded` is not in
   {ok, healthy}, so it is `unhealthy_critical` on a critical component. Nav2 is silent while planning, so a job set that makes
   drive_path critical at goal start faults at once; the static roster does not.
 - Honesty limits: an external watcher proves that a node produces output, not that it is correct (a node republishing stale data,
   a localization stuck on a wrong pose, a controller emitting wrong commands pass), and cannot see a node that is silent by design
-  while idle. drive_supervision cannot tell a legitimate command from a wrong one and flags coasting longer than
-  `cmd_max_age_s` minus the command period. Numbers come from fake publishers on a loaded host, single runs; latencies measured
+  while idle. drive_supervision cannot tell a legitimate command from a wrong one, nor that the wheels follow it
+  (it reads ground-truth odometry in the sim); a non-zero setpoint left by a dead commander keeps the stack stopped until a
+  command arrives, even after the robot has halted. A backward clock jump (more than 0.25 s) makes the
+  job roster select the strictest set. Numbers come from fake publishers on a loaded host, single runs; latencies measured
   from the signal depend on message phase: worst case = wait for next message (<= source period) + max_age + aggregator tick 0.05
   + soft stop 0.15 + stand-in tick 0.01, the tests add 0.1 s margin.
 - Tests l-t (`test/launch`, fakes in `ohk_fakes.py`); results JSON holds the measured values.
+
+## M6c (as built, 2026-11-13): watcher + static roster on Gazebo/Nav2/slam_toolbox
+All numbers: RTF 1.0, software GL, 1-4 containers in parallel, single runs unless a count is given. Results in `results/fullstack/`.
+- `health_sources:=watcher` = `job_roster` (static, `config/nav_rosters.yaml`) + `topic_heartbeat` (`config/nav_watch_sim.yaml`). Verified graph:
+  /scan 5.0 Hz, /odom 50 Hz, map->odom 5 Hz distinct stamps (slam_toolbox republishes the stamp at 50 Hz, stamp ~0.19 s AHEAD of sim now;
+  /pose is silent when stationary), costmap footprints 5 Hz (both; M6_RECON's 2 Hz was wrong), all single writer, same driving/stationary.
+  One ros_gz_bridge process carries /scan, /odom, /tf, /clock, /joint_states and takes cmd_vel_gated. /cmd_vel (stand-in input) has one
+  writer here (collision_monitor), /cmd_vel_nav six. drive_supervision watches /cmd_vel: any fresh command counts, it proves that a
+  fresh command exists while a setpoint is held or the robot moves, not that it is correct. max_age: lidar 0.6, odom 0.15,
+  localization 0.6 (measured max gap 0.22 s), drive_supervision 0.15, local_costmap 0.6 (critical: the collision monitor is
+  disabled in this stack, the local costmap is the only obstacle protection), global_costmap 0.6 (advisory).
+- Clock: health nodes (aggregator, watcher, stand-in) on WALL time (`--health-clock wall`, recorded as `health_clock`). The aggregator compares
+  heartbeat stamps with its own clock, so all must share one; sim time costs (1 run, 3 containers) topic_heartbeat 0.50 + health_monitor
+  0.32 + stand-in 0.31 + job_roster 0.23 core vs 0.17 + 0.04 + small on wall, and a frozen /clock freezes the aggregator's
+  staleness check. Consequence: header stamps (sim) are not checked (no `stamp_max_age_s`); freshness is receive-side (source timestamp
+  age, strictly newer tf stamps). Source timestamps are non-zero wall-clock for all watched topics (bridge, Nav2, slam_toolbox).
+- Goal start/end (new rule, final config, 260 goals incl. ~64 cancelled and 20 spin/backup/wait probes: 0 per goal): 0 aggregator faults,
+  0 soft stops in every phase. Motion without a command newer than 0.15 s: 0 events (Nav2 keeps commanding until the robot is below
+  0.02 m/s); Gazebo coast after a zero command about 0.12 s, hence `coast_max_s` 0.5 in the sim config. An unplannable goal aborts in
+  0.01 s and starts no BT recovery; recoveries were exercised by direct spin/backup/wait actions, not BT-triggered. Pre-fix (old
+  stationary rule) 104 goals also gave 0.
+- Faults (5 each, `faults.jsonl`): SIGSTOP Nav2 container 5 s, SIGKILL Nav2, SIGKILL slam, SIGKILL the bridge, Gazebo pause 5 s. Zero gated
+  command 0.22-0.72 s after the signal, standstill 0.46-0.84 s (0.08-0.15 m), except the bridge: the dead last hop cannot stop the robot, it
+  drove 1.7-2.1 m for 12-13 s until it stopped on its own (health loop and stand-in did their part at 0.22-0.28 s). A dead commander's
+  non-zero setpoint keeps the stack stopped until a command arrives (SIGKILL cases never recover; SIGSTOP/pause recover ~8 s after resume).
+- N4: SIGKILL + instant respawn of the bridge keeps the guard (2 writers) down 20.0-20.5 s (DDS lease), stand-in RUN again at 20.8 s;
+  fail-safe, no mitigation in rclpy. Not measured: other jobs, AMCL, hardware, runs over 15 min, GPU.

@@ -105,44 +105,73 @@ def publishers_ok(count: int, max_publishers: int) -> tuple[bool, str]:
 
 
 class MotionConsistency:
-    """Heartbeat condition for drive supervision.
+    """Heartbeat condition for drive supervision. Tracks the setpoint the MCU holds (the last value seen on the command topic).
 
-    Healthy when the robot is stationary (odometry twist below thresholds) OR a command message arrived within
-    ``cmd_max_age_s``. A robot that moves without a fresh command, stale or non-finite odometry give no heartbeat.
+    Beat (healthy) only if
+      (a) a command newer than ``cmd_max_age_s`` exists (the commander is alive: a fresh command of any value), OR
+      (b) the held setpoint is zero, or no command was ever seen, AND (odometry below the thresholds continuously for
+          ``settle_s`` OR, with a zero setpoint, less than ``coast_max_s`` since the setpoint became zero: the robot may still be
+          coasting down).
+    A non-zero held setpoint without a fresh command never beats, whatever odometry says (a held creep command below the odometry
+    threshold, or odometry that reads zero while the wheels are stalled, must not keep the loop alive). Stale or non-finite
+    odometry never beats. A non-finite command value counts as a non-zero setpoint and is not a fresh command.
     """
 
     def __init__(
         self, linear_threshold: float = 0.02, angular_threshold: float = 0.05,
-        cmd_max_age_s: float = 0.15, odom_max_age_s: float = 0.3,
+        cmd_max_age_s: float = 0.15, odom_max_age_s: float = 0.3, settle_s: float = 0.1, coast_max_s: float = 1.0,
     ) -> None:
         for name, v in (("linear_threshold", linear_threshold), ("angular_threshold", angular_threshold),
-                        ("cmd_max_age_s", cmd_max_age_s), ("odom_max_age_s", odom_max_age_s)):
+                        ("cmd_max_age_s", cmd_max_age_s), ("odom_max_age_s", odom_max_age_s),
+                        ("settle_s", settle_s), ("coast_max_s", coast_max_s)):
             if not (math.isfinite(v) and v > 0):
                 raise ValueError(f"{name} must be positive and finite")
         self.lin_thr, self.ang_thr = linear_threshold, angular_threshold
         self.cmd_max_age_s, self.odom_max_age_s = cmd_max_age_s, odom_max_age_s
-        self._odom: tuple[float, float, float] | None = None
-        self._cmd_t: float | None = None
+        self.settle_s, self.coast_max_s = settle_s, coast_max_s
+        self._odom_t: float | None = None
+        self._odom_finite = True
+        self._quiet_since: float | None = None
+        self._cmd_t: float | None = None          # time of the last finite command (None: none, or the last one was non-finite)
+        self._held_zero: bool | None = None       # None: no command ever seen
+        self._zero_since: float | None = None
 
     def on_odom(self, now: float, linear: float, angular: float) -> None:
-        self._odom = (now, linear, angular)
+        self._odom_t = now
+        self._odom_finite = math.isfinite(now) and math.isfinite(linear) and math.isfinite(angular)
+        if self._odom_finite and abs(linear) < self.lin_thr and abs(angular) < self.ang_thr:
+            if self._quiet_since is None:
+                self._quiet_since = now
+        else:
+            self._quiet_since = None
 
-    def on_cmd(self, now: float) -> None:
+    def on_cmd(self, now: float, linear: float = 1.0, angular: float = 0.0) -> None:
+        """Called for every message on the command topic with its linear speed and yaw rate (defaults: some non-zero command)."""
+        if not (math.isfinite(now) and math.isfinite(linear) and math.isfinite(angular)):
+            self._cmd_t, self._held_zero, self._zero_since = None, False, None
+            return
         self._cmd_t = now
+        zero = abs(linear) <= 1e-9 and abs(angular) <= 1e-9
+        if zero and self._held_zero is not True:
+            self._zero_since = now
+        self._held_zero = zero
 
     def ok(self, now: float) -> tuple[bool, str]:
-        if self._odom is None or not math.isfinite(now):
+        if self._odom_t is None or not math.isfinite(now):
             return False, "no odometry"
-        t, lin, ang = self._odom
-        if not (math.isfinite(t) and math.isfinite(lin) and math.isfinite(ang)):
+        if not self._odom_finite:
             return False, "non-finite odometry"
-        if now - t > self.odom_max_age_s + 1e-9 or t > now:
-            return False, f"odometry stale ({now - t:.3f}s)"
-        if abs(lin) < self.lin_thr and abs(ang) < self.ang_thr:
-            return True, ""
+        if now - self._odom_t > self.odom_max_age_s + 1e-9 or self._odom_t > now:
+            return False, f"odometry stale ({now - self._odom_t:.3f}s)"
         if self._cmd_t is not None and 0.0 <= now - self._cmd_t <= self.cmd_max_age_s + 1e-9:
             return True, ""
-        return False, f"moving (v={lin:.3f} w={ang:.3f}) without a command newer than {self.cmd_max_age_s:g}s"
+        if self._held_zero is False:
+            return False, f"non-zero setpoint held without a command newer than {self.cmd_max_age_s:g}s"
+        if self._quiet_since is not None and now - self._quiet_since >= self.settle_s - 1e-9:
+            return True, ""
+        if self._held_zero and self._zero_since is not None and 0.0 <= now - self._zero_since < self.coast_max_s:
+            return True, ""
+        return False, "robot moving or not yet settled with a zero or unknown setpoint"
 
 
 class TfTracker:
@@ -246,8 +275,10 @@ def parse_watches(doc: Any) -> list[WatchSpec]:
                 "angular_threshold": float(mc.get("angular_threshold", 0.05)),
                 "cmd_max_age_s": float(mc.get("cmd_max_age_s", 0.15)),
                 "odom_max_age_s": float(mc.get("odom_max_age_s", 0.3)),
+                "settle_s": float(mc.get("settle_s", 0.1)),
+                "coast_max_s": float(mc.get("coast_max_s", 1.0)),
             }
-            MotionConsistency(**{k: v for k, v in motion.items() if k.endswith(("threshold", "age_s"))})
+            MotionConsistency(**{k: v for k, v in motion.items() if k.endswith(("threshold", "_s"))})
             topic, mtype, parent, child = motion["odom_topic"], "nav_msgs/msg/Odometry", None, None
         elif tf is not None:
             if "type" in w:

@@ -24,7 +24,8 @@ FAKES = os.path.join(os.path.dirname(os.path.abspath(__file__)), "ohk_fakes.py")
 
 ENABLE_TOPIC = "/fake/enable"
 # Test copy of config/nav_*.yaml: same components and max_age values, test topic names. /nav_cmd stands for the stand-in's
-# command input (the Probe's cmd_vel_in drives the gate itself), /drive_cmd for the single-writer drive-chain output.
+# command input: the commander (fake "cmd", or the Probe's constant feed) writes cmd_vel_in, the topic the stand-in receives, and
+# drive_supervision watches exactly that topic. /drive_cmd stands for the single-writer drive-chain output (drive_path).
 SCAN_MAX_AGE = 0.6  # 3 x 0.2 s (5 Hz)
 WATCHES = {
     "watches": [
@@ -32,7 +33,7 @@ WATCHES = {
         {"component_id": "odom", "topic": "/odom", "type": "nav_msgs/msg/Odometry", "max_emit_hz": 50},
         {"component_id": "localization", "tf": {"parent": "map", "child": "odom"}, "max_emit_hz": 10},
         {"component_id": "drive_supervision", "max_emit_hz": 25,
-         "motion_consistency": {"odom_topic": "/odom", "cmd_topic": "/nav_cmd", "cmd_max_age_s": 0.15}},
+         "motion_consistency": {"odom_topic": "/odom", "cmd_topic": "/cmd_vel_in", "cmd_max_age_s": 0.15}},
         {"component_id": "drive_path", "topic": "/drive_cmd", "type": "geometry_msgs/msg/Twist"},
         {"component_id": "local_costmap", "topic": "/local_fp", "type": "geometry_msgs/msg/PolygonStamped"},
     ]
@@ -86,7 +87,7 @@ def fake_cmd(kind, name):
         "polygon": ["--kind", "polygon", "--topic", "/local_fp", "--hz", "5"],
         # silent while "off" on ENABLE_TOPIC; the staggered drive of scenario o/o3 is driven by the test
         "drive": ["--kind", "twist", "--topic", "/drive_cmd", "--hz", "20", "--enable-topic", ENABLE_TOPIC],
-        "cmd": ["--kind", "twist", "--topic", "/nav_cmd", "--hz", "20", "--enable-topic", ENABLE_TOPIC],
+        "cmd": ["--kind", "twist", "--topic", "/cmd_vel_in", "--hz", "20", "--enable-topic", ENABLE_TOPIC],
     }[kind]
 
 
@@ -131,6 +132,7 @@ class NavCase(h.OhkCase):
             history=HistoryPolicy.KEEP_LAST, depth=1,
             reliability=ReliabilityPolicy.RELIABLE, durability=DurabilityPolicy.TRANSIENT_LOCAL,
         )
+        cls.probe.feed = getattr(cls, "PROBE_FEED", True)  # False: only the "cmd" fake (or a test) writes cmd_vel_in
         cls.rosters = []  # (monotonic_t, dict) every roster the probe sees
         cls.probe.create_subscription(
             String, "oomwoo/health/roster",
@@ -183,6 +185,11 @@ class NavCase(h.OhkCase):
 
     def wait_idle_run(self, timeout=15.0):
         self.wait_run(timeout)
+        self.wait_stack(lambda s: s["state"].startswith("healthy"), 3.0, "healthy stack")
+
+    def wait_quiet_run(self, timeout=15.0):
+        """Stand-in in RUN and stack healthy, whatever the output (no commander is needed for this)."""
+        self.wait_for(lambda: self.current_state() == "run", timeout, "stand-in RUN")
         self.wait_stack(lambda s: s["state"].startswith("healthy"), 3.0, "healthy stack")
 
     def wait_stack_task(self, task, timeout, what, since=0.0):

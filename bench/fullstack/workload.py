@@ -32,6 +32,13 @@ POSES = [
     ("P7", 0.53, 0.89, -1.57),
     ("P0", -2.00, -0.50, 0.0),
 ]
+# --workload mix (M6c): a fixed cycle of 13 goals that adds, to the plain loop, goals cancelled while driving (cancel after N sim s)
+# a goal outside the map (the planner rejects it at once, 0.01 s: measured, it does NOT trigger BT recoveries) and an explicit
+# recovery probe "R": the behavior_server actions spin 1.57 rad, back up 0.3 m, wait 3 s sent directly while the robot is idle
+# (same command path as BT recoveries: behavior_server -> cmd_vel_nav -> smoother -> collision_monitor -> cmd_vel; NOT BT-triggered). (pose index into POSES or "UNREACH", cancel_after_sim_s or None)
+UNREACH = ("UNREACH", 9.0, 9.0, 0.0)
+MIX_CYCLE = [(0, None), (1, None), (2, 4.0), (3, None), ("U", 35.0), ("R", None), (4, None), (5, None), (6, 1.0), (7, None), (0, None),
+             (1, 6.0), (2, None)]
 GOAL_TIMEOUT_SIM_S = 150.0
 SERVER_WAIT_S = 30.0
 
@@ -71,7 +78,7 @@ def _yaw_to_quat(yaw):
 
 
 class Workload:
-    def __init__(self, node, odometer=None, log=None, sim_now=None):
+    def __init__(self, node, odometer=None, log=None, sim_now=None, mix=False):
         from nav2_msgs.action import NavigateToPose
         from rclpy.action import ActionClient
 
@@ -81,6 +88,7 @@ class Workload:
         self.client = ActionClient(node, NavigateToPose, "navigate_to_pose")
         self.records = []
         self._sim_now = sim_now
+        self.mix = mix
 
     def sim_now(self):
         if self._sim_now:
@@ -117,7 +125,7 @@ class Workload:
         g.pose.pose.orientation.z, g.pose.pose.orientation.w = _yaw_to_quat(yaw)
         return g
 
-    def one_goal(self, idx, pose, should_stop):
+    def one_goal(self, idx, pose, should_stop, cancel_after=None):
         """Send one goal and wait for the result. Never raises; returns the record."""
         name, x, y, yaw = pose
         rec = {"idx": idx, "pose": name, "x": x, "y": y, "yaw": yaw, "result": "error"}
@@ -145,6 +153,8 @@ class Workload:
             while not done.wait(0.2):
                 if should_stop():
                     cancelled_by = "session_end"
+                elif cancel_after is not None and self.sim_now() - t0s > cancel_after:
+                    cancelled_by = "test_cancel"
                 elif self.sim_now() - t0s > GOAL_TIMEOUT_SIM_S:
                     cancelled_by = "timeout"
                 if cancelled_by:
@@ -159,6 +169,9 @@ class Workload:
             elif cancelled_by == "session_end":
                 rec["result"] = "canceled"
                 rec["note"] = "session ended"
+            elif cancelled_by == "test_cancel":
+                rec["result"] = "canceled"
+                rec["note"] = f"test cancel after {cancel_after} sim s" + (" (unplannable goal)" if pose[0] == "UNREACH" else "")
             elif res.done():
                 rec["result"] = STATUS.get(res.result().status, f"status{res.result().status}")
             else:
@@ -169,10 +182,52 @@ class Workload:
             rec["note"] = f"{type(e).__name__}: {e}"
         return self._finish(rec, t0w, t0s, d0)
 
+    def recovery_probe(self, idx, should_stop):
+        """spin, back up, wait via the behavior_server action servers; one record like a goal."""
+        from builtin_interfaces.msg import Duration
+        from geometry_msgs.msg import Point
+        from nav2_msgs.action import BackUp, Spin, Wait
+        from rclpy.action import ActionClient
+
+        rec = {"idx": idx, "pose": "RECOVERY", "result": "succeeded", "steps": []}
+        t0w, t0s, d0 = time.monotonic(), self.sim_now(), self.odo.distance()
+        try:
+            for name, cls, goal in (("spin", Spin, Spin.Goal()), ("backup", BackUp, BackUp.Goal()), ("wait", Wait, Wait.Goal())):
+                if name == "spin":
+                    goal.target_yaw = 1.57
+                elif name == "backup":
+                    goal.target = Point(x=0.3)
+                    goal.speed = 0.1
+                    goal.time_allowance = Duration(sec=15)
+                else:
+                    goal.time = Duration(sec=3)
+                cl = ActionClient(self.node, cls, name)
+                if should_stop() or not cl.wait_for_server(timeout_sec=5.0):
+                    rec["steps"].append(f"{name}: no server/stop")
+                    rec["result"] = "error"
+                    continue
+                ev = threading.Event()
+                f = cl.send_goal_async(goal)
+                f.add_done_callback(lambda _f: ev.set())
+                if not ev.wait(10.0) or not f.result().accepted:
+                    rec["steps"].append(f"{name}: not accepted")
+                    rec["result"] = "error"
+                    continue
+                rf = f.result().get_result_async()
+                ev2 = threading.Event()
+                rf.add_done_callback(lambda _f: ev2.set())
+                ok = ev2.wait(30.0)
+                rec["steps"].append(f"{name}: " + (STATUS.get(rf.result().status, "?") if ok else "timeout"))
+                cl.destroy()
+        except Exception as e:  # keep the loop alive
+            rec["result"], rec["note"] = "error", f"{type(e).__name__}: {e}"
+        return self._finish(rec, t0w, t0s, d0)
+
     def _finish(self, rec, t0w, t0s, d0):
         rec["duration_wall_s"] = round(time.monotonic() - t0w, 2)
         rec["duration_sim_s"] = round(self.sim_now() - t0s, 2)
         rec["sim_start_s"] = round(t0s, 2)
+        rec["t0_mono"], rec["t1_mono"] = t0w, time.monotonic()  # host monotonic clock, shared with the recorder process
         rec["distance_odom_m"] = round(self.odo.distance() - d0, 3)
         self.records.append(rec)
         self.log("goal " + json.dumps(rec))
@@ -189,7 +244,16 @@ class Workload:
             if duration_sim_s is not None and self.sim_now() - t0 >= duration_sim_s:
                 break
             stop = (lambda: should_stop() or (duration_sim_s is not None and self.sim_now() - t0 >= duration_sim_s))
-            rec = self.one_goal(i, POSES[i % len(POSES)], stop)
+            if self.mix:
+                pi, cancel_after = MIX_CYCLE[i % len(MIX_CYCLE)]
+                if pi == "R":
+                    self.recovery_probe(i, stop)
+                    i += 1
+                    continue
+                pose = UNREACH if pi == "U" else POSES[pi]
+            else:
+                pose, cancel_after = POSES[i % len(POSES)], None
+            rec = self.one_goal(i, pose, stop, cancel_after)
             if on_goal:
                 on_goal(rec)
             if rec["result"] in ("error", "no_server", "rejected"):

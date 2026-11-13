@@ -20,6 +20,7 @@ class TestJobStateTopic(n.NavCase):
         self.assertTrue(self.drive_critical(), "first roster must be the strictest set")
         self.assertIsNotNone(self.crit(self.last_roster(), "job_roster"))
         t0 = self.set_job_state("idle")
+        time.sleep(0.15)  # the message has arrived (poll 20 ms) but the 0.3 s debounce has not elapsed
         self.assertTrue(self.drive_critical(), "relaxation must be debounced")
         self.wait_for(lambda: self.drive_critical() is False, 3.0, "relaxed roster")
         self.assertGreaterEqual(self.rosters[-1][0] - t0, 0.29)

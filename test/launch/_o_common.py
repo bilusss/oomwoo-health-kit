@@ -58,6 +58,9 @@ class JobTransitions(n.NavCase):
         self.assertLess(z, START_STOP_MAX_S)
         time.sleep(1.0)
         t_quiet = self.set_enable(False)  # commands stop 0.5 s before the goal ends
+        # once settled, motion is not interrupted while driving (the start-of-goal stop above is the documented cost of this
+        # optional roster; restart of arming at the transition is allowed only before t_settled)
+        self.assertEqual(self.motion_gaps(t_settled, t_quiet), [], "motion interrupted while driving")
         silence_stop = None
         self.wait_for(lambda: self.first_zero_since(t_quiet) is not None, 2.0, "stop after the drive path went silent")
         silence_stop = self.first_zero_since(t_quiet)

@@ -30,14 +30,24 @@ def test_debouncer_flap_does_not_relax():
     assert d.poll(1.0) is None and d.committed == "driving"
 
 
-def test_debouncer_repeat_observation_keeps_hold_start_and_clock_backwards_commits():
+def test_debouncer_repeat_observation_keeps_hold_start():
     d = Debouncer("driving", 0.3, RANKS)
     d.observe(0.0, "idle")
     d.observe(0.2, "idle")
     assert d.poll(0.31) == "idle"
+
+
+def test_debouncer_clock_backwards_selects_the_strictest_set():
     d = Debouncer("driving", 0.3, RANKS)
+    d.observe(10.0, "idle")  # relaxation pending
+    assert d.poll(2.0) is None and d.committed == "driving"  # jump back: NOT a relaxation
+    assert d.poll(2.4) is None and d.committed == "driving"  # and the pending relaxation was dropped
+    d = Debouncer("idle", 0.3, RANKS)
     d.observe(10.0, "idle")
-    assert d.poll(2.0) == "idle"
+    assert d.observe(3.0, "idle") == "driving" and d.committed == "driving"  # relaxed state + jump -> strictest
+    d = Debouncer("idle", 0.3, RANKS)
+    d.observe(10.0, "idle")
+    assert d.poll(1.0) == "driving"
 
 
 def test_status_source_unknown_until_known():

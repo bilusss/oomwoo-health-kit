@@ -5,6 +5,15 @@ callbacks of the watched topics and never from a timer, so when every publisher 
 messages remain, the heartbeats stop. Messages that waited in the queue too long (a stalled watcher) and messages
 on a topic with more publishers than ``max_publishers`` give no heartbeat. It proves that a node produces output,
 not that the output is correct.
+
+Queue-age guard (a stalled watcher must not turn old queued messages into fresh heartbeats): age = host wall clock now minus
+the RMW SOURCE timestamp (set by the publisher, measured on the real stack: ros_gz_bridge, Nav2 and slam_toolbox all set it).
+The receive timestamp is NOT used (Fast DDS takes it at take time, it cannot show queueing). If the source timestamp is zero the
+header stamp is used (message age against this node's clock, so the node clock must be the stamp clock); if there is neither,
+the guard cannot work for that message: it is logged once per watch and every such heartbeat carries the detail
+"queue guard unavailable". Assumption: publisher and watcher share one host clock (source timestamps are wall time of the publisher's host).
+Watchers of ``tf`` pairs have no writer guard: /tf has many writers by design, a second writer of the same (parent, child) pair
+(or a surviving duplicate of a restarted node) is not detected there.
 """
 
 import math
@@ -64,18 +73,27 @@ class TopicHeartbeat(Node):
             self.get_logger().warn(text)
 
     @staticmethod
-    def _queue_age(info, header_stamp_sec, now_ros) -> float | None:
-        """Seconds since the publisher sent (else the RMW took) the message; the RMW receive stamp is taken at take time in Fast DDS and cannot show queueing; header stamp as the last resort."""
-        for key in ("source_timestamp", "received_timestamp"):
-            ts = (info or {}).get(key, 0)
-            if ts and ts > 0:
-                return time.time() - ts / 1e9
+    def _queue_age(info, header_stamp_sec, now_ros) -> tuple[float | None, str]:
+        """(seconds since the publisher sent the message, basis). Basis 'source' (RMW source timestamp), 'header' (zero source
+        stamp: node clock minus header stamp) or 'none' (no way to know)."""
+        ts = (info or {}).get("source_timestamp", 0)
+        if ts and ts > 0:
+            return time.time() - ts / 1e9, "source"
         if header_stamp_sec is not None:
-            return now_ros - header_stamp_sec
-        return None
+            return now_ros - header_stamp_sec, "header"
+        return None, "none"
 
-    def _fresh(self, spec: WatchSpec, info, header_stamp_sec, now) -> bool:
-        return not queued_too_long(self._queue_age(info, header_stamp_sec, now), spec.max_emit_hz, spec.queue_slack_s)
+    def _fresh(self, spec: WatchSpec, info, header_stamp_sec, now) -> tuple[bool, str]:
+        """(fresh enough, detail). detail is non-empty when the queue guard could not work for this message."""
+        age, basis = self._queue_age(info, header_stamp_sec, now)
+        detail = ""
+        if basis == "none":
+            detail = "queue guard unavailable (zero source timestamp, no header stamp)"
+            self._warn(spec.component_id + ":guard", f"{spec.component_id}: {detail}: a stalled watcher could replay queued messages")
+        elif basis == "header" and self._warned.get(spec.component_id + ":hdr") is None:
+            self._warned[spec.component_id + ":hdr"] = time.monotonic()
+            self.get_logger().warn(f"{spec.component_id}: zero source timestamp, queue age taken from the header stamp (node clock)")
+        return not queued_too_long(age, spec.max_emit_hz, spec.queue_slack_s), detail
 
     def _single_writer(self, spec: WatchSpec, cache: TtlCache, topic: str, now: float) -> bool:
         count = cache.get(now, lambda: len(self.get_publishers_info_by_topic(self.resolve_topic_name(topic))))
@@ -93,11 +111,11 @@ class TopicHeartbeat(Node):
         def stamp_of(stamp):
             return _stamp_sec(stamp) if stamp is not None else None
 
-        def emit(stamp) -> None:
+        def emit(stamp, extra: str = "") -> None:
             now = self._now()
             if limiter.allow(now):
                 level, detail = stamp_level(now, stamp_of(stamp), spec.stamp_max_age_s)
-                hb.beat(level, detail)
+                hb.beat(level, "; ".join(x for x in (detail, extra) if x))
 
         if spec.is_motion:
             self._watch_motion(spec, hb, limiter, qos, pubs)
@@ -112,11 +130,12 @@ class TopicHeartbeat(Node):
                 now = self._now()
                 for t in msg.transforms:
                     if strip_frame(t.header.frame_id) == spec.tf_parent and strip_frame(t.child_frame_id) == spec.tf_child:
-                        if not self._fresh(spec, info, stamp_of(t.header.stamp), now):
+                        fresh, note = self._fresh(spec, info, stamp_of(t.header.stamp), now)
+                        if not fresh:
                             continue
                         ns = t.header.stamp.sec * 1_000_000_000 + t.header.stamp.nanosec
                         if tracker.is_newer(ns):
-                            emit(t.header.stamp)
+                            emit(t.header.stamp, note)
 
             self._subs.append(self.create_subscription(msg_cls, spec.topic, on_tf, qos))
             return
@@ -127,29 +146,37 @@ class TopicHeartbeat(Node):
             now = self._now()
             header = getattr(msg, "header", None)
             stamp = header.stamp if header is not None else None
-            if not self._fresh(spec, info, stamp_of(stamp), now):
+            fresh, note = self._fresh(spec, info, stamp_of(stamp), now)
+            if not fresh:
                 return
             if not self._single_writer(spec, pubs, spec.topic, now):
                 return
-            emit(stamp)
+            emit(stamp, note)
 
         self._subs.append(self.create_subscription(msg_cls, spec.topic, on_msg, qos))
 
     def _watch_motion(self, spec, hb, limiter, qos, pubs) -> None:
         m = spec.motion
-        core = MotionConsistency(m["linear_threshold"], m["angular_threshold"], m["cmd_max_age_s"], m["odom_max_age_s"])
+        core = MotionConsistency(m["linear_threshold"], m["angular_threshold"], m["cmd_max_age_s"], m["odom_max_age_s"],
+                                 m["settle_s"], m["coast_max_s"])
         odom_cls, cmd_cls = get_message("nav_msgs/msg/Odometry"), get_message(m["cmd_type"])
+        # The command topic carries the setpoint the MCU holds: reliable (a lost message would leave a stale setpoint), and it
+        # must be the topic the MCU stand-in receives (the last hop; any writer counts, max_publishers is not applied).
+        cmd_qos = QoSProfile(history=HistoryPolicy.KEEP_LAST, depth=10, reliability=ReliabilityPolicy.RELIABLE,
+                             durability=DurabilityPolicy.VOLATILE)
+        notes = {"odom": "", "cmd": ""}
 
         def maybe_beat(now: float) -> None:
             ok, detail = core.ok(now)
             if ok and limiter.allow(now):
-                hb.beat("ok", "")
+                hb.beat("ok", "; ".join(x for x in notes.values() if x))
             elif not ok:
                 self._warn(spec.component_id, f"{spec.component_id}: no heartbeat, {detail}")
 
         def on_odom(msg, info) -> None:
             now = self._now()
-            if not self._fresh(spec, info, None, now) or not self._single_writer(spec, pubs, m["odom_topic"], now):
+            fresh, notes["odom"] = self._fresh(spec, info, _stamp_sec(msg.header.stamp), now)
+            if not fresh or not self._single_writer(spec, pubs, m["odom_topic"], now):
                 return
             t = msg.twist.twist
             core.on_odom(now, math.hypot(t.linear.x, t.linear.y), t.angular.z)
@@ -157,13 +184,15 @@ class TopicHeartbeat(Node):
 
         def on_cmd(msg, info) -> None:
             now = self._now()
-            if not self._fresh(spec, info, None, now):
+            fresh, notes["cmd"] = self._fresh(spec, info, None, now)
+            if not fresh:
                 return
-            core.on_cmd(now)
+            lin, ang = msg.linear, msg.angular
+            core.on_cmd(now, math.hypot(lin.x, lin.y, lin.z), math.hypot(ang.x, ang.y, ang.z))
             maybe_beat(now)
 
         self._subs.append(self.create_subscription(odom_cls, m["odom_topic"], on_odom, qos))
-        self._subs.append(self.create_subscription(cmd_cls, m["cmd_topic"], on_cmd, qos))
+        self._subs.append(self.create_subscription(cmd_cls, m["cmd_topic"], on_cmd, cmd_qos))
 
 
 def main(args=None) -> None:

@@ -1,4 +1,5 @@
-"""Static roster: robot keeps moving (odom) while the command source dies -> stop; robot halts -> recovery."""
+"""Static roster: robot keeps moving (odom) while the commander dies -> stop. The dead commander leaves a NON-ZERO held setpoint:
+the loop stays stopped even after the robot halts, until a command arrives again."""
 
 import os
 import signal
@@ -19,6 +20,8 @@ def generate_test_description():
 
 
 class TestCmdSourceKilled(n.NavCase):
+    PROBE_FEED = False  # the "cmd" fake is the only writer of cmd_vel_in, the topic the watch observes
+
     def test_moving_without_commands_stops(self):
         self.set_enable(True)
         self.wait_idle_run()  # moving, commands fresh
@@ -29,7 +32,11 @@ class TestCmdSourceKilled(n.NavCase):
         self.assert_blames("drive_supervision", t0)
         time.sleep(0.5)
         self.assertTrue(all(not nz for _, nz in self.cmds_since(t0 + lat)))
+        os.kill(self.pid("odom"), signal.SIGUSR2)  # the robot has stopped (odom now reads zero)
+        time.sleep(3.0)  # a non-zero setpoint is still held: no beat, whatever odom says
+        self.assertTrue(all(not nz for _, nz in self.cmds_since(t0 + lat)), "restarted without a command")
+        self.assertNotEqual(self.current_state(), "run")
         t1 = time.monotonic()
-        os.kill(self.pid("odom"), signal.SIGUSR2)  # the robot has stopped
+        self.spawn_fake("cmd", ("--value", "0.2"))  # a live commander again (enable topic is still on)
         self.wait_run(8.0)
-        self.wait_stack(lambda s: s["state"] == "healthy", 2.0, "healthy again", t1)
+        self.wait_stack(lambda s: s["state"] == "healthy", 3.0, "healthy again", t1)

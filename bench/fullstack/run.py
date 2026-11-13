@@ -37,6 +37,7 @@ import argparse
 import datetime as dt
 import glob
 import json
+import math
 import os
 import signal
 import subprocess
@@ -50,6 +51,8 @@ KIT_ROOT = os.path.dirname(BENCH)
 sys.path.insert(0, BENCH)
 sys.path.insert(0, HERE)
 import ohk_bench as b  # noqa: E402
+import faultcalc as fc  # noqa: E402  (fault-trial evaluation, ROS-free)
+import phases as ph  # noqa: E402  (goal/phase attribution of health events, ROS-free)
 import soak as s  # noqa: E402  (profiles, windows, shm helpers; the parent never imports rclpy)
 
 RES = os.environ.get("OHK_RESULTS_DIR") or ("/results" if os.path.isdir("/results") else os.path.join(KIT_ROOT, "results", "fullstack"))
@@ -181,6 +184,7 @@ def recorder_main(path):
     Same QoS as the stand-in's own subscription for the heartbeat (reliable, volatile, depth 1)."""
     import rclpy
     from geometry_msgs.msg import Twist
+    from nav_msgs.msg import Odometry
     from rclpy.node import Node
     from std_msgs.msg import String
 
@@ -192,8 +196,11 @@ def recorder_main(path):
     signal.signal(signal.SIGINT, lambda *_: stop.set())
     node = Node("ohk_fullstack_recorder")
     lock = threading.Lock()
-    d = {"hb_buckets": {}, "gaps": [], "states": [], "softs": [], "cmd_in": {}, "cmd_out": {}, "stack_n": 0}
-    last = {"hb": None}
+    events = os.environ.get("OHK_REC_EVENTS") == "1"  # faults mode: every cmd/stack message with its monotonic time
+    d = {"hb_buckets": {}, "gaps": [], "states": [], "softs": [], "cmd_in": {}, "cmd_out": {}, "stack_n": 0,
+         "faults": [], "ev_in": [], "ev_out": [], "ev_stack": [], "uncommanded": []}
+    unc = [None]  # open interval of motion (odom above drive_supervision's thresholds) without a command newer than 0.15 s
+    last = {"hb": None, "odom": None, "cmd": None, "cmd_nz": None, "stack_state": None, "ep": None}
     ring = []
 
     def on_hb(_m):
@@ -216,6 +223,28 @@ def recorder_main(path):
             ring.append((t, j))
             if len(ring) > 80:
                 del ring[:40]
+            st_ = j.get("state")
+            blamed = {k: list(j.get(k) or []) for k in ("missing_critical", "stale_critical", "unhealthy_critical")}
+            if events and (st_ != last["stack_state"] or (st_ == "fault" and blamed != last.get("blamed"))):
+                d["ev_stack"].append([t, st_, blamed])
+            last["blamed"] = blamed
+            last["stack_state"] = st_
+            ep = last["ep"]
+            if st_ == "fault":
+                if ep is None:
+                    o = last["odom"]
+                    ep = last["ep"] = {"t0": t, "t1": None, "blamed": {k: list(v) for k, v in blamed.items()}, "advisory": list(j.get("advisory_faults") or []),
+                                       "odom_v": None if o is None else round(o[1], 3), "odom_w": None if o is None else round(o[2], 3),
+                                       "odom_age_wall_s": None if o is None else round(t - o[0], 3),
+                                       "cmd_age_wall_s": None if last["cmd"] is None else round(t - last["cmd"], 3),
+                                       "last_cmd_nonzero": last["cmd_nz"]}
+                    d["faults"].append(ep)
+                else:
+                    for k, v in blamed.items():
+                        ep["blamed"][k] = sorted(set(ep["blamed"][k]) | set(v))
+            elif ep is not None:
+                ep["t1"] = t
+                last["ep"] = None
 
     def on_state(m):
         t = time.monotonic()
@@ -233,17 +262,41 @@ def recorder_main(path):
 
     def cmd_cb(key):
         def cb(m):
-            k = str(int(time.monotonic()))
+            t = time.monotonic()
+            k = str(int(t))
+            nz = m.linear.x != 0.0 or m.angular.z != 0.0
             with lock:
                 c = d[key].setdefault(k, [0, 0])
                 c[0] += 1
-                if m.linear.x != 0.0 or m.angular.z != 0.0:
+                if nz:
                     c[1] += 1
+                if key == "cmd_in":
+                    last["cmd"], last["cmd_nz"] = t, nz
+                if events:
+                    d["ev_in" if key == "cmd_in" else "ev_out"].append([t, nz])
         return cb
+
+    def on_odom(m):
+        v = m.twist.twist
+        t = time.monotonic()
+        with lock:
+            lin, ang = math.hypot(v.linear.x, v.linear.y), v.angular.z
+            last["odom"] = (t, lin, ang)
+            moving = lin >= 0.02 or abs(ang) >= 0.05
+            stale = last["cmd"] is None or t - last["cmd"] > 0.15
+            if moving and stale:
+                if unc[0] is None:
+                    unc[0] = {"t0": t, "t1": None, "last_cmd_nonzero": last["cmd_nz"], "last_cmd_age_at_start_s": None if last["cmd"] is None else round(t - last["cmd"], 3), "max_v": lin, "max_w": abs(ang)}
+                    d["uncommanded"].append(unc[0])
+                unc[0]["max_v"], unc[0]["max_w"] = max(unc[0]["max_v"], lin), max(unc[0]["max_w"], abs(ang))
+            elif unc[0] is not None:
+                unc[0]["t1"] = t
+                unc[0] = None
 
     node.create_subscription(String, "oomwoo/health/mcu_heartbeat", on_hb, mcu_heartbeat_qos())
     node.create_subscription(String, "oomwoo/health/stack", on_stack, latched_state_qos())
     node.create_subscription(String, "oomwoo/health/mcu_state", on_state, latched_state_qos())
+    node.create_subscription(Odometry, "odom", on_odom, 10)
     node.create_subscription(Twist, "cmd_vel", cmd_cb("cmd_in"), 10)
     node.create_subscription(Twist, "cmd_vel_gated", cmd_cb("cmd_out"), 10)
 
@@ -276,6 +329,162 @@ def _interp(pairs, t):
     return round(lo[1] + (hi[1] - lo[1]) * (t - lo[0]) / (hi[0] - lo[0]), 3)
 
 
+# --------------------------------------------------------------------------- fault injection helpers (faults mode)
+
+FAULTS = {  # name -> what is signalled; fragment = argv[0] of the target process
+    "sigstop_nav2": {"fragment": "/component_container", "sig": signal.SIGSTOP, "resume": signal.SIGCONT},
+    "sigkill_nav2": {"fragment": "/component_container", "sig": signal.SIGKILL},
+    "sigkill_slam": {"fragment": "/localization_slam_toolbox_node", "sig": signal.SIGKILL},
+    "sigkill_bridge": {"fragment": "/parameter_bridge", "sig": signal.SIGKILL},
+    "pause_gz": {"gz_pause": True},
+}
+
+
+def find_pid(fragment):
+    """First pid whose argv[0] contains fragment (the stack has one component container, one bridge, one slam node)."""
+    for pid in filter(str.isdigit, os.listdir("/proc")):
+        try:
+            argv = open(f"/proc/{pid}/cmdline", "rb").read().split(b"\0")
+        except OSError:
+            continue
+        if argv and fragment.encode() in argv[0] and int(pid) != os.getpid():
+            return int(pid), b" ".join(argv).decode(errors="replace")[:160]
+    return None, None
+
+
+def gz_pause(on):
+    r = subprocess.run(["gz", "service", "-s", "/world/default/control", "--reqtype", "gz.msgs.WorldControl", "--reptype",
+                        "gz.msgs.Boolean", "--timeout", "3000", "--req", f"pause: {'true' if on else 'false'}"],
+                       capture_output=True, text=True)
+    return (r.stdout + r.stderr).strip()
+
+
+class GzTruth:
+    """Ground truth from the simulator itself (`gz topic -e -t /odom`: physics pose and twist at 50 Hz), independent of the ROS
+    bridge, so it keeps reporting when the bridge is dead. Rows: (monotonic receive time, x, y, speed, |yaw rate|)."""
+
+    def __init__(self):
+        self.rows = []
+        self.proc = None
+
+    def start(self):
+        self.proc = subprocess.Popen(["gz", "topic", "-e", "-t", "/odom"], stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
+                                     text=True, bufsize=1, start_new_session=True, preexec_fn=b.die_with_parent)
+        threading.Thread(target=self._read, daemon=True).start()
+
+    def _read(self):
+        stack, cur = [], {}
+        for line in self.proc.stdout:
+            l = line.strip()
+            if l.endswith("{"):
+                stack.append(l[:-1].strip())
+            elif l == "}":
+                name = stack.pop() if stack else None
+                if not stack and name == "twist":
+                    self.rows.append((time.monotonic(), cur.get("pose/position/x", 0.0), cur.get("pose/position/y", 0.0),
+                                      math.hypot(cur.get("twist/linear/x", 0.0), cur.get("twist/linear/y", 0.0)),
+                                      abs(cur.get("twist/angular/z", 0.0))))
+                    cur = {}
+            elif ":" in l:
+                k, v = l.split(":", 1)
+                try:
+                    cur["/".join(stack) + "/" + k] = float(v)
+                except ValueError:
+                    pass
+
+    def last(self):
+        return self.rows[-1] if self.rows else None
+
+    def stop(self):
+        if self.proc and self.proc.poll() is None:
+            self.proc.kill()
+
+
+def fault_phase(spec, st, work, sim_now, recorder, rec_path, res, log, off, stop):
+    """One fault trial: drive, wait for steady driving, signal, hold, resume, observe, evaluate (faultcalc)."""
+    fault = FAULTS[spec["fault"]]
+    truth = GzTruth()
+    truth.start()
+    clock_s = []
+    done = threading.Event()
+
+    def sampler():
+        while not done.is_set():
+            clock_s.append((time.monotonic(), sim_now()))
+            done.wait(0.1)
+
+    threading.Thread(target=sampler, daemon=True).start()
+    goal_stop = threading.Event()
+    threading.Thread(target=lambda: work.run(None, should_stop=lambda: goal_stop.is_set() or stop.is_set()), daemon=True).start()
+    t_wait, since = time.monotonic(), None
+    steady = False
+    while not stop.is_set() and time.monotonic() - t_wait < 150.0:
+        last = truth.last()
+        ok = last is not None and time.monotonic() - last[0] < 0.2 and last[3] >= 0.12 and st["last_state"] == "run"
+        since = (since or time.monotonic()) if ok else None
+        if since and time.monotonic() - since >= 2.0:
+            steady = True
+            break
+        time.sleep(0.05)
+    res["steady_driving_reached"] = steady
+    res["steady_wait_wall_s"] = round(time.monotonic() - t_wait, 1)
+    if not steady:
+        goal_stop.set()
+        done.set()
+        truth.stop()
+        finish_recorder(recorder, rec_path)
+        return
+    pid, cmdline = (None, None) if fault.get("gz_pause") else find_pid(fault["fragment"])
+    res["target_pid"], res["target_cmdline"] = pid, cmdline
+    pre = truth.last()
+    res["pre_signal"] = {"standin_state": st["last_state"], "speed_mps": round(pre[3], 3), "x": round(pre[1], 3), "y": round(pre[2], 3),
+                         "goals_done": len(work.records), "stack": st["stack_last"] and st["stack_last"].get("state")}
+    t_sig, sim_sig = time.monotonic(), sim_now()
+    res["signal_wall"], res["signal_sim_s"] = iso(t_sig, off), round(sim_sig, 3)
+    t_cont = None
+    if fault.get("gz_pause"):
+        res["signal_reply"] = gz_pause(True)
+        res["signal"] = "gz world control pause: true"
+    elif pid:
+        os.kill(pid, fault["sig"])
+        res["signal"] = fault["sig"].name
+    else:
+        res["signal"] = "target process not found"
+    log(f"  fault {spec['fault']}: signalled pid {pid} at sim {sim_sig:.1f}")
+    hold = spec["hold_s"] if ("resume" in fault or fault.get("gz_pause")) else 0.0
+    if hold:
+        time.sleep(hold)
+        t_cont = time.monotonic()
+        if fault.get("gz_pause"):
+            res["resume_reply"] = gz_pause(False)
+        elif pid:
+            os.kill(pid, fault["resume"])
+        res["resume"] = "unpause" if fault.get("gz_pause") else fault["resume"].name
+        res["resume_after_s"] = round(t_cont - t_sig, 2)
+    end_wall = (t_cont or t_sig) + spec["observe_s"]
+    while time.monotonic() < end_wall and not stop.is_set():
+        time.sleep(0.2)
+    t_end = time.monotonic()
+    res["pid_alive_at_end"] = bool(pid) and os.path.exists(f"/proc/{pid}")
+    res["target_alive_again_any_pid"] = None if fault.get("gz_pause") else find_pid(fault["fragment"])[0]
+    ga = [{"idx": r["idx"], "result": r["result"], "t_end_rel_s": round(r["t1_mono"] - t_sig, 2)}
+          for r in work.records if r["t1_mono"] >= t_sig]
+    res["goals_after_signal_n"] = len(ga)
+    res["goals_after_signal_by_result"] = {k: sum(1 for g in ga if g["result"] == k) for k in {g["result"] for g in ga}}
+    res["goals_after_signal"] = ga[:8]  # a dead Nav2 makes the loop spin through aborted/rejected goals
+    goal_stop.set()
+    done.set()
+    rec = finish_recorder(recorder, rec_path)
+    truth.stop()
+    res["recorder_missing"] = rec is None
+    res["sim_clock_s_at_end"] = round(sim_now(), 3)
+    if rec is not None:
+        res.update(fc.evaluate(t_sig, t_cont, t_end, rec, list(truth.rows), clock_s))
+    res["hold_s"], res["observe_after_resume_s"] = spec["hold_s"], spec["observe_s"]
+    res["detected"] = res.get("standin_soft_stop_s") is not None
+    res["interrupted"] = stop.is_set()
+
+
 # --------------------------------------------------------------------------- worker (imports rclpy)
 
 def worker_main(spec_path):
@@ -297,6 +506,8 @@ def worker_main(spec_path):
     log = s.Logger(os.path.join(RES, "run.log"))
     off = time.time() - time.monotonic()
     rec_path = spec["result"] + ".recorder"
+    if spec.get("fault"):
+        os.environ["OHK_REC_EVENTS"] = "1"
     recorder = subprocess.Popen([sys.executable, "-u", os.path.abspath(__file__), "--recorder", rec_path], env=dict(os.environ),
                                 start_new_session=True, preexec_fn=b.die_with_parent)
 
@@ -330,7 +541,30 @@ def worker_main(spec_path):
                                                                    history=HistoryPolicy.KEEP_LAST, depth=1))
     node.create_subscription(String, "oomwoo/health/stack", on_stack, latched_state_qos())
     node.create_subscription(String, "oomwoo/health/mcu_state", on_state, latched_state_qos())
-    work = wl.Workload(node, sim_now=sim_now, log=lambda m: log("  " + m))
+    work = wl.Workload(node, sim_now=sim_now, log=lambda m: log("  " + m), mix=spec.get("workload") == "mix")
+    # Nav2 recovery actions (behavior_server): intervals in which any of them has an active goal (accepted/executing/canceling)
+    from action_msgs.msg import GoalStatusArray
+    from rclpy.qos import DurabilityPolicy
+    rec_active, recoveries = {}, []
+
+    def mk_status_cb(topic):
+        def cb(m):
+            t = time.monotonic()
+            act = any(g.status in (1, 2, 3) for g in m.status_list)
+            with lock:
+                was = any(rec_active.values())
+                rec_active[topic] = act
+                now_ = any(rec_active.values())
+                if now_ and not was:
+                    recoveries.append([t, None])
+                elif was and not now_ and recoveries and recoveries[-1][1] is None:
+                    recoveries[-1][1] = t
+        return cb
+
+    for a in ("spin", "backup", "wait", "drive_on_heading"):
+        node.create_subscription(GoalStatusArray, f"/{a}/_action/status", mk_status_cb(a),
+                                 QoSProfile(reliability=ReliabilityPolicy.RELIABLE, durability=DurabilityPolicy.TRANSIENT_LOCAL,
+                                            history=HistoryPolicy.KEEP_LAST, depth=1))
     tfbuf = tf2_ros.Buffer()
     tflist = tf2_ros.TransformListener(tfbuf, node)  # destroyed once localized: /tf is hot
     ex = SingleThreadedExecutor()
@@ -387,6 +621,12 @@ def worker_main(spec_path):
     except Exception:
         pass
     time.sleep(2.0)  # let the first goal start from a settled stack
+    if spec.get("fault"):
+        fault_phase(spec, st, work, sim_now, recorder, rec_path, res, log, off, stop)
+        json.dump(res, open(spec["result"], "w"))
+        if rclpy.ok():
+            rclpy.shutdown()
+        return
 
     # ---- verification of the transport profile in the processes that matter (environment as inherited)
     prof_env = {}
@@ -522,6 +762,43 @@ def worker_main(spec_path):
             res[name + "_msgs"] = sum(v[0] for k_, v in rec[key].items() if sec(k_))
             res[name + "_nonzero"] = sum(v[1] for k_, v in rec[key].items() if sec(k_))
         res["recorder_stack_msgs"] = rec["stack_n"]
+        # ---- attribution of aggregator faults and soft stops to goals and phases (host monotonic clock throughout)
+        gl = [dict(r) for r in recs if "t0_mono" in r]
+        for g in gl:
+            g["artificial_end"] = g["result"] == "canceled" and g.get("note") == "session ended"
+        with lock:
+            rcv = [(a, b_) for a, b_ in recoveries]
+        eps = [e for e in rec["faults"] if inw(e["t0"])]
+        softs_w = [e for e in rec["softs"] if inw(e["t"])]
+        events, tables = ph.summarize(gl, rcv, eps, softs_w)
+        for e in events:
+            e["wall"] = iso(e.pop("t_mono"), off)
+        un = [e for e in rec["uncommanded"] if inw(e["t0"])]
+        for e in un:
+            gi, phase, since, to_end = ph.classify(e["t0"], gl, rcv)
+            e.update(goal=None if gi is None else gl[gi]["idx"], phase=phase, to_goal_end_s=to_end,
+                     duration_s=None if e["t1"] is None else round(e["t1"] - e["t0"], 3))
+            e["wall"] = iso(e["t0"], off)
+            e.pop("t0"), e.pop("t1")
+        zero_sp = [e["duration_s"] for e in un if e["last_cmd_nonzero"] is False and e["duration_s"] is not None]
+        res["uncommanded_motion"] = {
+            "basis": "odom above (0.02 m/s, 0.05 rad/s) with no /cmd_vel newer than 0.15 s; last_cmd_nonzero False = the held setpoint was zero (coast-down), True = a non-zero setpoint was held",
+            "n": len(un), "n_zero_setpoint": len(zero_sp), "n_nonzero_setpoint": sum(1 for e in un if e["last_cmd_nonzero"]),
+            "zero_setpoint_duration_s_max": max(zero_sp, default=None),
+            "zero_setpoint_duration_s_p50": sorted(zero_sp)[len(zero_sp) // 2] if zero_sp else None,
+            "nonzero_setpoint_duration_s_max": max((e["duration_s"] or 0 for e in un if e["last_cmd_nonzero"]), default=None),
+            "events": un[:60]}
+        res["health_events"] = events
+        res["health_event_tables"] = tables
+        res["recovery_intervals_n"] = len(rcv)
+        res["recovery_wall_s"] = round(sum((b_ if b_ is not None else t1w) - a for a, b_ in rcv), 1)
+        res["phase_windows_s"] = {"start": ph.START_S, "end_head": ph.END_HEAD_S, "end_tail": ph.END_TAIL_S, "recovery_tail": ph.RECOVERY_TAIL_S}
+        for r in res["goals"]:  # per-goal counts next to the goal record
+            n_soft = sum(1 for e in events if e["kind"] == "soft_stop" and e["goal"] == r["idx"])
+            n_ep = sum(1 for e in events if e["kind"] == "fault_episode" and e["goal"] == r["idx"])
+            r["soft_stops"], r["fault_episodes"] = n_soft, n_ep
+            r.pop("t0_mono", None)
+            r.pop("t1_mono", None)
     res["standin_end_state"] = st["last_state"]
     res["last_stack"] = st["stack_last"]
     json.dump(res, open(spec["result"], "w"))
@@ -552,10 +829,19 @@ def session_record(args, k, profile, log, windows):
     rec = {"session": k, "profile": profile, "profile_file": prof_file, "profile_sha256": s.profile_sha256(profile),
            "discovery_range": s.DISCOVERY_RANGE[profile], "requested_rtf": args.rtf, "requested_duration_sim_s": args.duration_sim,
            "gpu": args.gpu, "health_sources": args.health_sources, "max_age_sec": args.max_age, "label": args.label,
+           "mode": "soak", "workload": args.workload, "health_clock": args.health_clock,
+           "health_clock_note": ("health nodes (aggregator, watcher, stand-in) on WALL time; header stamps are sim time so the watcher has "
+                                 "no stamp checks; stand-in/aggregator/heartbeat ages are wall seconds (= sim seconds at RTF 1.0)"
+                                 if args.health_clock == "wall" else
+                                 "health nodes on SIM time (/clock subscribed in each); ages are sim seconds; a frozen /clock freezes "
+                                 "the aggregator's staleness check"),
+           "watcher_config": ("config/nav_watch_sim.yaml + config/nav_rosters.yaml (static roster)" if args.health_sources == "watcher" else None),
            "domain_id": os.environ.get("ROS_DOMAIN_ID"), "instance": os.environ.get("OHK_INSTANCE"),
            "kit_commit": os.environ.get("OHK_KIT_COMMIT"), "aggregator_commit": os.environ.get("OHK_AGG_COMMIT"),
            "start": dt.datetime.now().astimezone().isoformat(timespec="seconds"), "valid": False,
            "timing_note": "sim = Gazebo /clock, wall = host monotonic; stand-in decides on wall clock (steady)"}
+    if args.health_sources == "watcher":
+        rec["max_age_sec"] = "per component from config/nav_rosters.yaml (the --max-age argument is ignored by the watcher)"
     reasons = []
     spec_path = f"/tmp/ohk_fs_spec_{k}.json"
     res_path = f"/tmp/ohk_fs_res_{k}.json"
@@ -586,14 +872,15 @@ def session_record(args, k, profile, log, windows):
         rec["env_at_launch"] = {k_: os.environ.get(k_) for k_ in ("ROS_DOMAIN_ID", "ROS_AUTOMATIC_DISCOVERY_RANGE",
                                 "FASTRTPS_DEFAULT_PROFILES_FILE", "GZ_PARTITION", "OHK_GPU", "NVIDIA_DRIVER_CAPABILITIES")}
         cmd = ["ros2", "launch", LAUNCH, f"gpu:={'true' if args.gpu else 'false'}", f"health_sources:={args.health_sources}",
-               f"max_age_sec:={args.max_age}", f"rate_hz:={args.rate_hz}", f"soft_stop_timeout_s:={args.soft_stop}"]
+               f"max_age_sec:={args.max_age}", f"rate_hz:={args.rate_hz}", f"soft_stop_timeout_s:={args.soft_stop}",
+               f"health_sim_time:={'true' if args.health_clock == 'sim' else 'false'}"]
         log(f"session {k}: profile {profile}, gpu {args.gpu}, duration {args.duration_sim} sim s, rtf {args.rtf}")
         progress("starting stack")
         t_launch = time.monotonic()
         stack = subprocess.Popen(cmd, stdout=stack_log, stderr=subprocess.STDOUT, start_new_session=True,
                                  preexec_fn=b.die_with_parent)
         spec = {"session": k, "profile": profile, "profile_file": prof_file or "", "duration_sim_s": args.duration_sim,
-                "rtf": args.rtf, "arm_timeout_s": ARM_TIMEOUT_S, "gpu": args.gpu, "result": res_path}
+                "rtf": args.rtf, "arm_timeout_s": ARM_TIMEOUT_S, "gpu": args.gpu, "result": res_path, "workload": args.workload}
         json.dump(spec, open(spec_path, "w"))
         worker = subprocess.Popen([sys.executable, "-u", os.path.abspath(__file__), "--worker", spec_path], env=dict(os.environ),
                                   start_new_session=True, preexec_fn=b.die_with_parent)
@@ -691,6 +978,104 @@ def session_record(args, k, profile, log, windows):
     return rec
 
 
+def trial_record(args, k, fault, rep, log, windows):
+    """One fault trial = one stack start (the fault usually destroys the stack): arm, drive, inject, observe, tear down."""
+    profile = args.profile.split(",")[0].strip()
+    prof_file = s.PROFILES[profile]
+    rec = {"mode": "faults", "trial": k, "fault": fault, "rep": rep, "profile": profile, "profile_file": prof_file,
+           "gpu": args.gpu, "health_sources": args.health_sources, "health_clock": args.health_clock, "label": args.label,
+           "requested_rtf": args.rtf, "domain_id": os.environ.get("ROS_DOMAIN_ID"), "instance": os.environ.get("OHK_INSTANCE"),
+           "kit_commit": os.environ.get("OHK_KIT_COMMIT"), "aggregator_commit": os.environ.get("OHK_AGG_COMMIT"),
+           "start": dt.datetime.now().astimezone().isoformat(timespec="seconds"), "valid": False,
+           "soft_stop_timeout_s": args.soft_stop, "workload": "plain",
+           "timing_note": "times *_s are seconds from the signal on the host monotonic clock (= sim seconds at RTF 1.0); sim_* fields are "
+                          "Gazebo /clock; ground truth is gz /odom (physics), not the ROS bridge"}
+    reasons = []
+    spec_path, res_path = f"/tmp/ohk_ft_spec_{k}.json", f"/tmp/ohk_ft_res_{k}.json"
+    if os.path.exists(res_path):
+        os.unlink(res_path)
+    stack = worker = None
+    stack_log = open(os.path.join(RES, f"stack_{k % 3}.log"), "w")
+    try:
+        kill_leftovers(log)
+        s.clean_shm(log)
+        s.apply_profile(profile)
+        os.environ["ROS_AUTOMATIC_DISCOVERY_RANGE"] = s.DISCOVERY_RANGE[profile]
+        if args.gpu:
+            os.environ["OHK_EGL_VENDOR_FILE"] = write_egl_vendor()
+            os.environ.pop("LIBGL_ALWAYS_SOFTWARE", None)
+            os.environ.pop("GALLIUM_DRIVER", None)
+        cmd = ["ros2", "launch", LAUNCH, f"gpu:={'true' if args.gpu else 'false'}", f"health_sources:={args.health_sources}",
+               f"max_age_sec:={args.max_age}", f"rate_hz:={args.rate_hz}", f"soft_stop_timeout_s:={args.soft_stop}",
+               f"health_sim_time:={'true' if args.health_clock == 'sim' else 'false'}"]
+        log(f"trial {k}: {fault} rep {rep}, profile {profile}")
+        t_launch = time.monotonic()
+        stack = subprocess.Popen(cmd, stdout=stack_log, stderr=subprocess.STDOUT, start_new_session=True, preexec_fn=b.die_with_parent)
+        spec = {"session": k, "profile": profile, "profile_file": prof_file or "", "duration_sim_s": 0, "rtf": args.rtf,
+                "arm_timeout_s": ARM_TIMEOUT_S, "gpu": args.gpu, "result": res_path, "workload": "plain", "fault": fault,
+                "hold_s": args.fault_hold, "observe_s": args.fault_observe}
+        json.dump(spec, open(spec_path, "w"))
+        worker = subprocess.Popen([sys.executable, "-u", os.path.abspath(__file__), "--worker", spec_path], env=dict(os.environ),
+                                  start_new_session=True, preexec_fn=b.die_with_parent)
+        budget = ARM_TIMEOUT_S + 150.0 + args.fault_hold + args.fault_observe + 120.0
+        while worker.poll() is None:
+            time.sleep(1.0)
+            if time.monotonic() - t_launch > budget:
+                reasons.append(f"wall budget {budget:.0f} s exceeded")
+                break
+            if windows.active_end(s.now()) is not None:
+                reasons.append("quiet window started during the trial")
+                break
+        if worker.poll() is None:
+            worker.send_signal(signal.SIGTERM)
+            try:
+                worker.wait(60)
+            except subprocess.TimeoutExpired:
+                worker.kill()
+    except s.CellInvalid as e:
+        reasons.append(str(e))
+    except Shutdown as e:
+        reasons.append(f"aborted by {e}")
+        rec["aborted"] = True
+        if worker and worker.poll() is None:
+            worker.send_signal(signal.SIGTERM)
+            try:
+                worker.wait(60)
+            except subprocess.TimeoutExpired:
+                worker.kill()
+    finally:
+        stop_stack(stack, log)
+        rec["leftover_after_stop"] = kill_leftovers(log)
+        s.clean_shm(log)
+        stack_log.close()
+    res = {}
+    if os.path.exists(res_path):
+        try:
+            res = json.load(open(res_path))
+        except ValueError:
+            reasons.append("worker result unreadable")
+    else:
+        reasons.append("worker wrote no result")
+    rec.update(res)
+    rec["end"] = dt.datetime.now().astimezone().isoformat(timespec="seconds")
+    checks = {"armed": bool(res.get("armed")), "steady_driving": bool(res.get("steady_driving_reached")),
+              "target_found": bool(res.get("target_pid")) or fault == "pause_gz",
+              "recorder_present": not res.get("recorder_missing", True),
+              "truth_stream_present": res.get("truth_msgs_after_signal") is not None and res.get("speed_at_signal_mps") is not None,
+              "no_interruption": not res.get("interrupted") and not rec.get("aborted")}
+    rec["checks"] = checks
+    bad = [n for n, ok in checks.items() if not ok]
+    if bad:
+        reasons.append("failed checks: " + ", ".join(bad))
+    rec["valid"] = not reasons
+    if reasons:
+        rec["invalid_reason"] = "; ".join(reasons)
+    log(f"trial {k} done: valid={rec['valid']} detected={rec.get('detected')} gated_zero={rec.get('gated_first_zero_s')} "
+        f"standstill={rec.get('standstill_s')} dist={rec.get('distance_to_standstill_m')} blamed={rec.get('blamed')} "
+        f"recovered={rec.get('recovered_by_itself')}" + ("" if rec["valid"] else f" INVALID: {rec['invalid_reason']}"))
+    return rec
+
+
 def stop_stack(stack, log):
     if stack is not None and stack.poll() is None:
         try:
@@ -724,6 +1109,34 @@ def parent_main(args):
     log(f"run.py start: profiles {profiles}, sessions {args.sessions or 'endless'}, duration {args.duration_sim} sim s, rtf {args.rtf}, "
         f"gpu {args.gpu}, resources {RES}")
     k = 0
+    if args.mode == "faults":
+        names = [f.strip() for f in args.faults.split(",") if f.strip()]
+        for f in names:
+            if f not in FAULTS:
+                raise SystemExit(f"unknown fault {f!r}; known: {', '.join(FAULTS)}")
+        out_path = os.path.join(RES, "faults.jsonl")
+        log(f"run.py faults: {names} x {args.reps}, hold {args.fault_hold} s, observe {args.fault_observe} s, resources {RES}")
+        try:
+            for rep in range(1, args.reps + 1):
+                for f in names:
+                    k += 1
+                    while windows.active_end(s.now()) is not None:
+                        time.sleep(30.0)
+                    rec = trial_record(args, k, f, rep, log, windows)
+                    with open(out_path, "a") as fh:
+                        fh.write(json.dumps(rec) + "\n")
+                        fh.flush()
+                        os.fsync(fh.fileno())
+                    if rec.get("aborted"):
+                        raise Shutdown("abort")
+        except Shutdown as e:
+            log(f"run.py stopping: {e}")
+        finally:
+            kill_leftovers(log)
+            write_json_atomic(os.path.join(RES, "progress.json"), {"phase": "idle", "trials_done": k,
+                              "updated": dt.datetime.now().astimezone().isoformat(timespec="seconds")})
+            log("run.py exit")
+        return
     try:
         while not args.sessions or k < args.sessions:
             est = 120.0 + ARM_TIMEOUT_S * 0.5 + args.duration_sim / max(args.rtf, 0.05) * 1.1 + 60.0
@@ -764,12 +1177,22 @@ def main():
     if len(sys.argv) == 3 and sys.argv[1] == "--recorder":
         return recorder_main(sys.argv[2])
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0], formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--mode", default="soak", choices=["soak", "faults"],
+                    help="soak: sessions.jsonl (default); faults: one stack per trial, faults.jsonl (see --faults, --reps)")
+    ap.add_argument("--faults", default=",".join(FAULTS), help="faults mode: comma list of " + ", ".join(FAULTS))
+    ap.add_argument("--reps", type=int, default=5, help="faults mode: repetitions of each fault (default 5)")
+    ap.add_argument("--fault-hold", type=float, default=5.0, help="faults mode: seconds between SIGSTOP/pause and SIGCONT/unpause (default 5)")
+    ap.add_argument("--fault-observe", type=float, default=25.0, help="faults mode: observation seconds after the resume (kills: after the signal)")
     ap.add_argument("--duration-sim", type=float, default=300.0, help="sim seconds of workload per session (default 300)")
+    ap.add_argument("--workload", default="plain", choices=["plain", "mix"],
+                    help="plain: 8-pose goal loop; mix: 12-goal cycle with test cancels and an unplannable goal (recoveries)")
     ap.add_argument("--rtf", type=float, default=1.0, help="Gazebo real_time_factor (default 1.0; anything else makes timing_valid false)")
     ap.add_argument("--profile", default="default", help="comma list cycled per session: " + ", ".join(s.PROFILES))
     ap.add_argument("--sessions", type=int, default=1, help="number of sessions, 0 = until stopped (default 1)")
     ap.add_argument("--gpu", action="store_true", help="render on the GPU (container must be `sim.sh up N --gpu`)")
     ap.add_argument("--health-sources", default="fake", choices=["fake", "watcher"])
+    ap.add_argument("--health-clock", default="wall", choices=["wall", "sim"],
+                    help="clock of the health nodes (aggregator, watcher, stand-in sources): wall (default, see docs/SPEC.md M6c) or sim")
     ap.add_argument("--max-age", type=float, default=0.15, help="roster max_age_sec for the health components (default 0.15)")
     ap.add_argument("--rate-hz", type=float, default=20.0, help="fake component beat rate (default 20)")
     ap.add_argument("--soft-stop", type=float, default=0.15, help="stand-in soft stop timeout s (default 0.15)")

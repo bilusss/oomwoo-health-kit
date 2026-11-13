@@ -99,6 +99,7 @@ class Probe(RclNode):
         self.comp_details = []  # (monotonic_t, component_id, detail)
         self.comp_stamps = []  # (monotonic_t, component_id, stamp_sec)
         self.mcu_hbs = []  # (monotonic_t, dict) aggregate MCU heartbeats from the aggregator
+        self.feed = True  # False: the probe publishes no command (a test's own commander feeds cmd_vel_in)
         self._pub = self.create_publisher(Twist, "cmd_vel_in", 10)
         self.create_subscription(Twist, "cmd_vel", self._on_cmd, 10)
         self.create_subscription(String, "oomwoo/health/mcu_state", self._on_state, latched_state_qos())
@@ -116,6 +117,8 @@ class Probe(RclNode):
             self.mcu_hbs.append((time.monotonic(), d))
 
     def _tick(self):
+        if not self.feed:
+            return
         m = Twist()
         m.linear.x = 0.2
         self._pub.publish(m)

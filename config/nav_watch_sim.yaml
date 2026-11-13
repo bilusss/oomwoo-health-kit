@@ -1,0 +1,58 @@
+# Watches for the FULL SIM STACK of bench/fullstack (M6c): oomwoo_one, living_room, Nav2 composed container, slam_toolbox
+# localization, one ros_gz_bridge process, MCU stand-in on the last cmd_vel hop. Roster: config/nav_rosters.yaml (static).
+# Every row below was checked on the live graph (ros2 topic info -v, probe_rates.py, RTF 1.0, 2026-11-13); numbers in
+# results/fullstack/1/rates_*.json. Differences to nav_watch.yaml:
+#  - the watcher runs on WALL time (health_sim_time:=false: Gazebo's 1000 Hz /clock costs ~0.2 core per Python node and a frozen
+#    sim clock would freeze the aggregator's staleness check too). Header stamps are SIM time, so NO stamp_max_age_s here:
+#    freshness comes from the receive side (queue-age check on the publisher's source timestamp, strictly-newer tf stamps).
+#  - localization uses only distinct-newer map->odom stamps (slam_toolbox republishes the same stamp at 50 Hz; the stamp moves 5 Hz).
+# Measured (wall = sim at RTF 1.0), driving / stationary:
+#   /scan 5.00 / 4.8-4.9 Hz, max gap 206 ms, 1 writer (ros_gz_bridge, RELIABLE)       -> max_age 0.6
+#   /odom 49.97 / 47.7-48.5 Hz, max gap 25 ms, 1 writer (ros_gz_bridge)                -> max_age 0.15
+#   map->odom new stamps 4.99 / 4.8 Hz, max gap 220 ms; /pose 1.4 Hz moving, 0 stationary (NOT usable) -> max_age 0.6
+#   /cmd_vel (stand-in input) 20 Hz while a goal is active, 1 writer now (collision_monitor)
+#   local/global published_footprint 5.0 Hz both, 1 writer each                         -> max_age 0.6
+# (The stationary rates are slightly below nominal only because the phase timer includes the transition seconds.)
+watches:
+  - component_id: lidar
+    topic: /scan
+    type: sensor_msgs/msg/LaserScan
+
+  - component_id: odom
+    topic: /odom
+    type: nav_msgs/msg/Odometry
+    max_emit_hz: 50
+
+  - component_id: localization
+    tf: {parent: map, child: odom}      # no writer guard on tf watches: a second writer of the pair is not detected
+    max_emit_hz: 10
+
+  # cmd_topic = what the stand-in receives (cmd_vel_in remapped to /cmd_vel): the last hop before the gate, any writer counts
+  # (max_publishers is not applied to it). Today only collision_monitor writes it; /cmd_vel_nav has 6 writers (controller_server,
+  # 5x behavior_server), /cmd_vel_smoothed 1: neither is the last hop.
+  # Drive supervision (default critical). Tracks the SETPOINT the MCU holds (last value on cmd_topic). Beats only if a command
+  # newer than cmd_max_age_s exists, or the held setpoint is zero (or none was ever seen) and odom has been below the
+  # thresholds for settle_s, or less than coast_max_s passed since the setpoint became zero (coasting). A non-zero held setpoint
+  # with no fresh command never beats whatever odom says (held creep command, stalled wheels with live odometry).
+  # cmd_topic must be the topic the MCU stand-in receives (the last hop; any writer counts, max_publishers is not applied).
+  # Proves: some fresh command exists whenever a non-zero setpoint is held, and the robot is not moving without a setpoint.
+  # Does NOT prove the command is right, or that the wheels follow it (odom here is ground truth in the sim).
+  - component_id: drive_supervision
+    max_emit_hz: 25
+    motion_consistency:
+      odom_topic: /odom
+      cmd_topic: /cmd_vel
+      linear_threshold: 0.02
+      angular_threshold: 0.05
+      cmd_max_age_s: 0.15
+      odom_max_age_s: 0.3
+      settle_s: 0.1                     # odom below the thresholds this long = settled (zero or unknown setpoint)
+      coast_max_s: 0.5                  # zero setpoint: odom may stay above the thresholds this long. Data: Nav2 flows had 0 uncommanded motion in 104 goals; Gazebo coast after a zero command about 0.12 s (5 trials)
+
+  - component_id: local_costmap
+    topic: /local_costmap/published_footprint
+    type: geometry_msgs/msg/PolygonStamped
+
+  - component_id: global_costmap
+    topic: /global_costmap/published_footprint
+    type: geometry_msgs/msg/PolygonStamped

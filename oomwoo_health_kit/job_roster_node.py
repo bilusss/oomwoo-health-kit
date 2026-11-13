@@ -9,8 +9,10 @@ Plumbing liveness: with a dynamic source the node also publishes component ``job
 Its work cycle is the re-validation done on every poll tick (20 ms): the state source is still readable (every status
 topic has a publisher), the posted roster is the one for the committed state. A beat (10 Hz) is level ``ok`` only when
 that validation passes, otherwise ``degraded``. A dead or wedged node stops beating, so the aggregator stops the robot
-after max_age + stand-in soft stop. This proves the node's loop runs and its source exists, not that the job state is
-right.
+after max_age + stand-in soft stop. This proves the node's loop runs and that the status topics still have a MATCHED publisher
+endpoint, not that the job state is right and not that the action server is alive: a SIGKILLed action server stays matched
+until its DDS lease expires (about 20 s with Fast DDS defaults) and a SIGSTOPped one stays matched indefinitely. What limits the
+damage of a dead or frozen Nav2 is drive_supervision (motion without a fresh command), not this check.
 """
 
 import json

@@ -14,6 +14,7 @@ from typing import Any, Iterable
 # action_msgs/GoalStatus: ACCEPTED, EXECUTING, CANCELING are the active states.
 ACTIVE_GOAL_STATUSES = frozenset({1, 2, 3})
 DEFAULT_DEBOUNCE_S = 0.3
+BACKWARD_JUMP_S = 0.25
 DEFAULT_JOB_STATE_TOPIC = "oomwoo/health/job_state"
 DEFAULT_SETTLE_S = 3.0
 DEFAULT_PLUMBING_MAX_AGE_S = 0.5
@@ -28,17 +29,36 @@ def any_active(statuses: Iterable[int]) -> bool:
 class Debouncer:
     """Stricter targets commit at once; a relaxation commits after being wanted continuously for ``hold_s``.
 
-    ``ranks`` maps state -> strictness (higher is stricter). Equal ranks count as not relaxing.
+    ``ranks`` maps state -> strictness (higher is stricter). Equal ranks count as not relaxing. A clock that jumps backwards
+    (between two calls) drops any pending relaxation and commits the strictest state: elapsed time can no longer be trusted.
     """
 
     def __init__(self, initial: str, hold_s: float, ranks: dict[str, float]) -> None:
         self.committed = initial
         self._hold = hold_s
         self._ranks = dict(ranks)
+        self._strictest = max(self._ranks, key=lambda k: self._ranks[k])
         self._pending: tuple[str, float] | None = None
+        self._last: float | None = None
+
+    def _jumped_back(self, now: float) -> bool:
+        # observe() and poll() are called with times taken a few ms apart (message callback vs timer): only a step back of more
+        # than BACKWARD_JUMP_S counts as a clock jump
+        back = self._last is not None and now < self._last - BACKWARD_JUMP_S
+        self._last = now
+        return back
+
+    def _to_strictest(self) -> str | None:
+        self._pending = None
+        if self.committed == self._strictest:
+            return None
+        self.committed = self._strictest
+        return self.committed
 
     def observe(self, now: float, desired: str) -> str | None:
         """Newly committed state if a stricter (or equal-rank) one was observed, else None."""
+        if self._jumped_back(now):
+            return self._to_strictest()
         if desired == self.committed:
             self._pending = None
             return None
@@ -50,11 +70,13 @@ class Debouncer:
         return None
 
     def poll(self, now: float) -> str | None:
-        """The newly committed relaxation, or None."""
+        """The newly committed relaxation (or, after a backward clock jump, the strictest state), or None."""
+        if self._jumped_back(now):
+            return self._to_strictest()
         if self._pending is None:
             return None
         state, since = self._pending
-        if now - since >= self._hold or now < since:
+        if now - since >= self._hold:
             self.committed, self._pending = state, None
             return state
         return None

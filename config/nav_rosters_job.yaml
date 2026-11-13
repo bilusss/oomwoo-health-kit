@@ -28,20 +28,20 @@ rosters:
     components:
       - {component_id: lidar,             critical: true,  max_age_sec: 0.6}
       - {component_id: odom,              critical: true,  max_age_sec: 0.15}
-      - {component_id: localization,      critical: true,  max_age_sec: 1.0}
+      - {component_id: localization,      critical: true,  max_age_sec: 0.6}   # map->odom new stamps 5 Hz measured (driving and stationary), 3 periods
       - {component_id: drive_supervision, critical: true,  max_age_sec: 0.15}
       - {component_id: drive_path,        critical: false, max_age_sec: 0.15}   # /cmd_vel_smoothed 20 Hz
       - {component_id: controller,        critical: false, max_age_sec: 0.6}    # /cmd_vel_nav 5 Hz
-      - {component_id: local_costmap,     critical: false, max_age_sec: 0.6}
-      - {component_id: global_costmap,    critical: false, max_age_sec: 1.5}
+      - {component_id: local_costmap,     critical: true,  max_age_sec: 0.6}
+      - {component_id: global_costmap,    critical: false, max_age_sec: 0.6}   # 5 Hz measured (the 2 Hz in M6_RECON was wrong)
   driving:
     task_id: nav
     components:
       - {component_id: lidar,             critical: true,  max_age_sec: 0.6}
       - {component_id: odom,              critical: true,  max_age_sec: 0.15}
-      - {component_id: localization,      critical: true,  max_age_sec: 1.0}
+      - {component_id: localization,      critical: true,  max_age_sec: 0.6}   # map->odom new stamps 5 Hz measured (driving and stationary), 3 periods
       - {component_id: drive_supervision, critical: true,  max_age_sec: 0.15}
       - {component_id: drive_path,        critical: true,  max_age_sec: 0.15}
       - {component_id: controller,        critical: true,  max_age_sec: 0.6}
-      - {component_id: local_costmap,     critical: false, max_age_sec: 0.6}
-      - {component_id: global_costmap,    critical: false, max_age_sec: 1.5}
+      - {component_id: local_costmap,     critical: true,  max_age_sec: 0.6}
+      - {component_id: global_costmap,    critical: false, max_age_sec: 0.6}   # 5 Hz measured (the 2 Hz in M6_RECON was wrong)

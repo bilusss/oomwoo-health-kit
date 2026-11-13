@@ -93,70 +93,152 @@ def mc(**kw):
     return MotionConsistency(**kw)
 
 
-def test_motion_stationary_is_ok_without_commands():
+def quiet(m, t0, t1, lin=0.0, ang=0.0, hz=50):
+    """odom samples at hz from t0 to t1 (inclusive)"""
+    n = int(round((t1 - t0) * hz))
+    for i in range(n + 1):
+        m.on_odom(t0 + i / hz, lin, ang)
+
+
+def test_motion_no_command_ever_needs_settle_time():
     m = mc()
     m.on_odom(1.0, 0.0, 0.0)
-    assert m.ok(1.0)[0]
-    m.on_odom(1.1, 0.019, 0.049)  # below both thresholds
-    assert m.ok(1.1)[0]
+    assert not m.ok(1.0)[0]  # just started being quiet
+    quiet(m, 1.0, 1.1)
+    assert m.ok(1.1)[0]  # settle_s 0.1 reached
+    m.on_odom(1.11, 0.019, 0.049)  # still below both thresholds
+    assert m.ok(1.11)[0]
 
 
-def test_motion_moving_with_fresh_command_is_ok():
+def test_motion_no_command_ever_and_moving_is_not_ok():
+    m = mc()
+    quiet(m, 1.0, 1.5, lin=0.2)
+    ok, detail = m.ok(1.5)
+    assert not ok and "moving" in detail
+
+
+def test_motion_fresh_command_beats_whatever_odom_says():
     m = mc()
     m.on_odom(1.0, 0.2, 0.0)
-    m.on_cmd(0.9)
+    m.on_cmd(0.9, 0.2)
     assert m.ok(1.0)[0]
-    m.on_odom(1.05, 0.0, 0.3)  # rotating counts as moving
+    m.on_odom(1.05, 0.0, 0.3)  # rotating counts as moving, command is fresh
     assert m.ok(1.05)[0]
+    m2 = mc()
+    m2.on_odom(1.0, 0.0, 0.0)  # odom reads zero but a fresh command is there (robot about to move)
+    m2.on_cmd(1.0, 0.2)
+    assert m2.ok(1.0)[0]
 
 
-def test_motion_moving_with_stale_or_no_command_is_not_ok():
+def test_motion_nonzero_setpoint_without_fresh_command_never_beats():
     m = mc()
+    m.on_cmd(0.8, 0.2)  # last command 0.2 s old > 0.15
     m.on_odom(1.0, 0.2, 0.0)
     ok, detail = m.ok(1.0)
-    assert not ok and "without a command" in detail
-    m.on_cmd(0.8)
-    assert not m.ok(1.0)[0]  # 0.2 s old > 0.15
-    m.on_cmd(0.85)
+    assert not ok and "non-zero setpoint" in detail
+    m.on_cmd(0.85, 0.2)
     assert m.ok(1.0)[0]  # exactly at the limit
+
+
+def test_motion_creep_command_below_odom_threshold_dies_with_commander():
+    m = mc()
+    m.on_cmd(1.0, 0.015)  # held creep command, below the 0.02 m/s odom threshold
+    quiet(m, 1.0, 5.0, lin=0.015)  # odometry below the threshold the whole time
+    assert not m.ok(5.0)[0]
+    assert not m.ok(60.0)[0]
+
+
+def test_motion_odom_reads_zero_with_nonzero_setpoint():
+    m = mc()
+    m.on_cmd(1.0, 0.2)
+    quiet(m, 1.0, 3.0)  # stalled wheels / frozen encoder: alive odometry reads zero
+    assert not m.ok(3.0)[0]
+    m.on_cmd(3.0, 0.2)
+    assert m.ok(3.0)[0]  # a live commander is accepted
+    assert not m.ok(3.2)[0]  # and the stop follows within cmd_max_age
+
+
+def test_motion_zero_setpoint_coast_window():
+    m = mc(coast_max_s=1.0)
+    m.on_cmd(10.0, 0.2)
+    quiet(m, 10.0, 10.1, lin=0.2)
+    m.on_cmd(10.1, 0.0)  # setpoint becomes zero while the robot still moves; commands are silent from now on
+    quiet(m, 10.1, 10.3, lin=0.2)
+    assert m.ok(10.3)[0]  # 0.2 s after the zero: inside the coast window (command also still fresh until 10.25)
+    quiet(m, 10.3, 11.0, lin=0.2)
+    assert m.ok(11.0)[0]  # 0.9 s after the zero
+    quiet(m, 11.0, 11.2, lin=0.2)
+    assert not m.ok(11.2)[0]  # window expired (1.1 s) and still moving
+    quiet(m, 11.2, 11.3)  # finally quiet
+    assert not m.ok(11.2)[0] and not m.ok(11.25)[0] and m.ok(11.3)[0]  # settle_s again
+    # the coast window applies to a zero setpoint only
+    m.on_cmd(11.3, 0.1)
+    quiet(m, 11.3, 11.8, lin=0.1)
+    assert not m.ok(11.8)[0]
+
+
+def test_motion_zero_setpoint_stationary_after_commands_stay_healthy():
+    m = mc()
+    m.on_cmd(1.0, 0.0)
+    quiet(m, 1.0, 20.0)
+    assert m.ok(20.0)[0]  # idle for a long time
+
+
+def test_motion_zero_command_streams_do_not_extend_the_coast_window():
+    m = mc(coast_max_s=1.0)
+    m.on_cmd(1.0, 0.0)
+    quiet(m, 1.0, 2.5, lin=0.2)
+    for t in (1.2, 1.4, 1.6):
+        m.on_cmd(t, 0.0)  # repeated zeros, the setpoint "became zero" at 1.0
+    assert not m.ok(2.5)[0]
 
 
 def test_motion_thresholds():
     m = mc(linear_threshold=0.1, angular_threshold=0.5)
-    m.on_odom(1.0, 0.09, 0.4)
-    assert m.ok(1.0)[0]
-    m.on_odom(1.0, 0.11, 0.0)
-    assert not m.ok(1.0)[0]
-    m.on_odom(1.0, 0.0, -0.6)
-    assert not m.ok(1.0)[0]  # sign does not matter
+    quiet(m, 1.0, 1.2, lin=0.09, ang=0.4)
+    assert m.ok(1.2)[0]
+    m = mc(linear_threshold=0.1, angular_threshold=0.5)
+    quiet(m, 1.0, 1.2, lin=0.11)
+    assert not m.ok(1.2)[0]
+    m = mc(linear_threshold=0.1, angular_threshold=0.5)
+    quiet(m, 1.0, 1.2, ang=-0.6)
+    assert not m.ok(1.2)[0]  # sign does not matter
 
 
 def test_motion_odom_stale_or_missing_is_not_ok():
     m = mc(odom_max_age_s=0.3)
     assert not m.ok(1.0)[0]
-    m.on_odom(1.0, 0.0, 0.0)
+    quiet(m, 0.8, 1.0)
     assert m.ok(1.3)[0]
     ok, detail = m.ok(1.31)
     assert not ok and "stale" in detail
-    m.on_cmd(1.3)
+    m.on_cmd(1.3, 0.2)
     assert not m.ok(1.31)[0]  # a command cannot make up for missing odometry
 
 
 def test_motion_non_finite_values_are_not_ok():
     for bad in (float("nan"), float("inf"), float("-inf")):
         m = mc()
-        m.on_cmd(1.0)
+        m.on_cmd(1.0, 0.2)
         m.on_odom(1.0, bad, 0.0)
         assert not m.ok(1.0)[0]
         m.on_odom(1.0, 0.0, bad)
         assert not m.ok(1.0)[0]
+        # a non-finite command is a non-zero setpoint and not a fresh command
+        m = mc()
+        quiet(m, 0.0, 1.0)
+        assert m.ok(1.0)[0]
+        m.on_cmd(1.0, bad, 0.0)
+        assert not m.ok(1.0)[0]
+        m.on_cmd(1.0, 0.0, bad)
+        assert not m.ok(1.01)[0]
     m = mc()
-    m.on_odom(1.0, 0.0, 0.0)
+    quiet(m, 0.0, 1.0)
     assert not m.ok(float("nan"))[0]
 
 
 def test_motion_rejects_bad_parameters():
-    for kw in ({"linear_threshold": 0}, {"cmd_max_age_s": -1}, {"odom_max_age_s": float("nan")}):
+    for kw in ({"linear_threshold": 0}, {"cmd_max_age_s": -1}, {"odom_max_age_s": float("nan")}, {"settle_s": 0}, {"coast_max_s": float("inf")}):
         with pytest.raises(ValueError):
             mc(**kw)
 

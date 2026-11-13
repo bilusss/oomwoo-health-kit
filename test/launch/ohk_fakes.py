@@ -3,7 +3,8 @@
 One process per publisher so each can be SIGSTOPped or SIGKILLed on its own.
     ohk_fakes.py --kind {scan,odom,twist,tf,polygon} --topic T --hz H [--enable-topic E] [--vx V] [--lag-s L] [--stale-s S]
 SIGUSR1 toggles a stale header stamp (now - S) on scan/odom/polygon messages; SIGUSR2 toggles odom motion off/on.
---enable-topic (std_msgs/String "on"/"off", transient-local): a twist publishes only while "on"; odom reports linear
+--enable-topic (std_msgs/String "on"/"off", transient-local): a twist publishes only while "on" (linear.x = --value) and sends ONE
+zero Twist when switched off after having been on (like Nav2 ending a command stream with a zero); odom reports linear
 velocity V while "on" and for --lag-s after "off" (the robot coasting), 0 otherwise. Without it odom reports V always.
 """
 
@@ -55,6 +56,8 @@ class Fake(Node):
         on = m.data == "on"
         if self.enabled and not on:
             self.off_at = time.monotonic()
+            if self.a.kind == "twist":
+                self.pub.publish(Twist())
         self.enabled = on
 
     def _moving(self) -> bool:
@@ -76,7 +79,7 @@ class Fake(Node):
             return
         if k == "twist":
             m = Twist()
-            m.linear.x = 0.2
+            m.linear.x = self.a.value
         elif k == "tf":
             tr = TransformStamped()
             tr.header.stamp = self.get_clock().now().to_msg()
@@ -104,6 +107,7 @@ def main() -> None:
     p.add_argument("--hz", type=float, required=True)
     p.add_argument("--enable-topic", default=None)
     p.add_argument("--vx", type=float, default=0.0)
+    p.add_argument("--value", type=float, default=0.2, help="twist: linear.x while enabled")
     p.add_argument("--lag-s", type=float, default=0.1)
     p.add_argument("--stale-s", type=float, default=2.0)
     a, _ = p.parse_known_args()

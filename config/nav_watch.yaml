@@ -9,7 +9,7 @@
 # component_id must match nav_rosters.yaml / nav_rosters_job.yaml.
 #
 # max_age_sec is in the roster. Rule: about 3 heartbeat periods (period = max(source period, 1/max_emit_hz)):
-# scan 5 Hz -> 0.6 s; footprints 5 Hz / 2 Hz -> 0.6 s / 1.5 s; drive path 20 Hz -> 0.15 s.
+# scan 5 Hz -> 0.6 s; footprints 5 Hz (both, measured M6c) -> 0.6 s; drive path 20 Hz -> 0.15 s.
 # odom is 50 Hz and is NOT limited below its rate (max_emit_hz 50, period 0.02 s): max_age 0.15 s is then 7 periods,
 # three aggregator ticks (50 ms) of margin; at the old 20 Hz limit it was 3 periods and tripped under load.
 watches:
@@ -24,17 +24,19 @@ watches:
     max_emit_hz: 50
     stamp_max_age_s: 0.5
 
-  - component_id: localization          # map->odom on /tf (slam_toolbox or AMCL). Rate NOT measured in M6_RECON
-    tf: {parent: map, child: odom}      # (only /pose 1.6 Hz while moving, silent idle), so its max_age is a guess.
+  - component_id: localization          # map->odom on /tf (slam_toolbox or AMCL). Measured M6c with slam_toolbox: new stamp 5 Hz
+    tf: {parent: map, child: odom}      # moving AND stationary (/pose is silent idle), stamp ~0.19 s ahead of sim now: no stamp_max_age_s.
     max_emit_hz: 10                     # /tf has several writers by design; the (parent, child) pair is the filter,
-                                        # max_publishers is not applied to tf watches.
+                                        # max_publishers is not applied to tf watches
+                                        # (tf watches have NO writer guard: a second or surviving writer of the pair is not seen).
 
-  # Drive supervision, the default critical drive-chain component. Heartbeat only while the robot is stationary
-  # (odom twist below the thresholds) or a command newer than cmd_max_age_s was seen on cmd_topic. A robot that moves
-  # without a fresh command gives no heartbeat. cmd_topic is the command input of the MCU stand-in (remap
-  # cmd_vel_in:=/cmd_vel), where any writer's command counts, so max_publishers is not applied to it.
-  # Tune the thresholds to the robot's coast-down: motion that outlasts the last command by more than cmd_max_age_s
-  # is reported as a fault.
+  # Drive supervision (default critical). Tracks the SETPOINT the MCU holds (last value on cmd_topic). Beats only if a command
+  # newer than cmd_max_age_s exists, or the held setpoint is zero (or none was ever seen) and odom has been below the
+  # thresholds for settle_s, or less than coast_max_s passed since the setpoint became zero (coasting). A non-zero held setpoint
+  # with no fresh command never beats whatever odom says (held creep command, stalled wheels with live odometry).
+  # cmd_topic must be the topic the MCU stand-in receives (the last hop; any writer counts, max_publishers is not applied).
+  # Proves: some fresh command exists whenever a non-zero setpoint is held, and the robot is not moving without a setpoint.
+  # Does NOT prove the command is right, or that the wheels follow it (odom here is ground truth in the sim).
   - component_id: drive_supervision
     max_emit_hz: 25
     motion_consistency:
@@ -44,6 +46,8 @@ watches:
       angular_threshold: 0.05           # rad/s
       cmd_max_age_s: 0.15
       odom_max_age_s: 0.3
+      settle_s: 0.1                     # odom below the thresholds this long = settled (zero or unknown setpoint)
+      coast_max_s: 1.0                  # zero setpoint: odom may stay above the thresholds this long (coast-down)
 
   # The next two are only used by the optional job-following roster (nav_rosters_job.yaml).
   - component_id: drive_path            # velocity_smoother /cmd_vel_smoothed, 20 Hz while it gets input, single writer.
@@ -60,6 +64,6 @@ watches:
     topic: /local_costmap/published_footprint
     type: geometry_msgs/msg/PolygonStamped
 
-  - component_id: global_costmap        # /global_costmap/published_footprint, 2 Hz
+  - component_id: global_costmap        # /global_costmap/published_footprint, 5 Hz measured (M6_RECON said 2 Hz)
     topic: /global_costmap/published_footprint
     type: geometry_msgs/msg/PolygonStamped
