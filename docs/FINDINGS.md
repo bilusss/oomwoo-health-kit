@@ -1,3 +1,95 @@
+# M6 (2026-11-13 and 14): the health loop on the real simulation stack
+
+Raw data: `results/fullstack/` (`soak_long_2026-11-13_kit8d7211e.jsonl`, `soak_long2_2026-11-14_kit35f0bba.jsonl`,
+`_m6c_fix2_faults`, `_m6c_fix2_item6`, earlier passes in the other `_*` directories). How to run: `bench/fullstack/README.md`.
+Design and limits: `docs/SPEC.md`, sections M6a and M6c. Everything above this section used fake components; this
+section is the first with real nodes.
+
+Setup: Gazebo (living_room world, lidar and odometry, software rendering) + Nav2 + slam_toolbox localization from the
+`makerspet/oomwoo:jazzy-dev` image, real-time factor 1.0, one x86 PC, up to four instances in parallel containers.
+The aggregator (`b2b9796`) is fed by the kit's topic watcher, which turns activity on real output topics into
+component heartbeats, with a static roster. The MCU stand-in (150 ms soft stop) gates `cmd_vel` on the hop before
+`ros_gz_bridge`. Health nodes run on wall time, so header-stamp checks are off.
+
+## Rates measured on the running stack, and the roster used
+| Component | Signal watched | Writers | Rate driving | max_age_sec | Class |
+|---|---|---|---|---|---|
+| lidar | `/scan` | 1 | 5.0 Hz | 0.6 | critical |
+| odom | `/odom` | 1 | 50 Hz | 0.15 | critical |
+| localization | new `map`->`odom` stamps on `/tf` | not guarded | 5.0 Hz | 0.6 | critical |
+| drive_supervision | `/cmd_vel` (stand-in input) + `/odom` | 1 | 20 Hz | 0.15 | critical |
+| local_costmap | published footprint | 1 | 5 Hz | 0.6 | critical |
+| global_costmap | published footprint | 1 | 5 Hz | 0.6 | advisory |
+
+- Only the drive path fits the 20 Hz / 0.15 s draft values; the 5 Hz sources need about 0.6 s.
+- slam_toolbox `/pose` is 1.4 Hz moving and silent when stationary, so it cannot serve as a liveness signal.
+- `drive_supervision` beats only on a fresh non-zero command, or when the last command was zero and odometry has
+  settled (or a short coast window is still open). A non-zero held setpoint without a fresh command never beats.
+  This supervises motion whatever node commands it, without a job-following roster. A job-following roster was
+  also built and measured against fake Nav2-like timing: it stopped the robot twice per goal (0.6-0.8 s each),
+  because the aggregator restarts arming on a roster change; it stays optional.
+
+## Navigation without faults
+- Goal accounting on the fixed code (4 sessions of 700 sim s): 228 NavigateToPose goals (148 succeeded, 36 cancelled
+  mid-drive, 20 cancelled early, 4 cut by session end, 20 unplannable with no motion) plus 20 direct spin / backup /
+  wait actions: 0 stand-in soft stops and 0 periods in which the aggregator withheld the heartbeat, in every phase.
+  An earlier pass on the previous rule gave the same result over 220 goals, 20 unplannable goals and 20 probes.
+- Soak 1 (kit `8d7211e`), 40 valid one-hour sessions, 20 sim hours per profile:
+
+| Fast DDS profile | Goals | Distance | Soft stops | Heartbeat gaps > 0.2 s |
+|---|---|---|---|---|
+| default | 6276 | 10.8 km | 1 | 1 |
+| shm_hc60 | 6279 | 10.8 km | 0 | 0 |
+
+  The soft stop (and one more in a session cut short when the soak was stopped) came 1-2 s into a session's first
+  goal: the aggregator reported `drive_supervision` stale for one or two ticks (and `odom` once), the recorder saw a
+  400 ms heartbeat gap, and the stand-in was back in RUN after about 0.35 s. Host load average was about 19 on 12
+  threads. Cause not determined; both were on the same instance.
+- Soak 2 (kit `35f0bba`, profiles swapped between instances), 14 valid one-hour sessions per profile:
+
+| Fast DDS profile | Goals succeeded / cancelled / aborted | Distance | Soft stops | Withheld-heartbeat periods | Gaps > 0.2 s |
+|---|---|---|---|---|---|
+| default | 3048 / 1024 / 336 | 7.56 km | 0 | 0 | 0 |
+| shm_hc60 | 3045 / 1024 / 336 | 7.56 km | 0 | 0 | 0 |
+
+  The stand-in's own soft-stop counter agrees (delta 0 in every session). One 20 ms interval was recorded in which
+  the robot turned on a non-zero setpoint whose last command was 156 ms old, just past the 150 ms window, without
+  a stop following; host load average reached 23, so the margins here are thin under this load.
+- Together: 68 sim hours, about 21,300 goals, about 36.7 km, 1 soft stop in valid sessions. That is not "no false
+  stops": the one that occurred is unexplained, and four instances overload this PC (RTF stayed at 0.997-0.998).
+
+## Faults injected into real processes (kit `8d7211e` plus the fixes, 5 trials each, robot driving, seconds from the signal)
+| Fault | Zero command at the gate | Standstill | Distance | Components blamed | Recovers by itself |
+|---|---|---|---|---|---|
+| SIGKILL aggregator | 0.11-0.15 | 0.23-0.26 | 0.03-0.04 m | none (stand-in timeout) | no |
+| SIGKILL topic watcher | 0.25-0.29 | 0.37-0.40 | 0.06 m | all | no |
+| SIGSTOP Nav2 for 5 s | 0.37-0.41 | 0.48-0.51 | 0.08-0.09 m | drive_supervision, local_costmap | 4 of 5 within 7.7-8.3 s of SIGCONT |
+| SIGKILL Nav2 | 0.35-0.41 | 0.46-0.53 | 0.08-0.09 m | drive_supervision, local_costmap | no |
+| SIGKILL slam_toolbox | 0.51-0.71 | 0.61-0.83 | 0.11-0.15 m | localization, local_costmap | no |
+| Gazebo paused for 5 s | 0.14-0.27 | (physics frozen) | n/a | drive_supervision, lidar, localization, odom | yes, 0.8-9 s after unpause |
+| SIGKILL ros_gz_bridge | 0.24-0.28 | see below | see below | drive_supervision, lidar, localization, odom | no |
+
+- Bridge kill is a simulation artefact, not a stopping result. The gate sits before `ros_gz_bridge`, the only path to
+  the simulated motors: the loop detected the kill in 0.24-0.28 s but could not deliver the zero, and the simulated
+  base kept its last command for 12.6-15.0 s and 1.7-2.1 m, ending 0.12 m from a wall in 5 of 5 trials (contact
+  inferred from pose and map, not recorded). On the robot the MCU is the last hop; loss of the link to the MCU was
+  not tested.
+- One SIGSTOP trial did not recover within 25 s; cause not determined.
+- Nav2 runs as one composed process, so these are process faults, not per-node faults.
+- After a writer is SIGKILLed and respawned, the dead DDS participant still counts as a second writer for its lease:
+  the watcher's single-writer guard then withholds the heartbeat for about 20 s (one run). Fail-safe, but a long stop.
+
+## What these results do not show
+- Nothing about hardware, AMCL, docking, cleaning jobs, behaviour-tree-triggered recoveries, RTF other than 1.0,
+  health nodes on sim time, or header-stamp checks.
+- A watcher proves that a node produces output, not that the output is right. The local-costmap watch stayed alive
+  with `/scan` dead: it shows the update loop runs, not that obstacle data is fresh. `/tf` watches have no writer guard.
+- `drive_supervision` does not catch motion that contradicts a live command, motion below its thresholds on a zero
+  setpoint, or odometry that is alive and wrong while commands are fresh. It relies on the MCU never restoring an
+  old setpoint after a soft stop.
+- The 0.5 s coast window is justified only for this simulation at 0.2 m/s (measured coast 0.11-0.12 s).
+- Five trials per fault and single runs elsewhere; no confidence intervals.
+
 > Note, 2026-11-10: the M3 measurements further down were taken with the earlier stand-in settings (0.2 s soft stop,
 > 2.0 s CPU reset). The kit now uses 0.15 s / 300 s, following the firmware bring-up policy
 > (makerspet/oomwoo-firmware#1); those are experimental simulation settings, not a recommendation. The M3 numbers are
