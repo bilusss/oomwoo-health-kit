@@ -194,29 +194,35 @@ Nothing here has run on hardware, with AMCL, docking, or any other job than the 
   + soft stop 0.15 + stand-in tick 0.01, the tests add 0.1 s margin.
 - Tests l-t (`test/launch`, fakes in `ohk_fakes.py`); results JSON holds the measured values.
 
-## M6c (as built, 2026-11-13): watcher + static roster on Gazebo/Nav2/slam_toolbox
-All numbers: RTF 1.0, software GL, 1-4 containers in parallel, single runs unless a count is given. Results in `results/fullstack/`.
+## M6c (as built, 2026-11-13, fixed 2026-11-14): watcher + static roster on Gazebo/Nav2/slam_toolbox
+RTF 1.0, software GL, 1-4 containers in parallel, single runs unless counted. Results in `results/fullstack/` (first pass kit 8d7211e in `_m6c_first_pass_*`). New-code sessions are labelled `8d7211e-dirty` (uncommitted fixes).
 - `health_sources:=watcher` = `job_roster` (static, `config/nav_rosters.yaml`) + `topic_heartbeat` (`config/nav_watch_sim.yaml`). Verified graph:
-  /scan 5.0 Hz, /odom 50 Hz, map->odom 5 Hz distinct stamps (slam_toolbox republishes the stamp at 50 Hz, stamp ~0.19 s AHEAD of sim now;
-  /pose is silent when stationary), costmap footprints 5 Hz (both; M6_RECON's 2 Hz was wrong), all single writer, same driving/stationary.
-  One ros_gz_bridge process carries /scan, /odom, /tf, /clock, /joint_states and takes cmd_vel_gated. /cmd_vel (stand-in input) has one
-  writer here (collision_monitor), /cmd_vel_nav six. drive_supervision watches /cmd_vel: any fresh command counts, it proves that a
-  fresh command exists while a setpoint is held or the robot moves, not that it is correct. max_age: lidar 0.6, odom 0.15,
-  localization 0.6 (measured max gap 0.22 s), drive_supervision 0.15, local_costmap 0.6 (critical: the collision monitor is
-  disabled in this stack, the local costmap is the only obstacle protection), global_costmap 0.6 (advisory).
-- Clock: health nodes (aggregator, watcher, stand-in) on WALL time (`--health-clock wall`, recorded as `health_clock`). The aggregator compares
-  heartbeat stamps with its own clock, so all must share one; sim time costs (1 run, 3 containers) topic_heartbeat 0.50 + health_monitor
-  0.32 + stand-in 0.31 + job_roster 0.23 core vs 0.17 + 0.04 + small on wall, and a frozen /clock freezes the aggregator's
-  staleness check. Consequence: header stamps (sim) are not checked (no `stamp_max_age_s`); freshness is receive-side (source timestamp
-  age, strictly newer tf stamps). Source timestamps are non-zero wall-clock for all watched topics (bridge, Nav2, slam_toolbox).
-- Goal start/end (new rule, final config, 260 goals incl. ~64 cancelled and 20 spin/backup/wait probes: 0 per goal): 0 aggregator faults,
-  0 soft stops in every phase. Motion without a command newer than 0.15 s: 0 events (Nav2 keeps commanding until the robot is below
-  0.02 m/s); Gazebo coast after a zero command about 0.12 s, hence `coast_max_s` 0.5 in the sim config. An unplannable goal aborts in
-  0.01 s and starts no BT recovery; recoveries were exercised by direct spin/backup/wait actions, not BT-triggered. Pre-fix (old
-  stationary rule) 104 goals also gave 0.
-- Faults (5 each, `faults.jsonl`): SIGSTOP Nav2 container 5 s, SIGKILL Nav2, SIGKILL slam, SIGKILL the bridge, Gazebo pause 5 s. Zero gated
-  command 0.22-0.72 s after the signal, standstill 0.46-0.84 s (0.08-0.15 m), except the bridge: the dead last hop cannot stop the robot, it
-  drove 1.7-2.1 m for 12-13 s until it stopped on its own (health loop and stand-in did their part at 0.22-0.28 s). A dead commander's
-  non-zero setpoint keeps the stack stopped until a command arrives (SIGKILL cases never recover; SIGSTOP/pause recover ~8 s after resume).
-- N4: SIGKILL + instant respawn of the bridge keeps the guard (2 writers) down 20.0-20.5 s (DDS lease), stand-in RUN again at 20.8 s;
-  fail-safe, no mitigation in rclpy. Not measured: other jobs, AMCL, hardware, runs over 15 min, GPU.
+  /scan 5.0 Hz, /odom 50 Hz, map->odom 5 Hz distinct stamps (the stamp is republished at 50 Hz, ~0.19 s ahead of sim now; /pose is silent
+  when stationary), costmap footprints 5 Hz, all single writer, same driving and stationary. One ros_gz_bridge process carries /scan, /odom, /tf, /clock
+  and takes cmd_vel_gated. drive_supervision watches /cmd_vel (stand-in input, 1 writer: collision_monitor; /cmd_vel_nav has 6): a fresh NON-ZERO command, or a
+  zero setpoint with odom settled / inside `coast_max_s`; zero commands give no freshness credit and do not extend the coast window (it starts when the setpoint
+  first becomes zero, cleared by a non-zero command); a queued-too-long command still updates the held setpoint. max_age: lidar 0.6, odom 0.15, localization 0.6,
+  drive_supervision 0.15, local_costmap 0.6 (critical), global_costmap 0.6 (advisory).
+- Clock: health nodes on WALL time (aggregator compares heartbeat stamps with its own clock; sim time cost 1.3 core vs 0.3, one run; a frozen /clock would freeze the
+  staleness check). Header-stamp checks are therefore OFF (stamps are sim time); freshness is receive-side (source timestamp age, strictly newer tf stamps).
+- Limits of the watches: local_costmap's footprint shows that its update loop runs, not that obstacle data is fresh (it stayed alive with /scan dead). The "no command
+  ever seen" branch is safe only because the stand-in never restores an old setpoint after a soft stop; firmware must match. coast_max_s 0.5 is justified only for this
+  sim at 0.2 m/s (Nav2 flows: no uncommanded motion; Gazebo coast after a zero command ~0.12 s).
+- Goal accounting, first pass (kit cc5691e-dirty, 260 = 220 NavigateToPose: 156 succeeded, 60 cancelled mid-drive, 4 cut by session end; 20 unplannable; 20 direct recovery
+  probes; 104 of them with coast_max_s 1.0): 0 episodes, 0 soft stops. New code (8d7211e-dirty, 4 sessions x 700 sim s, 228 NavigateToPose: 148 succeeded, 36 cancelled mid-drive,
+  20 cancelled early (1 s), 4 cut by session end, 20 unplannable (aborted in 0.01 s, no motion); plus 20 spin/backup/wait probes, not BT-triggered): 0 non-emitting episodes,
+  0 soft stops in any phase, stand-in counter delta 0, aggregator healthy_for_sec 710 s at the end of every session.
+- Faults, 5 each (`faults.jsonl`; seconds from the signal): zero gated command / standstill / distance. SIGSTOP Nav2 5 s: 0.37-0.41 / 0.48-0.51 / 0.08-0.09 m, blamed
+  drive_supervision + local_costmap, 4/5 recovered 7.7-8.3 s after SIGCONT (1/5 did not within 25 s: local_costmap went stale again; cause not determined). SIGKILL Nav2:
+  0.35-0.41 / 0.46-0.53 / 0.08-0.09 m, no recovery. SIGKILL slam: 0.51-0.71 / 0.61-0.83 / 0.11-0.15 m (localization, local_costmap). SIGKILL watcher: 0.25-0.29 / 0.37-0.40 /
+  0.06 m (all components stale). SIGKILL aggregator: 0.11-0.15 / 0.23-0.26 / 0.03-0.04 m (no stack message; the stand-in's own timeout). Gazebo pause 5 s: fault instant = last
+  advance of /clock; aggregator fault 0.04-0.17 s, zero gated 0.14-0.27 s; physics is frozen so standstill is not a stopping measure; commands resumed 0.8-9.0 s after unpause.
+- SIGKILL of ros_gz_bridge: the gate sits before the bridge, the only path to the simulated motors. The loop detected the kill (fault 0.13-0.17 s, zero command 0.24-0.28 s) but could
+  not deliver the zero; the diff-drive kept its last velocity for 12-15 s (1.7-2.1 m). In 5/5 it ended at x=-2.276, heading pi, 0.12 m from the first occupied cell of the west wall,
+  speed decaying over ~1 s: consistent with wall contact (inferred from pose and map; contact sensors not recorded). Not stopping performance. On the robot the MCU is the last hop;
+  loss of the link to the MCU was not tested.
+- N4: SIGKILL + instant respawn of the bridge keeps the writer guard down 20.0-20.5 s (DDS lease), stand-in RUN again at 20.8 s; fail-safe, no mitigation in rclpy.
+- Overnight soak (44 sessions, kit 8d7211e): 40 valid; the 4 invalid are session 11 of each instance, aborted by the SIGTERM that stopped the soak ("failed checks" are consequences). Two
+  default-profile soft stops (instance 2, sessions 9 and 11), each 1-2 s into the first goal of the session, host load average ~19 on 12 threads: aggregator stale drive_supervision
+  (+odom), 400 ms heartbeat gap, stand-in back in RUN in 0.35 s. Cause (starved watcher process) not determined.
+- Not measured: other jobs, AMCL, hardware, GPU, BT-triggered recoveries, runs over 1 h per session on the fixed code.

@@ -108,7 +108,7 @@ class MotionConsistency:
     """Heartbeat condition for drive supervision. Tracks the setpoint the MCU holds (the last value seen on the command topic).
 
     Beat (healthy) only if
-      (a) a command newer than ``cmd_max_age_s`` exists (the commander is alive: a fresh command of any value), OR
+      (a) a NON-ZERO command newer than ``cmd_max_age_s`` exists (the commander is alive; zero commands give no credit), OR
       (b) the held setpoint is zero, or no command was ever seen, AND (odometry below the thresholds continuously for
           ``settle_s`` OR, with a zero setpoint, less than ``coast_max_s`` since the setpoint became zero: the robot may still be
           coasting down).
@@ -145,16 +145,26 @@ class MotionConsistency:
         else:
             self._quiet_since = None
 
-    def on_cmd(self, now: float, linear: float = 1.0, angular: float = 0.0) -> None:
-        """Called for every message on the command topic with its linear speed and yaw rate (defaults: some non-zero command)."""
+    def on_cmd(self, now: float, linear: float = 1.0, angular: float = 0.0, fresh: bool = True) -> None:
+        """Called for every message on the command topic with its linear speed and yaw rate (defaults: some non-zero command).
+
+        Only a NON-ZERO command is a sign of a live commander (``fresh``): a zero command sets the held setpoint to zero and only
+        starts the settle/coast branch (the coast window starts when the setpoint first becomes zero and is cleared by a non-zero
+        command; repeated zeros do not extend it). ``fresh=False`` (the message waited too long in the subscription queue) still
+        updates the held setpoint, so it matches what the MCU stand-in forwarded, but gives no freshness credit.
+        """
         if not (math.isfinite(now) and math.isfinite(linear) and math.isfinite(angular)):
             self._cmd_t, self._held_zero, self._zero_since = None, False, None
             return
-        self._cmd_t = now
         zero = abs(linear) <= 1e-9 and abs(angular) <= 1e-9
-        if zero and self._held_zero is not True:
-            self._zero_since = now
-        self._held_zero = zero
+        if zero:
+            if self._held_zero is not True:
+                self._zero_since = now
+            self._held_zero = True
+        else:
+            self._held_zero, self._zero_since = False, None
+            if fresh:
+                self._cmd_t = now
 
     def ok(self, now: float) -> tuple[bool, str]:
         if self._odom_t is None or not math.isfinite(now):

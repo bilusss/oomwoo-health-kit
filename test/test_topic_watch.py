@@ -323,3 +323,49 @@ def test_parse_max_publishers_and_motion():
     assert a.max_publishers == 1 and b.max_publishers == 6
     (m,) = parse_watches(doc({"component_id": "m", "motion_consistency": {"odom_topic": "/o", "cmd_topic": "/c"}}))
     assert m.is_motion and m.motion["cmd_max_age_s"] == 0.15 and m.msg_type == "nav_msgs/msg/Odometry"
+
+
+def test_motion_stream_of_zero_commands_gives_no_credit_while_moving():
+    m = mc(coast_max_s=1.0)
+    m.on_cmd(10.0, 0.2)
+    t = 10.0
+    while t < 12.0:  # zeros every 50 ms while odometry keeps reporting motion
+        t = round(t + 0.05, 3)
+        m.on_odom(t, 0.2, 0.0)
+        m.on_cmd(t, 0.0, 0.0)
+        if t > 10.2 and t < 11.0:
+            assert m.ok(t)[0], t  # inside the coast window (started at 10.05)
+    m.on_odom(12.0, 0.2, 0.0)
+    m.on_cmd(12.0, 0.0, 0.0)
+    assert not m.ok(12.0)[0]  # fresh zero commands do not keep it alive past coast_max_s
+
+
+def test_motion_repeated_zeros_do_not_restart_the_coast_window():
+    m = mc(coast_max_s=1.0)
+    m.on_cmd(1.0, 0.0)
+    for t in (1.3, 1.6, 1.9, 2.2):
+        m.on_cmd(t, 0.0)
+    m.on_odom(2.2, 0.2, 0.0)
+    assert not m.ok(2.2)[0]  # window started at 1.0, expired at 2.0
+    m.on_cmd(2.3, 0.1)  # a non-zero command clears the window ...
+    m.on_cmd(2.4, 0.0)  # ... and the next zero starts a new one
+    m.on_odom(2.5, 0.2, 0.0)
+    assert m.ok(2.5)[0]
+    m.on_odom(3.5, 0.2, 0.0)
+    assert not m.ok(3.5)[0]
+
+
+def test_motion_queue_stale_command_updates_the_setpoint_without_credit():
+    m = mc()
+    quiet(m, 0.0, 1.0)
+    assert m.ok(1.0)[0]
+    m.on_cmd(1.0, 0.2, 0.0, fresh=False)  # waited in the queue: the stand-in forwarded it, the setpoint is non-zero
+    ok, detail = m.ok(1.0)
+    assert not ok and "non-zero setpoint" in detail
+    m.on_cmd(1.0, 0.2, 0.0)
+    assert m.ok(1.0)[0]  # a fresh one gives credit
+    m = mc()
+    m.on_cmd(1.0, 0.2)
+    m.on_cmd(1.5, 0.0, 0.0, fresh=False)  # a stale zero makes the held setpoint zero
+    quiet(m, 1.5, 1.7)
+    assert m.ok(1.7)[0]

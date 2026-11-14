@@ -189,6 +189,7 @@ def recorder_main(path):
     from std_msgs.msg import String
 
     from oomwoo_health_kit.qos import latched_state_qos, mcu_heartbeat_qos
+    from rclpy.qos import DurabilityPolicy, HistoryPolicy, QoSProfile, ReliabilityPolicy
 
     stop = threading.Event()
     rclpy.init()  # rclpy installs its own SIGINT/SIGTERM handlers; ours must come after
@@ -230,16 +231,19 @@ def recorder_main(path):
             last["blamed"] = blamed
             last["stack_state"] = st_
             ep = last["ep"]
-            if st_ == "fault":
+            # an episode = a period in which the aggregator does not emit the MCU heartbeat (fault, arming, no_roster, ...)
+            if j.get("emit_mcu_heartbeat") is not True:
                 if ep is None:
                     o = last["odom"]
-                    ep = last["ep"] = {"t0": t, "t1": None, "blamed": {k: list(v) for k, v in blamed.items()}, "advisory": list(j.get("advisory_faults") or []),
+                    ep = last["ep"] = {"t0": t, "t1": None, "states": [st_], "blamed": {k: list(v) for k, v in blamed.items()}, "advisory": list(j.get("advisory_faults") or []),
                                        "odom_v": None if o is None else round(o[1], 3), "odom_w": None if o is None else round(o[2], 3),
                                        "odom_age_wall_s": None if o is None else round(t - o[0], 3),
                                        "cmd_age_wall_s": None if last["cmd"] is None else round(t - last["cmd"], 3),
                                        "last_cmd_nonzero": last["cmd_nz"]}
                     d["faults"].append(ep)
                 else:
+                    if st_ not in ep["states"]:
+                        ep["states"].append(st_)
                     for k, v in blamed.items():
                         ep["blamed"][k] = sorted(set(ep["blamed"][k]) | set(v))
             elif ep is not None:
@@ -294,8 +298,10 @@ def recorder_main(path):
                 unc[0] = None
 
     node.create_subscription(String, "oomwoo/health/mcu_heartbeat", on_hb, mcu_heartbeat_qos())
-    node.create_subscription(String, "oomwoo/health/stack", on_stack, latched_state_qos())
-    node.create_subscription(String, "oomwoo/health/mcu_state", on_state, latched_state_qos())
+    # every message, not the latest: the aggregator publishes every 50 ms and an episode can last one tick
+    deep = QoSProfile(reliability=ReliabilityPolicy.RELIABLE, durability=DurabilityPolicy.VOLATILE, history=HistoryPolicy.KEEP_LAST, depth=500)
+    node.create_subscription(String, "oomwoo/health/stack", on_stack, deep)
+    node.create_subscription(String, "oomwoo/health/mcu_state", on_state, deep)
     node.create_subscription(Odometry, "odom", on_odom, 10)
     node.create_subscription(Twist, "cmd_vel", cmd_cb("cmd_in"), 10)
     node.create_subscription(Twist, "cmd_vel_gated", cmd_cb("cmd_out"), 10)
@@ -337,6 +343,8 @@ FAULTS = {  # name -> what is signalled; fragment = argv[0] of the target proces
     "sigkill_slam": {"fragment": "/localization_slam_toolbox_node", "sig": signal.SIGKILL},
     "sigkill_bridge": {"fragment": "/parameter_bridge", "sig": signal.SIGKILL},
     "pause_gz": {"gz_pause": True},
+    "sigkill_watcher": {"fragment": "/topic_heartbeat", "sig": signal.SIGKILL},
+    "sigkill_aggregator": {"fragment": "/health_monitor_node", "sig": signal.SIGKILL},
 }
 
 
@@ -347,7 +355,7 @@ def find_pid(fragment):
             argv = open(f"/proc/{pid}/cmdline", "rb").read().split(b"\0")
         except OSError:
             continue
-        if argv and fragment.encode() in argv[0] and int(pid) != os.getpid():
+        if argv and fragment.encode() in b" ".join(argv[:2]) and int(pid) != os.getpid():
             return int(pid), b" ".join(argv).decode(errors="replace")[:160]
     return None, None
 
@@ -383,7 +391,8 @@ class GzTruth:
                 if not stack and name == "twist":
                     self.rows.append((time.monotonic(), cur.get("pose/position/x", 0.0), cur.get("pose/position/y", 0.0),
                                       math.hypot(cur.get("twist/linear/x", 0.0), cur.get("twist/linear/y", 0.0)),
-                                      abs(cur.get("twist/angular/z", 0.0))))
+                                      abs(cur.get("twist/angular/z", 0.0)),
+                                      2.0 * math.atan2(cur.get("pose/orientation/z", 0.0), cur.get("pose/orientation/w", 1.0))))
                     cur = {}
             elif ":" in l:
                 k, v = l.split(":", 1)
@@ -445,6 +454,16 @@ def fault_phase(spec, st, work, sim_now, recorder, rec_path, res, log, off, stop
     if fault.get("gz_pause"):
         res["signal_reply"] = gz_pause(True)
         res["signal"] = "gz world control pause: true"
+        t_call = time.monotonic()
+        while time.monotonic() - st["clock_t"] < 0.1 and time.monotonic() - t_call < 3.0:
+            time.sleep(0.005)  # /clock advances 1 ms per message: 100 ms without an advance = stalled
+        if time.monotonic() - st["clock_t"] >= 0.1:
+            # fault instant = arrival of the last /clock message before the stall, not the CLI call
+            res["signal_cli_call_to_instant_s"] = round(st["clock_t"] - t_sig, 3)
+            t_sig = st["clock_t"]
+            res["signal_instant_basis"] = "last advance of the /clock value before the stall"
+        else:
+            res["signal_instant_basis"] = "clock never stalled (CLI call time used)"
     elif pid:
         os.kill(pid, fault["sig"])
         res["signal"] = fault["sig"].name
@@ -480,6 +499,8 @@ def fault_phase(spec, st, work, sim_now, recorder, rec_path, res, log, off, stop
     res["sim_clock_s_at_end"] = round(sim_now(), 3)
     if rec is not None:
         res.update(fc.evaluate(t_sig, t_cont, t_end, rec, list(truth.rows), clock_s))
+    res["truth_track"] = [[round(r[0] - t_sig, 2), round(r[1], 3), round(r[2], 3), round(r[3], 3), round(r[4], 3), round(r[5], 3)]
+                          for i, r in enumerate(truth.rows) if r[0] >= t_sig - 1.0 and i % 12 == 0]
     res["hold_s"], res["observe_after_resume_s"] = spec["hold_s"], spec["observe_s"]
     res["detected"] = res.get("standin_soft_stop_s") is not None
     res["interrupted"] = stop.is_set()
@@ -517,13 +538,16 @@ def worker_main(spec_path):
     # Wall-clock node; sim time comes from one explicit /clock subscription (cheaper than use_sim_time + a TF listener).
     node = Node("ohk_fullstack_probe")
     lock = threading.Lock()
-    st = {"clock": 0.0, "last_state": None, "stack_last": None}
+    st = {"clock": 0.0, "clock_t": 0.0, "last_state": None, "stack_last": None, "soft_stops": None, "resets": None}
 
     def sim_now():
         return st["clock"]
 
     def on_clock(m):
-        st["clock"] = m.clock.sec + m.clock.nanosec / 1e9
+        v = m.clock.sec + m.clock.nanosec / 1e9
+        if v > st["clock"]:
+            st["clock_t"] = time.monotonic()  # when the sim clock VALUE last advanced (a paused Gazebo may keep publishing /clock)
+        st["clock"] = v
 
     def on_stack(m):
         try:
@@ -533,7 +557,9 @@ def worker_main(spec_path):
 
     def on_state(m):
         try:
-            st["last_state"] = json.loads(m.data).get("state")
+            j = json.loads(m.data)
+            st["last_state"] = j.get("state")
+            st["soft_stops"], st["resets"] = j.get("soft_stops"), j.get("resets")  # stand-in's own cumulative counters
         except ValueError:
             pass
 
@@ -656,6 +682,7 @@ def worker_main(spec_path):
     cpu0, host0, proc0 = cgroup_cpu_s(), host_cpu_busy_s(), proc_cpu_by_comm()
     d0 = work.odo.distance()
     t0w, t0s = time.monotonic(), sim_now()
+    res["standin_soft_stops_at_start"] = st["soft_stops"]
     res["window_start_wall"] = iso(t0w, off)
     res["window_start_sim_s"] = round(t0s, 3)
     res["gpu_at_start"] = gpu_snapshot() if spec["gpu"] else None
@@ -694,6 +721,10 @@ def worker_main(spec_path):
     rec = finish_recorder(recorder, rec_path)
     wall, sim = t1w - t0w, t1s - t0s
     res["interrupted"] = stop.is_set()
+    res["standin_soft_stops_at_end"] = st["soft_stops"]
+    res["standin_soft_stops_delta"] = (None if st["soft_stops"] is None or res.get("standin_soft_stops_at_start") is None
+                                       else st["soft_stops"] - res["standin_soft_stops_at_start"])
+    res["aggregator_at_end"] = {k: (st["stack_last"] or {}).get(k) for k in ("state", "healthy_for_sec", "emit_mcu_heartbeat")}
     res["window_end_wall"] = iso(t1w, off)
     res["wall_s"] = round(wall, 2)
     res["sim_s"] = round(sim, 2)
@@ -770,7 +801,7 @@ def worker_main(spec_path):
             rcv = [(a, b_) for a, b_ in recoveries]
         eps = [e for e in rec["faults"] if inw(e["t0"])]
         softs_w = [e for e in rec["softs"] if inw(e["t"])]
-        events, tables = ph.summarize(gl, rcv, eps, softs_w)
+        events, tables = ph.summarize(gl, rcv, eps, softs_w, [(a, b_) for a, b_ in rec["gaps"] if inw(b_)])
         for e in events:
             e["wall"] = iso(e.pop("t_mono"), off)
         un = [e for e in rec["uncommanded"] if inw(e["t0"])]
@@ -795,7 +826,7 @@ def worker_main(spec_path):
         res["phase_windows_s"] = {"start": ph.START_S, "end_head": ph.END_HEAD_S, "end_tail": ph.END_TAIL_S, "recovery_tail": ph.RECOVERY_TAIL_S}
         for r in res["goals"]:  # per-goal counts next to the goal record
             n_soft = sum(1 for e in events if e["kind"] == "soft_stop" and e["goal"] == r["idx"])
-            n_ep = sum(1 for e in events if e["kind"] == "fault_episode" and e["goal"] == r["idx"])
+            n_ep = sum(1 for e in events if e["kind"] == "non_emitting_episode" and e["goal"] == r["idx"])
             r["soft_stops"], r["fault_episodes"] = n_soft, n_ep
             r.pop("t0_mono", None)
             r.pop("t1_mono", None)

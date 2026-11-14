@@ -55,19 +55,36 @@ def attach_episode(t_soft, episodes):
     return best
 
 
+def named_components(ep):
+    """Critical components the aggregator named (missing / stale / unhealthy) during the episode."""
+    if ep is None:
+        return []
+    b = ep["blamed"]
+    return sorted(set(b.get("missing_critical", [])) | set(b.get("stale_critical", [])) | set(b.get("unhealthy_critical", [])))
+
+
 def blamed_components(ep):
     if ep is None:
-        return ["(no aggregator fault)"]
-    b = ep["blamed"]
-    out = sorted(set(b.get("missing_critical", [])) | set(b.get("stale_critical", [])) | set(b.get("unhealthy_critical", [])))
-    return out or ["(fault without component)"]
+        return ["(no aggregator episode)"]
+    return named_components(ep) or ["(no component named: " + "/".join(ep.get("states", ["?"])) + ")"]
 
 
-def summarize(goals, recoveries, episodes, softs):
+def soft_stop_class(t_soft, ep, gaps):
+    """detection: an aggregator episode naming a critical component overlaps the soft stop. delivery_gap: the aggregator stayed
+    healthy (no such episode) but the recorder saw a heartbeat gap around it. unknown: neither."""
+    if ep is not None and named_components(ep):
+        return "detection"
+    if ep is None and any(a - 0.05 <= t_soft <= b + 0.1 for a, b in gaps):
+        return "delivery_gap"
+    return "unknown"
+
+
+def summarize(goals, recoveries, episodes, softs, gaps=()):
     """goals: records with t0_mono/t1_mono; recoveries: [(a, b)]; episodes: recorder fault episodes; softs: recorder soft stops.
     Returns (events, tables). tables: counts by phase and 'phase / component' for soft stops and for fault episodes."""
     gl = sorted((g for g in goals if "t0_mono" in g), key=lambda g: g["t0_mono"])
     events, soft_by_ph, soft_by_pc, ep_by_pc = [], {}, {}, {}
+    soft_by_cls, soft_by_phcls, ep_by_phsoft = {}, {}, {}
     attached = set()
     for e in softs:
         ep = attach_episode(e["t"], episodes)
@@ -75,7 +92,10 @@ def summarize(goals, recoveries, episodes, softs):
             attached.add(id(ep))
         gi, ph, since, to_end = classify(e["t"], gl, recoveries)
         comps = blamed_components(ep)
-        events.append({"kind": "soft_stop", "t_mono": e["t"], "goal": None if gi is None else gl[gi]["idx"], "phase": ph,
+        cls = soft_stop_class(e["t"], ep, gaps)
+        soft_by_cls[cls] = soft_by_cls.get(cls, 0) + 1
+        soft_by_phcls[f"{ph} / {cls}"] = soft_by_phcls.get(f"{ph} / {cls}", 0) + 1
+        events.append({"kind": "soft_stop", "class": cls, "episode_states": None if ep is None else ep.get("states"), "t_mono": e["t"], "goal": None if gi is None else gl[gi]["idx"], "phase": ph,
                        "since_goal_start_s": since, "to_goal_end_s": to_end, "blamed": comps, "reason": e.get("reason"),
                        "fault_ctx": None if ep is None else {k: ep[k] for k in ("odom_v", "odom_w", "cmd_age_wall_s", "last_cmd_nonzero")}})
         soft_by_ph[ph] = soft_by_ph.get(ph, 0) + 1
@@ -86,12 +106,16 @@ def summarize(goals, recoveries, episodes, softs):
         comps = blamed_components(ep)
         for c in comps:
             ep_by_pc[f"{ph} / {c}"] = ep_by_pc.get(f"{ph} / {c}", 0) + 1
-        events.append({"kind": "fault_episode", "t_mono": ep["t0"], "goal": None if gi is None else gl[gi]["idx"], "phase": ph,
+        key = f"{ph} / " + ("with soft stop" if id(ep) in attached else "no soft stop")
+        ep_by_phsoft[key] = ep_by_phsoft.get(key, 0) + 1
+        events.append({"kind": "non_emitting_episode", "states": ep.get("states"), "t_mono": ep["t0"], "goal": None if gi is None else gl[gi]["idx"], "phase": ph,
                        "since_goal_start_s": since, "to_goal_end_s": to_end, "blamed": comps,
                        "duration_ms": None if ep["t1"] is None else round((ep["t1"] - ep["t0"]) * 1000, 1),
                        "caused_soft_stop": id(ep) in attached, "odom_v": ep["odom_v"], "odom_w": ep["odom_w"],
                        "cmd_age_wall_s": ep["cmd_age_wall_s"], "last_cmd_nonzero": ep["last_cmd_nonzero"]})
     events.sort(key=lambda x: x["t_mono"])
     tables = {"soft_stops_by_phase": soft_by_ph, "soft_stops_by_phase_component": soft_by_pc,
-              "fault_episodes_by_phase_component": ep_by_pc, "fault_episodes_n": len(episodes), "soft_stops_n": len(softs)}
+              "fault_episodes_by_phase_component": ep_by_pc, "fault_episodes_n": len(episodes), "soft_stops_n": len(softs),
+              "soft_stops_by_class": soft_by_cls, "soft_stops_by_phase_class": soft_by_phcls,
+              "non_emitting_episodes_by_phase_soft_stop": ep_by_phsoft}
     return events, tables

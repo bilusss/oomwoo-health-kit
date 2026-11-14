@@ -185,11 +185,11 @@ class TopicHeartbeat(Node):
         def on_cmd(msg, info) -> None:
             now = self._now()
             fresh, notes["cmd"] = self._fresh(spec, info, None, now)
-            if not fresh:
-                return
             lin, ang = msg.linear, msg.angular
-            core.on_cmd(now, math.hypot(lin.x, lin.y, lin.z), math.hypot(ang.x, ang.y, ang.z))
-            maybe_beat(now)
+            # a command that waited too long still updates the held setpoint (the stand-in forwarded it), without freshness credit
+            core.on_cmd(now, math.hypot(lin.x, lin.y, lin.z), math.hypot(ang.x, ang.y, ang.z), fresh=fresh)
+            if fresh:
+                maybe_beat(now)
 
         self._subs.append(self.create_subscription(odom_cls, m["odom_topic"], on_odom, qos))
         self._subs.append(self.create_subscription(cmd_cls, m["cmd_topic"], on_cmd, cmd_qos))
