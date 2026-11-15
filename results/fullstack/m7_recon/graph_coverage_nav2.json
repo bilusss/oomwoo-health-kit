@@ -1,0 +1,622 @@
+{
+ "nodes": [
+  "/amcl",
+  "/behavior_server",
+  "/bt_navigator",
+  "/bt_navigator_navigate_through_poses_rclcpp_node",
+  "/bt_navigator_navigate_to_pose_rclcpp_node",
+  "/collision_monitor",
+  "/controller_server",
+  "/coverage_meter",
+  "/coverage_planner",
+  "/docking_server",
+  "/global_costmap/global_costmap",
+  "/ground_truth",
+  "/health_monitor",
+  "/job_roster",
+  "/launch_ros_7349",
+  "/lifecycle_manager_localization",
+  "/lifecycle_manager_navigation",
+  "/local_costmap/local_costmap",
+  "/map_server",
+  "/mcu_standin",
+  "/nav2_container",
+  "/ohk_fullstack_probe",
+  "/ohk_fullstack_recorder",
+  "/ohk_graph_facts",
+  "/planner_server",
+  "/robot_state_publisher",
+  "/ros_gz_bridge",
+  "/route_server",
+  "/smoother_server",
+  "/topic_heartbeat",
+  "/transform_listener_impl_7f2868002070",
+  "/transform_listener_impl_7f28a00020e0",
+  "/velocity_smoother",
+  "/waypoint_follower"
+ ],
+ "topics": {
+  "/cmd_vel": {
+   "publishers": [
+    {
+     "node": "/coverage_planner",
+     "type": "geometry_msgs/msg/Twist",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    },
+    {
+     "node": "/collision_monitor",
+     "type": "geometry_msgs/msg/Twist",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    },
+    {
+     "node": "/docking_server",
+     "type": "geometry_msgs/msg/Twist",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    }
+   ],
+   "subscriptions": [
+    {
+     "node": "/topic_heartbeat",
+     "type": "geometry_msgs/msg/Twist",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    },
+    {
+     "node": "/ohk_fullstack_recorder",
+     "type": "geometry_msgs/msg/Twist",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    },
+    {
+     "node": "/mcu_standin",
+     "type": "geometry_msgs/msg/Twist",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    }
+   ]
+  },
+  "/cmd_vel_nav": {
+   "publishers": [
+    {
+     "node": "/controller_server",
+     "type": "geometry_msgs/msg/Twist",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    },
+    {
+     "node": "/behavior_server",
+     "type": "geometry_msgs/msg/Twist",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    },
+    {
+     "node": "/behavior_server",
+     "type": "geometry_msgs/msg/Twist",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    },
+    {
+     "node": "/behavior_server",
+     "type": "geometry_msgs/msg/Twist",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    },
+    {
+     "node": "/behavior_server",
+     "type": "geometry_msgs/msg/Twist",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    },
+    {
+     "node": "/behavior_server",
+     "type": "geometry_msgs/msg/Twist",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    }
+   ],
+   "subscriptions": [
+    {
+     "node": "/velocity_smoother",
+     "type": "geometry_msgs/msg/Twist",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    }
+   ]
+  },
+  "/cmd_vel_smoothed": {
+   "publishers": [
+    {
+     "node": "/velocity_smoother",
+     "type": "geometry_msgs/msg/Twist",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    }
+   ],
+   "subscriptions": [
+    {
+     "node": "/collision_monitor",
+     "type": "geometry_msgs/msg/Twist",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    }
+   ]
+  },
+  "/cmd_vel_gated": {
+   "publishers": [
+    {
+     "node": "/mcu_standin",
+     "type": "geometry_msgs/msg/Twist",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    }
+   ],
+   "subscriptions": [
+    {
+     "node": "/ohk_fullstack_recorder",
+     "type": "geometry_msgs/msg/Twist",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    },
+    {
+     "node": "/ros_gz_bridge",
+     "type": "geometry_msgs/msg/Twist",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    }
+   ]
+  },
+  "/cmd_vel_teleop": {
+   "publishers": [],
+   "subscriptions": [
+    {
+     "node": "/behavior_server",
+     "type": "geometry_msgs/msg/Twist",
+     "reliability": "BEST_EFFORT",
+     "durability": "VOLATILE",
+     "depth": 0
+    }
+   ]
+  },
+  "/scan": {
+   "publishers": [
+    {
+     "node": "/ros_gz_bridge",
+     "type": "sensor_msgs/msg/LaserScan",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    }
+   ],
+   "subscriptions": [
+    {
+     "node": "/topic_heartbeat",
+     "type": "sensor_msgs/msg/LaserScan",
+     "reliability": "BEST_EFFORT",
+     "durability": "VOLATILE",
+     "depth": 0
+    },
+    {
+     "node": "/amcl",
+     "type": "sensor_msgs/msg/LaserScan",
+     "reliability": "BEST_EFFORT",
+     "durability": "VOLATILE",
+     "depth": 0
+    },
+    {
+     "node": "/collision_monitor",
+     "type": "sensor_msgs/msg/LaserScan",
+     "reliability": "BEST_EFFORT",
+     "durability": "VOLATILE",
+     "depth": 0
+    },
+    {
+     "node": "/local_costmap/local_costmap",
+     "type": "sensor_msgs/msg/LaserScan",
+     "reliability": "BEST_EFFORT",
+     "durability": "VOLATILE",
+     "depth": 0
+    },
+    {
+     "node": "/global_costmap/global_costmap",
+     "type": "sensor_msgs/msg/LaserScan",
+     "reliability": "BEST_EFFORT",
+     "durability": "VOLATILE",
+     "depth": 0
+    }
+   ]
+  },
+  "/odom": {
+   "publishers": [
+    {
+     "node": "/ros_gz_bridge",
+     "type": "nav_msgs/msg/Odometry",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    }
+   ],
+   "subscriptions": [
+    {
+     "node": "/topic_heartbeat",
+     "type": "nav_msgs/msg/Odometry",
+     "reliability": "BEST_EFFORT",
+     "durability": "VOLATILE",
+     "depth": 0
+    },
+    {
+     "node": "/topic_heartbeat",
+     "type": "nav_msgs/msg/Odometry",
+     "reliability": "BEST_EFFORT",
+     "durability": "VOLATILE",
+     "depth": 0
+    },
+    {
+     "node": "/ohk_fullstack_probe",
+     "type": "nav_msgs/msg/Odometry",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    },
+    {
+     "node": "/ohk_fullstack_recorder",
+     "type": "nav_msgs/msg/Odometry",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    },
+    {
+     "node": "/controller_server",
+     "type": "nav_msgs/msg/Odometry",
+     "reliability": "BEST_EFFORT",
+     "durability": "VOLATILE",
+     "depth": 0
+    },
+    {
+     "node": "/bt_navigator",
+     "type": "nav_msgs/msg/Odometry",
+     "reliability": "BEST_EFFORT",
+     "durability": "VOLATILE",
+     "depth": 0
+    },
+    {
+     "node": "/ground_truth",
+     "type": "nav_msgs/msg/Odometry",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    }
+   ]
+  },
+  "/tf": {
+   "publishers": [
+    {
+     "node": "/ros_gz_bridge",
+     "type": "tf2_msgs/msg/TFMessage",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    },
+    {
+     "node": "/robot_state_publisher",
+     "type": "tf2_msgs/msg/TFMessage",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    },
+    {
+     "node": "/amcl",
+     "type": "tf2_msgs/msg/TFMessage",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    }
+   ],
+   "subscriptions": [
+    {
+     "node": "/topic_heartbeat",
+     "type": "tf2_msgs/msg/TFMessage",
+     "reliability": "BEST_EFFORT",
+     "durability": "VOLATILE",
+     "depth": 0
+    },
+    {
+     "node": "/coverage_planner",
+     "type": "tf2_msgs/msg/TFMessage",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    },
+    {
+     "node": "/amcl",
+     "type": "tf2_msgs/msg/TFMessage",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    },
+    {
+     "node": "/transform_listener_impl_7f28a00020e0",
+     "type": "tf2_msgs/msg/TFMessage",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    },
+    {
+     "node": "/smoother_server",
+     "type": "tf2_msgs/msg/TFMessage",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    },
+    {
+     "node": "/transform_listener_impl_7f2868002070",
+     "type": "tf2_msgs/msg/TFMessage",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    },
+    {
+     "node": "/route_server",
+     "type": "tf2_msgs/msg/TFMessage",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    },
+    {
+     "node": "/behavior_server",
+     "type": "tf2_msgs/msg/TFMessage",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    },
+    {
+     "node": "/collision_monitor",
+     "type": "tf2_msgs/msg/TFMessage",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    },
+    {
+     "node": "/bt_navigator",
+     "type": "tf2_msgs/msg/TFMessage",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    },
+    {
+     "node": "/docking_server",
+     "type": "tf2_msgs/msg/TFMessage",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    }
+   ]
+  },
+  "/amcl_pose": {
+   "publishers": [
+    {
+     "node": "/amcl",
+     "type": "geometry_msgs/msg/PoseWithCovarianceStamped",
+     "reliability": "RELIABLE",
+     "durability": "TRANSIENT_LOCAL",
+     "depth": 0
+    }
+   ],
+   "subscriptions": [
+    {
+     "node": "/coverage_planner",
+     "type": "geometry_msgs/msg/PoseWithCovarianceStamped",
+     "reliability": "RELIABLE",
+     "durability": "TRANSIENT_LOCAL",
+     "depth": 0
+    }
+   ]
+  },
+  "/pose": {
+   "publishers": [],
+   "subscriptions": []
+  },
+  "/particle_cloud": {
+   "publishers": [
+    {
+     "node": "/amcl",
+     "type": "nav2_msgs/msg/ParticleCloud",
+     "reliability": "BEST_EFFORT",
+     "durability": "VOLATILE",
+     "depth": 0
+    }
+   ],
+   "subscriptions": []
+  },
+  "/local_costmap/published_footprint": {
+   "publishers": [
+    {
+     "node": "/local_costmap/local_costmap",
+     "type": "geometry_msgs/msg/PolygonStamped",
+     "reliability": "RELIABLE",
+     "durability": "TRANSIENT_LOCAL",
+     "depth": 0
+    }
+   ],
+   "subscriptions": [
+    {
+     "node": "/topic_heartbeat",
+     "type": "geometry_msgs/msg/PolygonStamped",
+     "reliability": "BEST_EFFORT",
+     "durability": "VOLATILE",
+     "depth": 0
+    },
+    {
+     "node": "/behavior_server",
+     "type": "geometry_msgs/msg/PolygonStamped",
+     "reliability": "BEST_EFFORT",
+     "durability": "VOLATILE",
+     "depth": 0
+    },
+    {
+     "node": "/collision_monitor",
+     "type": "geometry_msgs/msg/PolygonStamped",
+     "reliability": "BEST_EFFORT",
+     "durability": "VOLATILE",
+     "depth": 0
+    },
+    {
+     "node": "/docking_server",
+     "type": "geometry_msgs/msg/PolygonStamped",
+     "reliability": "BEST_EFFORT",
+     "durability": "VOLATILE",
+     "depth": 0
+    }
+   ]
+  },
+  "/global_costmap/published_footprint": {
+   "publishers": [
+    {
+     "node": "/global_costmap/global_costmap",
+     "type": "geometry_msgs/msg/PolygonStamped",
+     "reliability": "RELIABLE",
+     "durability": "TRANSIENT_LOCAL",
+     "depth": 0
+    }
+   ],
+   "subscriptions": [
+    {
+     "node": "/topic_heartbeat",
+     "type": "geometry_msgs/msg/PolygonStamped",
+     "reliability": "BEST_EFFORT",
+     "durability": "VOLATILE",
+     "depth": 0
+    },
+    {
+     "node": "/smoother_server",
+     "type": "geometry_msgs/msg/PolygonStamped",
+     "reliability": "BEST_EFFORT",
+     "durability": "VOLATILE",
+     "depth": 0
+    }
+   ]
+  },
+  "/behavior_server/transition_event": {
+   "publishers": [
+    {
+     "node": "/behavior_server",
+     "type": "lifecycle_msgs/msg/TransitionEvent",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    }
+   ],
+   "subscriptions": []
+  },
+  "/plan": {
+   "publishers": [
+    {
+     "node": "/planner_server",
+     "type": "nav_msgs/msg/Path",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    },
+    {
+     "node": "/route_server",
+     "type": "nav_msgs/msg/Path",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    }
+   ],
+   "subscriptions": []
+  },
+  "/dock_drive/state": {
+   "publishers": [],
+   "subscriptions": []
+  },
+  "/coverage_planner/cleaning_active": {
+   "publishers": [
+    {
+     "node": "/coverage_planner",
+     "type": "std_msgs/msg/Bool",
+     "reliability": "RELIABLE",
+     "durability": "TRANSIENT_LOCAL",
+     "depth": 0
+    }
+   ],
+   "subscriptions": [
+    {
+     "node": "/coverage_meter",
+     "type": "std_msgs/msg/Bool",
+     "reliability": "RELIABLE",
+     "durability": "TRANSIENT_LOCAL",
+     "depth": 0
+    }
+   ]
+  },
+  "/coverage_meter/ratio": {
+   "publishers": [
+    {
+     "node": "/coverage_meter",
+     "type": "std_msgs/msg/Float32",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    }
+   ],
+   "subscriptions": [
+    {
+     "node": "/coverage_planner",
+     "type": "std_msgs/msg/Float32",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    },
+    {
+     "node": "/ohk_fullstack_probe",
+     "type": "std_msgs/msg/Float32",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    }
+   ]
+  },
+  "/ground_truth/pose": {
+   "publishers": [
+    {
+     "node": "/ground_truth",
+     "type": "geometry_msgs/msg/PoseStamped",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    }
+   ],
+   "subscriptions": [
+    {
+     "node": "/coverage_meter",
+     "type": "geometry_msgs/msg/PoseStamped",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    }
+   ]
+  }
+ }
+}

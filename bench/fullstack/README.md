@@ -54,3 +54,34 @@ Gazebo + Nav2 + slam_toolbox in containers `ohk-sim-<i>` (RTF 1.0, max 4 at once
 ## Sim vs wall
 Gazebo `/clock` = sim; everything stamped `wall`/`monotonic` = host. At RTF 1.0 (the only supported setting for timing claims;
 `timing_valid`) they agree. Health nodes run on wall time by default (see docs/SPEC.md M6c); header stamps in the stack are sim time.
+
+## M7 tasks (AMCL, coverage, docking, BT recoveries)
+`--task` selects the stack and workload (`bench/fullstack/tasks.py`): `nav_slam` (default, M6), `nav_amcl`, `coverage`, `coverage_reactive`,
+`coverage_reactive_cmd30` (proposal config), `dock`, `recovery`. `--composition false` runs one process per Nav2 node (needed for per-node
+faults on the AMCL tasks). Use `OHK_RES_SUB=m7` (exported before `tools/sim.sh up|run|status`) to keep new raw data in `results/fullstack/m7/<i>/`.
+
+    export OHK_RES_SUB=m7; tools/sim.sh down; tools/sim.sh up 3
+    tools/sim.sh run 1 --health-sources watcher --task nav_amcl --workload mix --duration-sim 1800 --sessions 4 --profile default
+    tools/sim.sh run 2 --health-sources watcher --task coverage --duration-sim 1800 --sessions 4 --profile shm_hc60
+    tools/sim.sh run 3 --health-sources watcher --task dock --duration-sim 1800 --sessions 2 --profile default
+    tools/sim.sh run 3 --health-sources watcher --task recovery --duration-sim 1800 --sessions 4 --profile default
+    tools/sim.sh run 1 --mode faults --reps 5 --health-sources watcher --task nav_amcl --composition false --faults sigkill_amcl,sigstop_amcl,sigkill_controller,sigstop_controller
+    tools/sim.sh run 2 --mode faults --reps 5 --health-sources watcher --task dock --faults sigkill_dock_drive,sigstop_dock_drive,sigkill_dock_detector,sigstop_dock_detector
+    tools/sim.sh run 3 --mode faults --reps 5 --health-sources watcher --task recovery --composition false --faults sigkill_behavior,sigstop_behavior
+    tools/sim.sh run 1 --mode faults --reps 5 --health-sources watcher --task coverage_reactive_cmd30 --faults sigkill_coverage_fast,sigstop_coverage_fast
+    # tables (published ones: results/fullstack/soak_m7_*_kitwip.jsonl and faults_m7_*_kitwip.jsonl)
+    python3 bench/fullstack/summarize.py --by-task results/fullstack/soak_m7_*.jsonl          # sim hours AND active hours, stops per active hour
+    python3 bench/fullstack/summarize_faults.py results/fullstack/faults_m7_*.jsonl --latest-label-per-task    # the fault table in FINDINGS
+    python3 bench/fullstack/summarize_faults.py results/fullstack/faults_m7_*.jsonl --label=m7_faults --task=recovery --detail   # earlier series
+
+Coverage jobs finish their sweep and then idle, so `--by-task` reports active time (`active_seconds`: up to the last motion evidence in the
+session record) next to sim time and uses it for the per-hour rates. Fault trials are summarized over EXPOSED trials (definition in the
+`summarize_faults.py` docstring, set after the trials were seen). `OHK_RUN_STAGGER_S=<s>` spaces out instance starts; sessions and fault trials
+record `loadavg_series` (host 1-min load every 10 s).
+
+Live-graph checks before writing a watcher config (inside a container with the stack up): `python3 bench/fullstack/graph_facts.py`
+(publishers, subscriptions, QoS) and `probe_rates.py --seconds 100 [--extra /topic:pkg/msg/Type]` (rates moving / stationary).
+Workloads (`jobs.py`): coverage = upstream `coverage_planner` started after arming; dock = cycle of start poses with a harness `set_pose` between
+attempts (its records carry `harness_actions`; `summarize.py --by-task` reports soft stops within 2 s of one); recovery = goals with a wall spawned
+across the path (persistent or removed after 8 s) so that bt_navigator's own recovery branch runs. The gz service calls use the python
+gz-transport bindings (the `gz` CLI stalled /odom and /cmd_vel). Fault triggers (`when`): moving, fast (>= 0.30 m/s), recovery, dock_back.

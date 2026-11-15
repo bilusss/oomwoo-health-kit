@@ -226,3 +226,9 @@ RTF 1.0, software GL, 1-4 containers in parallel, single runs unless counted. Re
   default-profile soft stops (instance 2, sessions 9 and 11), each 1-2 s into the first goal of the session, host load average ~19 on 12 threads: aggregator stale drive_supervision
   (+odom), 400 ms heartbeat gap, stand-in back in RUN in 0.35 s. Cause (starved watcher process) not determined.
 - Not measured: other jobs, AMCL, hardware, GPU, BT-triggered recoveries, runs over 1 h per session on the fixed code.
+
+## M7 (as built, 2026-11-15): AMCL, coverage, docking, BT recoveries
+Bench-only extension of M6c; the cores (`topic_watch`, `job_logic`, `mcu_standin`) are unchanged. `bench/fullstack/tasks.py` (ROS-free presets, gz commands,
+action tally, planner-log parser; host tests in `test/test_fullstack_tasks.py`), `jobs.py` (coverage / dock / recovery workloads), `stack.launch.py`
+(`localization` slam|amcl|none, `world`, `job`, `composition`), configs `nav_watch_amcl`, `nav_rosters_amcl`, `nav_watch_dock`, `nav_rosters_dock`, and the proposal
+variant `nav_watch_amcl_reactive.yaml`. Facts, results and limits: `docs/M7_RECON.md`, `docs/FINDINGS.md` (M7).

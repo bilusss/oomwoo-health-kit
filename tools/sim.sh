@@ -11,6 +11,8 @@
 #                    see bench/fullstack/stack.launch.py). A container with a different GPU setting is recreated.
 #   run <i|all> ...  start bench/fullstack/run.py DETACHED in that container (docker exec -d: survives this shell); stdout in
 #                    results/fullstack/<i>/run.out. With --fg: run in the foreground. Refuses if a run is already active there.
+#                    OHK_RUN_STAGGER_S=<s> waits that long between the starts of several instances (default 0). Starting an instance
+#                    while others run a measured window coincided with anomalies in them (see docs/FINDINGS.md M7; correlation, not shown causal); start measured runs together or stagger.
 #   stop <i|all>     SIGTERM the run (it stops the stack cleanly and writes the session line), wait 90 s, then SIGKILL.
 #   status           containers, active runs, progress of each, last JSONL line per instance, container CPU.
 #   down [--purge]   remove the ohk-sim-* containers (--purge also removes the ohk-sim-ws build volume).
@@ -21,7 +23,7 @@ VOL=ohk-sim-ws
 AGG_URL=https://github.com/xbattlax/health-monitor.git
 AGG_COMMIT="${OHK_AGG_REF:-b2b9796}"
 PROJECT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-RES="$PROJECT/results/fullstack"
+RES="$PROJECT/results/fullstack${OHK_RES_SUB:+/$OHK_RES_SUB}"   # M7: OHK_RES_SUB=m7 keeps new raw data apart from the M6 per-instance directories
 UIDGID="$(id -u):$(id -g)"
 WS_ENV='source /ws/install/setup.bash'
 
@@ -91,8 +93,11 @@ run() {
   [ -n "$list" ] || { echo "no containers" >&2; exit 4; }
   local kit; kit="$(git -C "$PROJECT" rev-parse HEAD 2>/dev/null || echo unknown)$(git -C "$PROJECT" diff --quiet HEAD -- 2>/dev/null || echo -dirty)"
   local agg; agg="$(docker exec "$(echo "$list" | head -1)" cat /ws/.agg_built 2>/dev/null || echo unknown)"
-  local n
+  local n first=1
   for n in $list; do
+    # M7: neighbouring stack starts coincided with heartbeat anomalies in running instances; start instances OHK_RUN_STAGGER_S apart
+    [ "$first" = 1 ] || sleep "${OHK_RUN_STAGGER_S:-0}"
+    first=0
     if running_run "$n"; then echo "$n: a run is already active (tools/sim.sh stop ${n#ohk-sim-})" >&2; exit 4; fi
     local args; args="$(printf '%q ' "$@")"
     local cmd="$WS_ENV && exec python3 -u /ws/src/oomwoo_health_kit/bench/fullstack/run.py $args"

@@ -90,6 +90,9 @@ class Workload:
         self._sim_now = sim_now
         self.mix = mix
 
+    def ready(self):
+        return self.client.server_is_ready()
+
     def sim_now(self):
         if self._sim_now:
             return self._sim_now()

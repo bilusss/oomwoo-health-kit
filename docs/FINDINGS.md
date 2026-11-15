@@ -1,3 +1,173 @@
+# M7 (2026-11-14 and 15): AMCL, coverage, docking and behaviour-tree recoveries on the real simulation stack
+
+Raw data: `results/fullstack/soak_m7_<task>_2026-11-14_kitwip.jsonl` (soak sessions), `faults_m7_2026-11-14_kitwip.jsonl` (fault trials),
+`results/fullstack/m7/<i>/` (run logs of the three instances; the stack logs there are only those of the last session or trial of each instance),
+`results/fullstack/m7_recon/` (graph and rate probes), `results/fullstack/_m7_smoke/` (harness shake-out, not counted). The kit was a dirty
+tree on top of `ce0d029` (`kitwip`); aggregator `b2b9796`. Graph facts per stack: `docs/M7_RECON.md`. Every table below is printed by
+`python3 bench/fullstack/summarize.py --by-task results/fullstack/soak_m7_*.jsonl` and `summarize_faults.py` (commands in `bench/fullstack/README.md`).
+Same setup as M6 (Gazebo, software GL, RTF 1.0, health nodes on wall time, 150 ms soft stop), at most 3 instances in parallel, 1800 sim s per session.
+
+## What was run, what was not
+| Task | Stack | Run |
+|---|---|---|
+| AMCL navigation | `oomwoo_clean nav.launch.py` (AMCL + full Nav2, one composed container); faults with the same call and `use_composition:=False` | yes |
+| Coverage | `coverage_planner` + `coverage_meter` on the AMCL stack, `executor` nav2 and reactive | yes |
+| Docking | `dock_sim` nodes (ir_beacon_sim, dock_detector, dock_drive) in kitchen_dining, no Nav2 | yes |
+| BT recoveries | stock Nav2 BT, a wall the map does not know placed across the path through the gz service | yes |
+| `opennav_docking` | the stack runs `docking_server`, but navigation.yaml has only the template (SimpleChargingDock, placeholder poses, no dock model or charge signal in the sim). Not attempted live; no upstream sim support for it | skipped |
+
+Watcher configs: `nav_watch_amcl.yaml` / `nav_rosters_amcl.yaml`, `nav_watch_dock.yaml` / `nav_rosters_dock.yaml`; the M6 cores are
+unchanged. Thresholds were not tuned after a run; the one proposed variant (`nav_watch_amcl_reactive.yaml`) is labelled as such below.
+
+## Graph facts that changed a config (details in M7_RECON)
+- `/cmd_vel` has 2 writers on the full Nav2 stack (collision_monitor, docking_server), 3 with coverage_planner, 1 (dock_drive) in the dock
+  stack. `drive_supervision` counts any writer on the stand-in input by design. Consequence: while one writer is alive, a second dead
+  commander is invisible to it (a live writer keeps the stream fresh); the loop supervises the stream, not each writer.
+- `/amcl_pose` is silent when the robot is idle; the liveness signal is `map->odom`, 5.0 Hz new stamps moving and stationary (amcl sends
+  it from its scan callback). `/tf` has three writers and the tf watch has no writer guard.
+- The global costmap footprint is 2 Hz on this stack (5 Hz on the slam stack): roster max_age 1.5 s, advisory.
+- `dock_drive` publishes `/cmd_vel` at 20 Hz in every state, zeros included.
+- The reactive coverage executor commands `/cmd_vel` at 5 Hz (period 200 ms, p95 201 ms, max 405 ms; Nav2's chain: 20 Hz).
+- `/cmd_vel_nav` is 4.97 Hz while `/cmd_vel_smoothed` and `/cmd_vel` are 20.0 Hz (`rates_nav_amcl.json`): the velocity smoother re-emits the
+  held setpoint on its own 20 Hz timer, upstream `velocity_timeout: 1.0`, `max_decel` -2.5 / -3.2 (see "Reading the table").
+
+## Soaks: sim time and ACTIVE time
+33 sessions of 1800 sim s, all valid, 16.5 sim hours. **Coverage sessions are mostly idle**: the planner log reports `complete` in all 11 coverage
+sessions, the meter ends at 0.89-0.92, and the robot does not move after that although the planner process stays alive. Active time
+(`summarize.py`, `active_seconds`) is the time up to the last motion evidence in the session record (an uncommanded-motion event, or a health event
+with odometry above the thresholds or a command younger than 1 s): 931-1009 s per nav2-executor session, 521-580 s per default-profile and
+shm_hc60 reactive session, 437-489 s in the variant sessions. It is an estimate from the events the record keeps, not a direct measurement of
+motion; for the goal loops, dock cycles and recovery scenarios the whole window is active. Rates below use active time; "3/T" bounds (95%,
+zero events) use it too.
+
+| Task | Profile | Sim h | Active h | Work done | Distance | Soft stops | Per active hour | Heartbeat gaps >0.2 s |
+|---|---|---|---|---|---|---|---|---|
+| nav_amcl (mix) | default | 2.0 | 2.0 | 356 NavigateToPose succeeded, 88 cancelled mid-drive, 44 early, 44 unplannable, 44 direct probes; 114 spins / 70 backups / 70 waits started | 0.99 km | 1 | 0.5 | 2 |
+| nav_amcl (mix) | shm_hc60 | 2.0 | 2.0 | 351 / 87 / 44 / 45 / 45; 120 / 79 / 80 | 0.98 km | 0 | 0 (bound 1.5/h) | 0 |
+| coverage, nav2 executor | default | 2.0 | 1.10 | 4 jobs, meter 0.91 each; 468 waypoint goals succeeded | 0.29 km | 0 | 0 (bound 2.7/h) | 1 |
+| coverage, nav2 executor | shm_hc60 | 2.0 | 1.07 | 4 jobs, meter 0.89-0.92; 464 waypoint goals | 0.28 km | 0 | 0 (bound 2.8/h) | 0 |
+| coverage, reactive (config as shipped) | default | 1.0 | 0.30 | 2 jobs, 0.92 | 0.15 km | 149 (148 active, 1 idle) | **492** | 150 |
+| coverage, reactive (config as shipped) | shm_hc60 | 0.5 | 0.16 | 1 job, 0.92 | 0.07 km | 75 | **466** | 75 |
+| coverage, reactive, proposal config (cmd 0.30 s) | default | 0.5 | 0.14 | 1 job, 0.92 | 0.07 km | 8 | 59 | 8 |
+| coverage, reactive, proposal config | shm_hc60 | 0.5 | 0.12 | 1 job, 0.91 | 0.07 km | 11 | 91 | 11 |
+| dock | default | 1.0 | 1.0 | 111 docked, 5 timeouts, 2 cut | 0.09 km | 11 | 11 (all after a harness set_pose) | 11 |
+| dock | shm_hc60 | 1.0 | 1.0 | 98 docked, 4 timeouts, 2 cut | 0.08 km | 6 | 6 (all after a harness set_pose) | 6 |
+| recovery (wall) | default | 2.0 | 2.0 | 126 goals succeeded, 98 aborted; BT started 250 spins, 208 waits, 110 backups | 0.64 km | 0 | 0 (bound 1.5/h) | 0 |
+| recovery (wall) | shm_hc60 | 2.0 | 2.0 | 111 succeeded, 121 aborted; 303 / 260 / 135 | 0.55 km | 0 | 0 (bound 1.5/h) | 0 |
+
+The stand-in's own soft-stop counter delta equals the recorder's count in every row. RTF in 30 s windows: 0.977-1.0.
+
+### Soft stops, classified from the logs
+- **Reactive coverage, 224 stops: 223 blame `drive_supervision` only, 1 also `odom` (idle, see below).** A rule/configuration mismatch for this
+  commander. The planner's command period is 200 ms and `cmd_max_age_s` is 0.15 s, so `drive_supervision` withholds the heartbeat between commands
+  while the robot moves. At the start of the episodes the command was 0.27-0.34 s old (median 0.29); the robot was at 0.3 m/s or more in 128 of
+  the 224 (the others were slower or turning). Fail-safe direction, but the shipped configuration cannot run this job: 466-492 stops per active
+  hour. Proposal (not a tuned default): `cmd_max_age_s` 0.30. Measured with it: 8 stops in 0.14 active h (default) and 11 in 0.12 active h
+  (shm_hc60), i.e. 59 and 91 per active hour, with command age 0.42-0.48 s at the start of the episodes. The variant therefore does not remove the
+  problem, and a window covering those gaps (0.5 s) would allow 0.18 m of travel at 0.35 m/s after a dead commander.
+  **These three variant/shm sessions ran at host busy 9.4-10.3 of 12 cores (the other 30 sessions: 7.2-8.8) and the lowest RTF (0.977-0.98)**;
+  the 0.42-0.48 s command gaps ("the planner pauses about 0.45 s") and the proposal's remaining stops may be load, not planner behaviour.
+  The separate probe's 405 ms maximum was taken at normal load.
+- **Dock, 17 stops in 222 attempts, all after a successful dock**: each came 0.22-0.25 s after the harness `set_pose` of the next attempt (17 of
+  17 within 0.5 s of a recorded set_pose; 0 stops during a manoeuvre in any attempt). Only `drive_supervision` was blamed (never `odom`), the
+  aggregator kept publishing every 50 ms, the command was fresh (0.002-0.05 s) and odometry 0. That is consistent with the teleport's odometry
+  transient failing `settle_s` while the setpoint is zero, i.e. the rule working as designed; the earlier "stream stall" explanation is not
+  supported. The gz CLI is also not isolated as a cause: the same 340 ms stationary /odom maximum appears in `rates_coverage_reactive.json` with no
+  teleports. The persistent-binding harness reduced the rate from 9 stops in 12 attempts (gz CLI, first smoke run) to 17 in 222.
+- **nav_amcl default, 1 stop** (session 1, 118 sim s, 19:55:45, en route at 0.08 m/s): the aggregator published no stack message for about
+  350 ms (messages 0.40 and 0.35 s old, then a fault message naming `odom` and `drive_supervision` stale; a genuinely stale `/odom` would have
+  produced fault messages every 50 ms, as in the dock stops). Two recorder heartbeat gaps (350 and 300 ms); stand-in back in RUN 0.40 s after the
+  stop. Classification: a stall in the health path (aggregator or its delivery), cause unexplained. It happened 2 min after all three instances were
+  launched and no neighbour was starting a stack at that moment. The session-end load average (15.8) was taken 28 min later and says nothing about this event.
+- **Neighbour launches**: the nav2-coverage default session's only heartbeat gap (375 ms at 20:54:45.9, stand-in delta 0, so a recorder-side
+  stall) came 18-23 s after two neighbour instances started their sessions; the single idle reactive stop (blaming `odom` and `drive_supervision`,
+  command 1231 s old, robot still) came 3.2 s after two neighbours started and ended sessions. Two events, not a proof; `tools/sim.sh run` now has
+  `OHK_RUN_STAGGER_S`, and `run.py` records the host load as a time series (`loadavg_series`, also in fault records). Not yet exercised in a run.
+- Coverage (nav2 executor), recovery and nav_amcl shm_hc60: 0 stops.
+- `uncommanded_motion` (odometry above the thresholds with no command newer than 0.15 s): 62 and 84 events in the nav2-executor coverage soaks,
+  all with a non-zero held setpoint and at most 0.06 s long: the Nav2 command stream skips a 20 Hz slot now and then (command age at the start
+  0.157-0.17 s). No stop followed; the margin to the 0.15 s limit is under 20 ms.
+
+### Recoveries and docking: what the watchers did
+- 8 sim hours with BT-triggered recoveries (nav_amcl + recovery soaks: 787 spins, 618 waits, 394 backups started, 89 of the spin/wait/backup
+  triples being direct probes): 0 stops in the recovery soaks and 1 unrelated stall in nav_amcl, none during a recovery interval (the nav_amcl stop was in the 'en route' phase). Spin, wait and
+  backup commands pass through the smoother and collision monitor at 20 Hz, so `drive_supervision` sees a normal stream.
+- Task-level wedges: in all 8 recovery sessions between 2 and 32 aborted goals (travel under 0.5 m) occurred (per session: 10, 20, 12, 27, 31, 2, 32,
+  24 aborted goals under 0.5 m); the longest runs of consecutive aborts were 11, 15, 11, 27, 38, 3, 19, 29. One shm_hc60 session (the 38-run) never
+  recovered: goals 24-60 all aborted (travel 0.002-1.44 m), the rest of the session. During the run the controller log showed "collision ahead"
+  messages (not retained: the stack logs of the soak sessions were overwritten by later runs). The loop stayed healthy while the robot
+  did nothing; that is the known limit.
+- Dock: 9 attempts timed out after 150 s: 8 in GOTO (travel 0.003-0.121 m), 1 in BACK after 0.729 m. dock_drive's own log said it was holding
+  without a dock fix (not retained). Dock logic, not a health fault.
+
+## Faults (5 trials each unless stated; seconds from the signal; kit `kitwip`, default profile)
+Per-node faults need one process per node: AMCL, Nav2 and behavior_server faults used `composition:=False`. Table = `summarize_faults.py
+results/fullstack/faults_m7_2026-11-14_kitwip.jsonl --latest-label-per-task`. "Exposed" is defined after the trials were seen (post hoc): for
+behavior_server faults the robot had to be in a spin at its nominal rate (>= 0.9 rad/s) or a backup (>= 0.10 m/s) at the signal; all other faults
+count as exposed (triggered on motion). "Detected within hold" = stand-in soft stop within the 5 s hold.
+
+| Fault | During | Exposed | Detected (any time / within hold) | Zero at the gate (min/med/max s) | Distance to standstill (m) | Blamed |
+|---|---|---|---|---|---|---|
+| SIGKILL amcl | driving | 5 | 5 / 5 | 0.54 / 0.63 / 0.70 | 0.12-0.15 | localization |
+| SIGSTOP amcl 5 s | driving | 5 | 5 / 5 | 0.54 / 0.58 / 0.67 | 0.11-0.14 | localization; 5/5 resumed |
+| SIGKILL controller_server | driving | 5 | 5 / 5 | 0.60 / 0.66 / 0.69 | 0.13-0.15 | local_costmap (the costmap lives in that process); once also drive_supervision, lidar, localization, odom |
+| SIGSTOP controller_server 5 s | driving | 5 | 5 / 5 | 0.64 / 0.66 / 0.74 | 0.14-0.15 | local_costmap; 5/5 resumed |
+| SIGKILL dock_drive | reversing | 5 | 5 / 5 | 0.35 / 0.41 / 0.41 | 0.02-0.03 | drive_supervision |
+| SIGSTOP dock_drive 5 s | reversing | 5 | 5 / 5 | 0.32 / 0.38 / 0.41 | 0.02-0.03 | drive_supervision; 5/5 resumed |
+| SIGKILL dock_detector | reversing | 5 | **0 / 0** | 2.61 / 2.68 / 3.00 (dock_drive's own 3 s hold) | 0.16-0.18 | none |
+| SIGSTOP dock_detector 5 s | reversing | 5 | **0 / 0** | 2.65 / 2.77 / 2.99 | 0.16-0.18 | none |
+| SIGKILL coverage_planner, nav2 executor | transit by Nav2 (0.2 m/s) | 5 | **0 / 0** | 6.0-6.2 (one trial 11.2) | 0.49-0.51 | none |
+| SIGSTOP coverage_planner 5 s, nav2 executor | transit | 5 | **0 / 0** | 6.0-6.2 (one 11.0) | robot still moving at the end in 5/5 (1.6-2.0 m) | none |
+| SIGKILL coverage_planner, reactive executor, proposal config | reactive pass (>= 0.30 m/s) | 5 | 5 / 5 | 0.42 / 0.51 / 0.55 | 0.18-0.22 | drive_supervision |
+| SIGSTOP coverage_planner 5 s, same | reactive pass | 5 | 5 / 5 | 0.37 / 0.44 / 0.54 | 0.16-0.22 | drive_supervision; 5/5 resumed |
+| SIGKILL behavior_server | spin (4) or backup (1) | 5 | **0 / 0** | 1.01 / 1.29 / 1.32 | 0.00-0.15 | none; spin trials rotated 59.5-64.0 degrees after the signal |
+| SIGSTOP behavior_server 5 s | spin | **2** exposed of 4 valid (the other 2 hit the tail of a spin: 0.71 and 0.32 rad/s at the signal, rotation 3.9 and 0.0 degrees) | 2 / **0** | 1.23 / 1.29 / 1.36 | 0.00 | both exposed trials rotated 57.3 and 62.2 degrees undetected; a soft stop blaming local_costmap followed 3.4-3.6 s AFTER the SIGCONT in all 4 valid trials (8.4-8.6 s after the signal), cause not determined |
+
+Rotation is the trapezoid integral of the ground-truth yaw rate from the signal to standstill (samples about every 0.25 s); SIGSTOP rep 1 of the same
+series did not arm (local_costmap missing) and is invalid.
+Excluded old valid trial (series `m7_faults`, SIGSTOP behavior_server rep 1, trigger dwell 2 s): the robot kept driving on controller commands for
+4.47 s and 0.57 m, then stopped at 4.85 s through `drive_supervision` + `local_costmap` (soft stop 4.85 s). It was not in a spin; it shows the
+stale-setpoint path working after the BT stalled, not the behavior_server case.
+
+Reading the table:
+- **A dead commander behind the velocity smoother is invisible, and `drive_supervision` measures the smoother's timer, not the commander.** The
+  controller emits `/cmd_vel_nav` at 5 Hz while `/cmd_vel_smoothed` and `/cmd_vel` stay at 20 Hz: the smoother re-emits the held setpoint until
+  its upstream `velocity_timeout` (1.0 s), then decelerates (`max_decel` -3.2 rad/s^2 for a spin at 0.96 rad/s: about 0.3 s), predicting about
+  1.3 s. Measured first zero at the gate for the four spin kills: 1.26-1.32 s (standstill 1.28-1.34 s). The same 0.84-0.97 s of non-zero commands
+  after the signal is seen when `controller_server` is killed or stopped (the loop still stops at 0.60-0.74 s, but through the local costmap watch,
+  not through the commands). The stop belongs to Nav2, not to the health loop, for every commander upstream of the smoother
+  (controller_server, behavior_server).
+- Composition caveat: this applies to the non-composed launch used for per-node faults. In the default composed launch a crash of one node kills
+  the whole `nav2_container` process, which the M6 faults showed the loop does detect (SIGKILL Nav2: 0.35-0.41 s). The behavior_server row is a
+  per-node SIGKILL that the upstream launch does not produce by itself.
+- The nav2-executor coverage planner commands goals, not motion: after its death the controller finishes the current waypoint (6.0-6.2 s, 0.5 m) and the
+  loop stays green; with SIGSTOP the job resumes after 5 s. Correct for a loop that supervises motion, but "coverage server dead" is not a stop
+  condition on this architecture.
+- The dock detector can die or freeze while the robot is reversing: dock_drive carries its estimate by odometry for 3 s, then holds. The loop never
+  notices (the dock fix is silent for seconds legitimately: 1.5 Hz, max gap 4.3 s).
+- Killing `controller_server` is caught by the local costmap watch because that process hosts the local costmap.
+- Stop times of 0.54-0.74 s for AMCL and controller are the 0.6 s roster max_age of `localization` / `local_costmap` plus aggregator and stand-in. The
+  0.15 s path (dock) stops in 0.32-0.41 s; the reactive variant has a 0.30 s command window and stops in 0.37-0.55 s.
+- Earlier trial series are kept in the raw file with label `m7_faults`: behavior_server faults with a 2 s trigger dwell (4 of 10 invalid: three did
+  not reach the condition in 150 s, one did not arm; spin and backup do not last 2 s) and reactive-coverage faults triggered at any speed >= 0.12 m/s
+  (all hit Nav2 transits at 0.2 m/s, not the planner's own passes, so the `_fast` trigger was added). `summarize_faults.py --label=m7_faults --task=...`
+  prints them.
+- Fault records carry no host load. The v2 behavior and reactive fault series started right after the three overloaded sessions (02:10); their
+  stop times could include load effects. Not checked.
+
+## Limits
+- Single host, three parallel instances; host busy 7.2-8.8 of 12 cores in 30 sessions and 9.4-10.3 in three; RTF 0.977-1.0.
+- Active time: 2.0 h per task and profile for nav_amcl and recovery, 1.1 h for coverage (nav2 executor), 1.0 h for dock, 0.12-0.30 h for the
+  reactive rows. A row with zero stops bounds the rate only to about 3/T at 95% (1.5/h for 2 h, 2.7/h for 1.1 h).
+- The two Fast DDS profiles do not differ here: nav_amcl 1 vs 0 stops (one unexplained event), dock 11 vs 6 (both harness-related), reactive
+  492 vs 466 per active hour.
+- Docking is dock_drive with a simulated IR beacon; the fit uses the LiDAR, the robot is teleported between attempts, there is no charging.
+- Coverage jobs finish the sweep (planner `complete`, meter at the 0.90 target) in about 520-1010 s; the planner then idles. Completion times of the
+  full job were not measured separately.
+- Recovery provocation is one geometry (a 2.4 m wall 0.7 m ahead on the straight line to the goal), persistent or removed after 8 s.
+- Fault trials with composition false: the Nav2 processes are the same nodes but not the upstream default launch.
+- The watcher proves output exists and is fresh; the dock-detector, behavior-server and coverage-planner rows show what it cannot see.
+
 # M6 (2026-11-13 and 14): the health loop on the real simulation stack
 
 Raw data: `results/fullstack/` (`soak_long_2026-11-13_kit8d7211e.jsonl`, `soak_long2_2026-11-14_kit35f0bba.jsonl`,

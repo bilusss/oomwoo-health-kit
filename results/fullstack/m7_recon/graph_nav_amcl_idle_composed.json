@@ -1,0 +1,459 @@
+{
+ "nodes": [
+  "/_ros2cli_daemon_41_15a958e94897490aa04b81514e77c512",
+  "/amcl",
+  "/behavior_server",
+  "/bt_navigator",
+  "/bt_navigator_navigate_through_poses_rclcpp_node",
+  "/bt_navigator_navigate_to_pose_rclcpp_node",
+  "/collision_monitor",
+  "/controller_server",
+  "/docking_server",
+  "/fake_advisory_a",
+  "/fake_critical_a",
+  "/fake_critical_b",
+  "/global_costmap/global_costmap",
+  "/health_monitor",
+  "/launch_ros_85",
+  "/lifecycle_manager_localization",
+  "/lifecycle_manager_navigation",
+  "/local_costmap/local_costmap",
+  "/map_server",
+  "/mcu_standin",
+  "/nav2_container",
+  "/ohk_graph_facts",
+  "/planner_server",
+  "/robot_state_publisher",
+  "/ros_gz_bridge",
+  "/roster_publisher",
+  "/route_server",
+  "/smoother_server",
+  "/transform_listener_impl_7489f0002080",
+  "/transform_listener_impl_748a240020e0",
+  "/velocity_smoother",
+  "/waypoint_follower"
+ ],
+ "topics": {
+  "/cmd_vel": {
+   "publishers": [
+    {
+     "node": "/collision_monitor",
+     "type": "geometry_msgs/msg/Twist",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    },
+    {
+     "node": "/docking_server",
+     "type": "geometry_msgs/msg/Twist",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    }
+   ],
+   "subscriptions": [
+    {
+     "node": "/mcu_standin",
+     "type": "geometry_msgs/msg/Twist",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    }
+   ]
+  },
+  "/cmd_vel_nav": {
+   "publishers": [
+    {
+     "node": "/controller_server",
+     "type": "geometry_msgs/msg/Twist",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    },
+    {
+     "node": "/behavior_server",
+     "type": "geometry_msgs/msg/Twist",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    },
+    {
+     "node": "/behavior_server",
+     "type": "geometry_msgs/msg/Twist",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    },
+    {
+     "node": "/behavior_server",
+     "type": "geometry_msgs/msg/Twist",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    },
+    {
+     "node": "/behavior_server",
+     "type": "geometry_msgs/msg/Twist",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    },
+    {
+     "node": "/behavior_server",
+     "type": "geometry_msgs/msg/Twist",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    }
+   ],
+   "subscriptions": [
+    {
+     "node": "/velocity_smoother",
+     "type": "geometry_msgs/msg/Twist",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    }
+   ]
+  },
+  "/cmd_vel_smoothed": {
+   "publishers": [
+    {
+     "node": "/velocity_smoother",
+     "type": "geometry_msgs/msg/Twist",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    }
+   ],
+   "subscriptions": [
+    {
+     "node": "/collision_monitor",
+     "type": "geometry_msgs/msg/Twist",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    }
+   ]
+  },
+  "/cmd_vel_gated": {
+   "publishers": [
+    {
+     "node": "/mcu_standin",
+     "type": "geometry_msgs/msg/Twist",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    }
+   ],
+   "subscriptions": [
+    {
+     "node": "/ros_gz_bridge",
+     "type": "geometry_msgs/msg/Twist",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    }
+   ]
+  },
+  "/cmd_vel_teleop": {
+   "publishers": [],
+   "subscriptions": [
+    {
+     "node": "/behavior_server",
+     "type": "geometry_msgs/msg/Twist",
+     "reliability": "BEST_EFFORT",
+     "durability": "VOLATILE",
+     "depth": 0
+    }
+   ]
+  },
+  "/scan": {
+   "publishers": [
+    {
+     "node": "/ros_gz_bridge",
+     "type": "sensor_msgs/msg/LaserScan",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    }
+   ],
+   "subscriptions": [
+    {
+     "node": "/amcl",
+     "type": "sensor_msgs/msg/LaserScan",
+     "reliability": "BEST_EFFORT",
+     "durability": "VOLATILE",
+     "depth": 0
+    },
+    {
+     "node": "/collision_monitor",
+     "type": "sensor_msgs/msg/LaserScan",
+     "reliability": "BEST_EFFORT",
+     "durability": "VOLATILE",
+     "depth": 0
+    },
+    {
+     "node": "/local_costmap/local_costmap",
+     "type": "sensor_msgs/msg/LaserScan",
+     "reliability": "BEST_EFFORT",
+     "durability": "VOLATILE",
+     "depth": 0
+    },
+    {
+     "node": "/global_costmap/global_costmap",
+     "type": "sensor_msgs/msg/LaserScan",
+     "reliability": "BEST_EFFORT",
+     "durability": "VOLATILE",
+     "depth": 0
+    }
+   ]
+  },
+  "/odom": {
+   "publishers": [
+    {
+     "node": "/ros_gz_bridge",
+     "type": "nav_msgs/msg/Odometry",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    }
+   ],
+   "subscriptions": [
+    {
+     "node": "/controller_server",
+     "type": "nav_msgs/msg/Odometry",
+     "reliability": "BEST_EFFORT",
+     "durability": "VOLATILE",
+     "depth": 0
+    },
+    {
+     "node": "/bt_navigator",
+     "type": "nav_msgs/msg/Odometry",
+     "reliability": "BEST_EFFORT",
+     "durability": "VOLATILE",
+     "depth": 0
+    }
+   ]
+  },
+  "/tf": {
+   "publishers": [
+    {
+     "node": "/ros_gz_bridge",
+     "type": "tf2_msgs/msg/TFMessage",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    },
+    {
+     "node": "/robot_state_publisher",
+     "type": "tf2_msgs/msg/TFMessage",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    },
+    {
+     "node": "/amcl",
+     "type": "tf2_msgs/msg/TFMessage",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    }
+   ],
+   "subscriptions": [
+    {
+     "node": "/amcl",
+     "type": "tf2_msgs/msg/TFMessage",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    },
+    {
+     "node": "/transform_listener_impl_748a240020e0",
+     "type": "tf2_msgs/msg/TFMessage",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    },
+    {
+     "node": "/smoother_server",
+     "type": "tf2_msgs/msg/TFMessage",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    },
+    {
+     "node": "/transform_listener_impl_7489f0002080",
+     "type": "tf2_msgs/msg/TFMessage",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    },
+    {
+     "node": "/route_server",
+     "type": "tf2_msgs/msg/TFMessage",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    },
+    {
+     "node": "/behavior_server",
+     "type": "tf2_msgs/msg/TFMessage",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    },
+    {
+     "node": "/collision_monitor",
+     "type": "tf2_msgs/msg/TFMessage",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    },
+    {
+     "node": "/bt_navigator",
+     "type": "tf2_msgs/msg/TFMessage",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    },
+    {
+     "node": "/docking_server",
+     "type": "tf2_msgs/msg/TFMessage",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    }
+   ]
+  },
+  "/amcl_pose": {
+   "publishers": [
+    {
+     "node": "/amcl",
+     "type": "geometry_msgs/msg/PoseWithCovarianceStamped",
+     "reliability": "RELIABLE",
+     "durability": "TRANSIENT_LOCAL",
+     "depth": 0
+    }
+   ],
+   "subscriptions": []
+  },
+  "/pose": {
+   "publishers": [],
+   "subscriptions": []
+  },
+  "/particle_cloud": {
+   "publishers": [
+    {
+     "node": "/amcl",
+     "type": "nav2_msgs/msg/ParticleCloud",
+     "reliability": "BEST_EFFORT",
+     "durability": "VOLATILE",
+     "depth": 0
+    }
+   ],
+   "subscriptions": []
+  },
+  "/local_costmap/published_footprint": {
+   "publishers": [
+    {
+     "node": "/local_costmap/local_costmap",
+     "type": "geometry_msgs/msg/PolygonStamped",
+     "reliability": "RELIABLE",
+     "durability": "TRANSIENT_LOCAL",
+     "depth": 0
+    }
+   ],
+   "subscriptions": [
+    {
+     "node": "/behavior_server",
+     "type": "geometry_msgs/msg/PolygonStamped",
+     "reliability": "BEST_EFFORT",
+     "durability": "VOLATILE",
+     "depth": 0
+    },
+    {
+     "node": "/collision_monitor",
+     "type": "geometry_msgs/msg/PolygonStamped",
+     "reliability": "BEST_EFFORT",
+     "durability": "VOLATILE",
+     "depth": 0
+    },
+    {
+     "node": "/docking_server",
+     "type": "geometry_msgs/msg/PolygonStamped",
+     "reliability": "BEST_EFFORT",
+     "durability": "VOLATILE",
+     "depth": 0
+    }
+   ]
+  },
+  "/global_costmap/published_footprint": {
+   "publishers": [
+    {
+     "node": "/global_costmap/global_costmap",
+     "type": "geometry_msgs/msg/PolygonStamped",
+     "reliability": "RELIABLE",
+     "durability": "TRANSIENT_LOCAL",
+     "depth": 0
+    }
+   ],
+   "subscriptions": [
+    {
+     "node": "/smoother_server",
+     "type": "geometry_msgs/msg/PolygonStamped",
+     "reliability": "BEST_EFFORT",
+     "durability": "VOLATILE",
+     "depth": 0
+    }
+   ]
+  },
+  "/behavior_server/transition_event": {
+   "publishers": [
+    {
+     "node": "/behavior_server",
+     "type": "lifecycle_msgs/msg/TransitionEvent",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    }
+   ],
+   "subscriptions": []
+  },
+  "/plan": {
+   "publishers": [
+    {
+     "node": "/planner_server",
+     "type": "nav_msgs/msg/Path",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    },
+    {
+     "node": "/route_server",
+     "type": "nav_msgs/msg/Path",
+     "reliability": "RELIABLE",
+     "durability": "VOLATILE",
+     "depth": 0
+    }
+   ],
+   "subscriptions": []
+  },
+  "/dock_drive/state": {
+   "publishers": [],
+   "subscriptions": []
+  },
+  "/coverage_planner/cleaning_active": {
+   "publishers": [],
+   "subscriptions": []
+  },
+  "/coverage_meter/ratio": {
+   "publishers": [],
+   "subscriptions": []
+  },
+  "/ground_truth/pose": {
+   "publishers": [],
+   "subscriptions": []
+  }
+ }
+}

@@ -54,6 +54,7 @@ import ohk_bench as b  # noqa: E402
 import faultcalc as fc  # noqa: E402  (fault-trial evaluation, ROS-free)
 import phases as ph  # noqa: E402  (goal/phase attribution of health events, ROS-free)
 import soak as s  # noqa: E402  (profiles, windows, shm helpers; the parent never imports rclpy)
+import tasks as tk  # noqa: E402  (M7 task presets, ROS-free)
 
 RES = os.environ.get("OHK_RESULTS_DIR") or ("/results" if os.path.isdir("/results") else os.path.join(KIT_ROOT, "results", "fullstack"))
 LAUNCH = os.path.join(HERE, "stack.launch.py")
@@ -64,10 +65,38 @@ RTF_WINDOW_S = 30.0
 # Regexes (the [x] form keeps pkill from matching its own command line) for everything a session can leave behind.
 KILL_RE = ("[g]z sim|[r]uby .*gz|[c]omponent_container|[p]arameter_bridge|[r]obot_state_publisher|[l]ocalization_slam_toolbox|"
            "[h]ealth_monitor_node|[m]cu_standin_node|[r]oster_publisher_node|[f]ake_component_node|[t]opic_heartbeat_node|"
-           "[j]ob_roster_node|[b]ench/fullstack/run.py --(worker|recorder)|[r]viz2|[r]os2 launch|[r]os2cli.daemon|[r]os_gz_sim|ros_gz_sim/create|[l]aunch_ros")
+           "[j]ob_roster_node|[b]ench/fullstack/run.py --(worker|recorder)|[r]viz2|[r]os2 launch|[r]os2cli.daemon|[r]os_gz_sim|ros_gz_sim/create|[l]aunch_ros|"
+           # M7: separate Nav2 processes (composition:=false), job nodes
+           "lib/[n]av2_|lib/[o]omwoo_dock/|lib/[o]omwoo_coverage/|lib/[o]omwoo_sim_support/|lib/[t]f2_ros/")
 # Processes whose death invalidates a session, by /proc comm or a cmdline fragment.
 KEY_PROCS = {"gz": "gz sim -s", "nav2_container": "component_container", "bridge": "parameter_bridge",
              "aggregator": "health_monitor_node", "standin": "mcu_standin_node", "slam": "localization_slam_toolbox"}
+
+
+def key_procs_for(task, composition="true"):
+    """Processes whose death invalidates a session, for a task (set once per process by set_task)."""
+    t = tk.TASKS[task]
+    out = {k: KEY_PROCS[k] for k in ("gz", "bridge", "aggregator", "standin")}
+    if t["localization"] == "slam":
+        out.update(nav2_container=KEY_PROCS["nav2_container"], slam=KEY_PROCS["slam"])
+    elif t["localization"] == "amcl":
+        if composition == "true":
+            out["nav2_container"] = KEY_PROCS["nav2_container"]
+        else:
+            out.update(amcl="lib/nav2_amcl/amcl", controller="lib/nav2_controller/controller_server",
+                       behavior="lib/nav2_behaviors/behavior_server", bt_navigator="lib/nav2_bt_navigator/bt_navigator",
+                       planner="lib/nav2_planner/planner_server")
+    if t["job"] == "dock":
+        out.update(dock_drive="lib/oomwoo_dock/dock_drive", dock_detector="lib/oomwoo_dock/dock_detector")
+    return out
+
+
+ACTIVE_KEY_PROCS = dict(KEY_PROCS)
+
+
+def set_task(task, composition):
+    ACTIVE_KEY_PROCS.clear()
+    ACTIVE_KEY_PROCS.update(key_procs_for(task, composition))
 
 
 class Shutdown(BaseException):
@@ -133,7 +162,7 @@ def proc_cpu_by_comm():
 
 
 def key_procs_alive():
-    return {name: bool(pgrep(frag)) for name, frag in KEY_PROCS.items()}
+    return {name: bool(pgrep(frag)) for name, frag in ACTIVE_KEY_PROCS.items()}
 
 
 def kill_leftovers(log, wait=6.0):
@@ -348,6 +377,13 @@ FAULTS = {  # name -> what is signalled; fragment = argv[0] of the target proces
 }
 
 
+M6_FAULTS = list(FAULTS)
+for _name, (_frag, _sig, _resume, _when) in tk.M7_FAULTS.items():
+    FAULTS[_name] = {"fragment": _frag, "sig": getattr(signal, _sig), "when": _when}
+    if _resume:
+        FAULTS[_name]["resume"] = signal.SIGCONT
+
+
 def find_pid(fragment):
     """First pid whose argv[0] contains fragment (the stack has one component container, one bridge, one slam node)."""
     for pid in filter(str.isdigit, os.listdir("/proc")):
@@ -409,7 +445,7 @@ class GzTruth:
             self.proc.kill()
 
 
-def fault_phase(spec, st, work, sim_now, recorder, rec_path, res, log, off, stop):
+def fault_phase(spec, st, work, sim_now, recorder, rec_path, res, log, off, stop, extra_state=None):
     """One fault trial: drive, wait for steady driving, signal, hold, resume, observe, evaluate (faultcalc)."""
     fault = FAULTS[spec["fault"]]
     truth = GzTruth()
@@ -425,13 +461,21 @@ def fault_phase(spec, st, work, sim_now, recorder, rec_path, res, log, off, stop
     threading.Thread(target=sampler, daemon=True).start()
     goal_stop = threading.Event()
     threading.Thread(target=lambda: work.run(None, should_stop=lambda: goal_stop.is_set() or stop.is_set()), daemon=True).start()
+    when = fault.get("when", "moving")
+    extra_state = extra_state or {}
+    res["trigger_condition"] = when
+
+    def when_ok(last):
+        """Condition on the ground truth (t, x, y, speed, |yaw rate|, yaw) under which the signal is sent."""
+        return tk.when_ok(when, last[3], last[4], extra_state.get("recovery_active", lambda: False)(),
+                          extra_state.get("dock_state", lambda: None)())
     t_wait, since = time.monotonic(), None
     steady = False
     while not stop.is_set() and time.monotonic() - t_wait < 150.0:
         last = truth.last()
-        ok = last is not None and time.monotonic() - last[0] < 0.2 and last[3] >= 0.12 and st["last_state"] == "run"
+        ok = last is not None and time.monotonic() - last[0] < 0.2 and when_ok(last) and st["last_state"] == "run"
         since = (since or time.monotonic()) if ok else None
-        if since and time.monotonic() - since >= 2.0:
+        if since and time.monotonic() - since >= tk.WHEN_DWELL_S.get(when, 2.0):
             steady = True
             break
         time.sleep(0.05)
@@ -447,6 +491,9 @@ def fault_phase(spec, st, work, sim_now, recorder, rec_path, res, log, off, stop
     res["target_pid"], res["target_cmdline"] = pid, cmdline
     pre = truth.last()
     res["pre_signal"] = {"standin_state": st["last_state"], "speed_mps": round(pre[3], 3), "x": round(pre[1], 3), "y": round(pre[2], 3),
+                         "yaw_rate": round(pre[4], 3), "when": when,
+                         "dock_state": extra_state.get("dock_state", lambda: None)(),
+                         "recovery_active": bool(extra_state.get("recovery_active", lambda: False)()),
                          "goals_done": len(work.records), "stack": st["stack_last"] and st["stack_last"].get("state")}
     t_sig, sim_sig = time.monotonic(), sim_now()
     res["signal_wall"], res["signal_sim_s"] = iso(t_sig, off), round(sim_sig, 3)
@@ -510,6 +557,8 @@ def fault_phase(spec, st, work, sim_now, recorder, rec_path, res, log, off, stop
 
 def worker_main(spec_path):
     spec = json.load(open(spec_path))
+    task_cfg = tk.TASKS[spec.get("task", "nav_slam")]
+    set_task(spec.get("task", "nav_slam"), spec.get("composition", "true"))
     import rclpy
     from rclpy.duration import Duration
     from rclpy.executors import SingleThreadedExecutor
@@ -567,7 +616,20 @@ def worker_main(spec_path):
                                                                    history=HistoryPolicy.KEEP_LAST, depth=1))
     node.create_subscription(String, "oomwoo/health/stack", on_stack, latched_state_qos())
     node.create_subscription(String, "oomwoo/health/mcu_state", on_state, latched_state_qos())
-    work = wl.Workload(node, sim_now=sim_now, log=lambda m: log("  " + m), mix=spec.get("workload") == "mix")
+    tally = tk.ActionTally()
+    import jobs
+    wkw = dict(sim_now=sim_now, log=lambda m: log("  " + m))
+    kind = task_cfg["workload"]
+    if kind == "goals":
+        work = wl.Workload(node, mix=spec.get("workload") == "mix", **wkw)
+    elif kind == "coverage":
+        work = jobs.CoverageJob(node, executor=task_cfg["planner"], tally=tally, restart=not spec.get("fault"), **wkw)
+    elif kind == "dock":
+        work = jobs.DockJob(node, **wkw)
+    elif kind == "recovery":
+        work = jobs.RecoveryJob(node, tally=tally, **wkw)
+    else:
+        raise SystemExit(f"unknown workload kind {kind!r}")
     # Nav2 recovery actions (behavior_server): intervals in which any of them has an active goal (accepted/executing/canceling)
     from action_msgs.msg import GoalStatusArray
     from rclpy.qos import DurabilityPolicy
@@ -577,6 +639,7 @@ def worker_main(spec_path):
         def cb(m):
             t = time.monotonic()
             act = any(g.status in (1, 2, 3) for g in m.status_list)
+            tally.update(t, topic, [(bytes(g.goal_info.goal_id.uuid).hex(), g.status) for g in m.status_list])
             with lock:
                 was = any(rec_active.values())
                 rec_active[topic] = act
@@ -587,10 +650,19 @@ def worker_main(spec_path):
                     recoveries[-1][1] = t
         return cb
 
+    status_qos = QoSProfile(reliability=ReliabilityPolicy.RELIABLE, durability=DurabilityPolicy.TRANSIENT_LOCAL,
+                            history=HistoryPolicy.KEEP_LAST, depth=1)
     for a in ("spin", "backup", "wait", "drive_on_heading"):
-        node.create_subscription(GoalStatusArray, f"/{a}/_action/status", mk_status_cb(a),
-                                 QoSProfile(reliability=ReliabilityPolicy.RELIABLE, durability=DurabilityPolicy.TRANSIENT_LOCAL,
-                                            history=HistoryPolicy.KEEP_LAST, depth=1))
+        node.create_subscription(GoalStatusArray, f"/{a}/_action/status", mk_status_cb(a), status_qos)
+    if task_cfg["nav"]:  # other Nav2 actions are only counted (not part of the "recovery active" intervals)
+        def mk_count_cb(topic):
+            return lambda m: tally.update(time.monotonic(), topic,
+                                          [(bytes(g.goal_info.goal_id.uuid).hex(), g.status) for g in m.status_list])
+        for a in ("navigate_to_pose", "compute_path_to_pose", "follow_path"):
+            node.create_subscription(GoalStatusArray, f"/{a}/_action/status", mk_count_cb(a), status_qos)
+    dock_state = {"v": None}
+    if task_cfg["workload"] == "dock":
+        node.create_subscription(String, "/dock_drive/state", lambda m: dock_state.__setitem__("v", m.data), 10)
     tfbuf = tf2_ros.Buffer()
     tflist = tf2_ros.TransformListener(tfbuf, node)  # destroyed once localized: /tf is hot
     ex = SingleThreadedExecutor()
@@ -602,14 +674,16 @@ def worker_main(spec_path):
     clock_back = [False]
 
     def localized():
+        if task_cfg["localization"] == "none":
+            return True   # dock task: no map, no localization
         try:
             return tfbuf.can_transform("map", "base_footprint", Time(), Duration(seconds=0.0))
         except Exception:
             return False
 
     from std_srvs.srv import Trigger
-    lm_clients = [node.create_client(Trigger, f"/{n}/is_active") for n in ("lifecycle_manager_localization",
-                                                                         "lifecycle_manager_navigation")]
+    lm_clients = ([node.create_client(Trigger, f"/{n}/is_active") for n in ("lifecycle_manager_localization",
+                                                                          "lifecycle_manager_navigation")] if task_cfg["nav"] else [])
 
     def lifecycle_active():
         """Nav2 lifecycle managers report all their nodes active (the action server exists earlier and rejects goals)."""
@@ -625,7 +699,7 @@ def worker_main(spec_path):
 
     def armed():
         return (sim_now() > 0 and lifecycle_active() and st["last_state"] == "run" and (st["stack_last"] or {}).get("emit_mcu_heartbeat") is True
-                and work.client.server_is_ready() and localized())
+                and work.ready() and localized())
 
     t_start = time.monotonic()
     while not stop.is_set() and time.monotonic() - t_start < spec["arm_timeout_s"] and not armed():
@@ -635,7 +709,7 @@ def worker_main(spec_path):
     if not res["armed"]:
         res["interrupted"] = stop.is_set()
         res["arm_detail"] = {"clock_sim_s": sim_now(), "standin_state": st["last_state"], "stack": st["stack_last"],
-                             "nav_server": work.client.server_is_ready(), "map_to_base": localized(),
+                             "job_ready": work.ready(), "map_to_base": localized(),
                              "lifecycle_active": lifecycle_active()}
         finish_recorder(recorder)
         json.dump(res, open(spec["result"], "w"))
@@ -646,9 +720,27 @@ def worker_main(spec_path):
         tflist.unregister()
     except Exception:
         pass
+    getattr(work, "warm", lambda: None)()
+    # host load as a time series (1-min load average sampled every 10 s from here on; M7 review: one value at session end hid
+    # the load at the time of an event). Written into soak sessions (`loadavg_series`) and fault trials alike.
+    load_series = []
+    load_t0 = time.monotonic()
+
+    def load_sampler():
+        while not stop.is_set():
+            try:
+                load_series.append([round(time.monotonic() - load_t0, 1), float(open("/proc/loadavg").read().split()[0])])
+            except (OSError, ValueError):
+                pass
+            stop.wait(10.0)
+    threading.Thread(target=load_sampler, daemon=True).start()
+    res["loadavg_series_basis"] = "[seconds since arming, 1-min load average of the HOST (shared by all instances)], every 10 s"
     time.sleep(2.0)  # let the first goal start from a settled stack
     if spec.get("fault"):
-        fault_phase(spec, st, work, sim_now, recorder, rec_path, res, log, off, stop)
+        fault_phase(spec, st, work, sim_now, recorder, rec_path, res, log, off, stop,
+                    extra_state={"recovery_active": lambda: any(rec_active.values()), "dock_state": lambda: dock_state["v"]})
+        res["action_tally"] = tally.counts
+        res["loadavg_series"] = list(load_series)
         json.dump(res, open(spec["result"], "w"))
         if rclpy.ok():
             rclpy.shutdown()
@@ -657,7 +749,7 @@ def worker_main(spec_path):
     # ---- verification of the transport profile in the processes that matter (environment as inherited)
     prof_env = {}
     want = spec["profile_file"] or None
-    for name, frag in KEY_PROCS.items():
+    for name, frag in ACTIVE_KEY_PROCS.items():
         pids = pgrep(frag)
         got = "no process"
         for pid in pids[:1]:
@@ -763,6 +855,10 @@ def worker_main(spec_path):
     res["goal_duration_sim_s"] = ({"min": min(r["duration_sim_s"] for r in ok), "max": max(r["duration_sim_s"] for r in ok),
                                     "mean": round(sum(r["duration_sim_s"] for r in ok) / len(ok), 2)} if ok else None)
     res["goals"] = recs
+    res["action_tally"] = tally.counts
+    res["loadavg_series"] = list(load_series)
+    if task_cfg["workload"] == "coverage":
+        res["coverage_ratio_meter_end"] = getattr(work, "ratio", None)
 
     # ---- recorder data, restricted to the window; times converted to ISO wall + sim
     if rec is None:
@@ -866,13 +962,15 @@ def session_record(args, k, profile, log, windows):
                                  if args.health_clock == "wall" else
                                  "health nodes on SIM time (/clock subscribed in each); ages are sim seconds; a frozen /clock freezes "
                                  "the aggregator's staleness check"),
-           "watcher_config": ("config/nav_watch_sim.yaml + config/nav_rosters.yaml (static roster)" if args.health_sources == "watcher" else None),
+           "task": args.task, "composition": args.composition,
+           "watcher_config": (f"config/{tk.TASKS[args.task]['watch']} + config/{tk.TASKS[args.task]['roster']} (static roster)"
+                              if args.health_sources == "watcher" else None),
            "domain_id": os.environ.get("ROS_DOMAIN_ID"), "instance": os.environ.get("OHK_INSTANCE"),
            "kit_commit": os.environ.get("OHK_KIT_COMMIT"), "aggregator_commit": os.environ.get("OHK_AGG_COMMIT"),
            "start": dt.datetime.now().astimezone().isoformat(timespec="seconds"), "valid": False,
            "timing_note": "sim = Gazebo /clock, wall = host monotonic; stand-in decides on wall clock (steady)"}
     if args.health_sources == "watcher":
-        rec["max_age_sec"] = "per component from config/nav_rosters.yaml (the --max-age argument is ignored by the watcher)"
+        rec["max_age_sec"] = "per component from the task roster config (the --max-age argument is ignored by the watcher)"
     reasons = []
     spec_path = f"/tmp/ohk_fs_spec_{k}.json"
     res_path = f"/tmp/ohk_fs_res_{k}.json"
@@ -904,14 +1002,16 @@ def session_record(args, k, profile, log, windows):
                                 "FASTRTPS_DEFAULT_PROFILES_FILE", "GZ_PARTITION", "OHK_GPU", "NVIDIA_DRIVER_CAPABILITIES")}
         cmd = ["ros2", "launch", LAUNCH, f"gpu:={'true' if args.gpu else 'false'}", f"health_sources:={args.health_sources}",
                f"max_age_sec:={args.max_age}", f"rate_hz:={args.rate_hz}", f"soft_stop_timeout_s:={args.soft_stop}",
-               f"health_sim_time:={'true' if args.health_clock == 'sim' else 'false'}"]
+               f"health_sim_time:={'true' if args.health_clock == 'sim' else 'false'}",
+               *tk.launch_args(args.task, args.composition)]
         log(f"session {k}: profile {profile}, gpu {args.gpu}, duration {args.duration_sim} sim s, rtf {args.rtf}")
         progress("starting stack")
         t_launch = time.monotonic()
         stack = subprocess.Popen(cmd, stdout=stack_log, stderr=subprocess.STDOUT, start_new_session=True,
                                  preexec_fn=b.die_with_parent)
         spec = {"session": k, "profile": profile, "profile_file": prof_file or "", "duration_sim_s": args.duration_sim,
-                "rtf": args.rtf, "arm_timeout_s": ARM_TIMEOUT_S, "gpu": args.gpu, "result": res_path, "workload": args.workload}
+                "rtf": args.rtf, "arm_timeout_s": ARM_TIMEOUT_S, "gpu": args.gpu, "result": res_path, "workload": args.workload,
+                "task": args.task, "composition": args.composition}
         json.dump(spec, open(spec_path, "w"))
         worker = subprocess.Popen([sys.executable, "-u", os.path.abspath(__file__), "--worker", spec_path], env=dict(os.environ),
                                   start_new_session=True, preexec_fn=b.die_with_parent)
@@ -980,7 +1080,12 @@ def session_record(args, k, profile, log, windows):
     checks["armed"] = bool(res.get("armed"))
     sim, want = res.get("sim_s"), args.duration_sim
     checks["clock_advanced"] = bool(sim is not None and sim >= 0.9 * want and not res.get("clock_went_backwards"))
-    checks["robot_moved"] = bool(res.get("distance_m", 0) >= 1.0 and res.get("goals_succeeded", 0) >= 1)
+    kind = tk.TASKS[args.task]["workload"]
+    if kind == "coverage":   # planner records are cut by the session end; progress = the meter's ratio and NavigateToPose results
+        moved = (res.get("coverage_ratio_meter_end") or 0.0) >= 0.01
+    else:
+        moved = res.get("goals_succeeded", 0) >= 1
+    checks["robot_moved"] = bool(res.get("distance_m", 0) >= 1.0 and moved)
     checks["gating_in_path"] = bool(res.get("cmd_vel_in_msgs", 0) > 0 and res.get("cmd_vel_gated_msgs", 0) > 0)
     kp = rec.get("key_procs_alive_at_end", {})
     checks["key_processes_alive"] = bool(kp) and all(kp.values())
@@ -1018,7 +1123,7 @@ def trial_record(args, k, fault, rep, log, windows):
            "requested_rtf": args.rtf, "domain_id": os.environ.get("ROS_DOMAIN_ID"), "instance": os.environ.get("OHK_INSTANCE"),
            "kit_commit": os.environ.get("OHK_KIT_COMMIT"), "aggregator_commit": os.environ.get("OHK_AGG_COMMIT"),
            "start": dt.datetime.now().astimezone().isoformat(timespec="seconds"), "valid": False,
-           "soft_stop_timeout_s": args.soft_stop, "workload": "plain",
+           "soft_stop_timeout_s": args.soft_stop, "workload": "plain", "task": args.task, "composition": args.composition,
            "timing_note": "times *_s are seconds from the signal on the host monotonic clock (= sim seconds at RTF 1.0); sim_* fields are "
                           "Gazebo /clock; ground truth is gz /odom (physics), not the ROS bridge"}
     reasons = []
@@ -1038,13 +1143,14 @@ def trial_record(args, k, fault, rep, log, windows):
             os.environ.pop("GALLIUM_DRIVER", None)
         cmd = ["ros2", "launch", LAUNCH, f"gpu:={'true' if args.gpu else 'false'}", f"health_sources:={args.health_sources}",
                f"max_age_sec:={args.max_age}", f"rate_hz:={args.rate_hz}", f"soft_stop_timeout_s:={args.soft_stop}",
-               f"health_sim_time:={'true' if args.health_clock == 'sim' else 'false'}"]
+               f"health_sim_time:={'true' if args.health_clock == 'sim' else 'false'}",
+               *tk.launch_args(args.task, args.composition)]
         log(f"trial {k}: {fault} rep {rep}, profile {profile}")
         t_launch = time.monotonic()
         stack = subprocess.Popen(cmd, stdout=stack_log, stderr=subprocess.STDOUT, start_new_session=True, preexec_fn=b.die_with_parent)
         spec = {"session": k, "profile": profile, "profile_file": prof_file or "", "duration_sim_s": 0, "rtf": args.rtf,
                 "arm_timeout_s": ARM_TIMEOUT_S, "gpu": args.gpu, "result": res_path, "workload": "plain", "fault": fault,
-                "hold_s": args.fault_hold, "observe_s": args.fault_observe}
+                "hold_s": args.fault_hold, "observe_s": args.fault_observe, "task": args.task, "composition": args.composition}
         json.dump(spec, open(spec_path, "w"))
         worker = subprocess.Popen([sys.executable, "-u", os.path.abspath(__file__), "--worker", spec_path], env=dict(os.environ),
                                   start_new_session=True, preexec_fn=b.die_with_parent)
@@ -1132,6 +1238,10 @@ def parent_main(args):
     for p in profiles:
         if p not in s.PROFILES:
             raise SystemExit(f"unknown profile {p!r}; known: {', '.join(s.PROFILES)}")
+    set_task(args.task, args.composition)
+    if args.composition == "true" and any(f.strip() in tk.M7_FAULTS and tk.M7_FAULTS[f.strip()][0].startswith("/nav2_")
+                                          for f in args.faults.split(",")) and args.mode == "faults":
+        raise SystemExit("per-node Nav2 faults need --composition false (one process per Nav2 node)")
     if args.gpu and not (os.environ.get("OHK_GPU") == "1"):
         raise SystemExit("--gpu needs a container created with `tools/sim.sh up N --gpu`")
     for sig in (signal.SIGTERM, signal.SIGINT, signal.SIGHUP):
@@ -1210,10 +1320,14 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0], formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--mode", default="soak", choices=["soak", "faults"],
                     help="soak: sessions.jsonl (default); faults: one stack per trial, faults.jsonl (see --faults, --reps)")
-    ap.add_argument("--faults", default=",".join(FAULTS), help="faults mode: comma list of " + ", ".join(FAULTS))
+    ap.add_argument("--faults", default=",".join(M6_FAULTS), help="faults mode: comma list of " + ", ".join(FAULTS))
     ap.add_argument("--reps", type=int, default=5, help="faults mode: repetitions of each fault (default 5)")
     ap.add_argument("--fault-hold", type=float, default=5.0, help="faults mode: seconds between SIGSTOP/pause and SIGCONT/unpause (default 5)")
     ap.add_argument("--fault-observe", type=float, default=25.0, help="faults mode: observation seconds after the resume (kills: after the signal)")
+    ap.add_argument("--task", default="nav_slam", choices=sorted(tk.TASKS),
+                    help="M7: stack and workload preset (bench/fullstack/tasks.py); nav_slam = the M6 stack and workload")
+    ap.add_argument("--composition", default="true", choices=["true", "false"],
+                    help="amcl tasks: true = upstream nav.launch.py (one composed nav2_container); false = one process per Nav2 node")
     ap.add_argument("--duration-sim", type=float, default=300.0, help="sim seconds of workload per session (default 300)")
     ap.add_argument("--workload", default="plain", choices=["plain", "mix"],
                     help="plain: 8-pose goal loop; mix: 12-goal cycle with test cancels and an unplannable goal (recoveries)")

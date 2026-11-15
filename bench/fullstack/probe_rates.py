@@ -30,6 +30,8 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--seconds", type=float, default=60.0)
     ap.add_argument("--out", default=None)
+    ap.add_argument("--extra", action="append", default=[], metavar="TOPIC:PKG/msg/Type",
+                    help="M7: more topics to count (header stamp used when present), e.g. /amcl_pose:geometry_msgs/msg/PoseWithCovarianceStamped")
     a = ap.parse_args()
     rclpy.init()
     node = Node("ohk_probe_rates")
@@ -79,6 +81,16 @@ def main():
         node.create_subscription(PolygonStamped, t, lambda m, t=t: rec(t, m.header.stamp.sec + m.header.stamp.nanosec / 1e9), BE)
     for t in ("/cmd_vel", "/cmd_vel_nav", "/cmd_vel_smoothed", "/cmd_vel_gated"):
         node.create_subscription(Twist, t, lambda m, t=t: rec(t), BE)
+    from rosidl_runtime_py.utilities import get_message
+    for spec in a.extra:
+        topic, typ = spec.split(":", 1)
+
+        def cb(m, topic=topic):
+            h = getattr(m, "header", None)
+            rec(topic, None if h is None else h.stamp.sec + h.stamp.nanosec / 1e9)
+        # transient-local publishers (e.g. /amcl_pose) need a compatible subscriber to be counted; best-effort volatile is
+        # compatible with every publisher QoS except it gets no latched sample, which is what a rate probe wants
+        node.create_subscription(get_message(typ), topic, cb, BE)
     threading.Thread(target=rclpy.spin, args=(node,), daemon=True).start()
     t0 = time.monotonic()
     time.sleep(a.seconds)
