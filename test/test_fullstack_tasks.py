@@ -124,7 +124,7 @@ def test_gz_client_builds_requests_without_gz(monkeypatch):
 def test_m7_faults_cover_the_commanding_nodes():
     assert {"sigkill_behavior", "sigkill_dock_drive", "sigkill_coverage", "sigkill_amcl"} <= set(tk.M7_FAULTS)
     for name, (frag, sig, resume, when) in tk.M7_FAULTS.items():
-        assert (sig == "SIGSTOP") == resume and when in ("moving", "fast", "recovery", "dock_back"), name
+        assert (sig == "SIGSTOP") == resume and when in ("moving", "fast", "recovery", "recovery_nominal", "dock_back"), name
 
 
 def test_reactive_variant_differs_only_in_cmd_max_age():
@@ -135,3 +135,64 @@ def test_reactive_variant_differs_only_in_cmd_max_age():
     assert mc(a)["cmd_max_age_s"] == 0.15 and mc(b)["cmd_max_age_s"] == 0.30
     mc(a)["cmd_max_age_s"] = 0.30
     assert a == b
+
+
+def test_m8_tasks_select_new_rules_and_leave_the_m7_tasks_alone():
+    for name, base in (("nav_amcl_chain", "nav_amcl"), ("recovery_chain", "recovery"), ("dock_fix", "dock"), ("recovery_probe_chain", "recovery_probe")):
+        a, b = dict(tk.TASKS[name]), dict(tk.TASKS[base])
+        for k in ("watch", "roster"):
+            assert a.pop(k) != b.pop(k)
+        assert a == b, name
+    assert tk.TASKS["nav_amcl"]["watch"] == "nav_watch_amcl.yaml" and tk.TASKS["dock"]["watch"] == "nav_watch_dock.yaml"
+
+
+def test_recovery_nominal_trigger_matches_the_exposure_criterion():
+    ok = lambda sp, w, act=True: tk.when_ok("recovery_nominal", sp, w, recovery_active=act)  # noqa: E731
+    assert ok(0.0, 0.95) and ok(0.12, 0.0)                  # nominal spin, nominal backup
+    assert not ok(0.0, 0.71) and not ok(0.05, 0.2)          # tail of a spin, a creeping backup
+    assert not ok(0.0, 0.95, act=False) and not ok(0.0, 0.0)  # no action active, a wait
+    assert tk.M7_FAULTS["sigkill_behavior_nominal"][3] == "recovery_nominal"
+
+
+def _watch_doc(n):
+    return yaml.safe_load((ROOT / "config" / n).read_text())
+
+
+def test_chain_config_is_the_amcl_config_plus_one_watch_and_one_critical_component():
+    a, b = _watch_doc("nav_watch_amcl.yaml"), _watch_doc("nav_watch_amcl_chain.yaml")
+    extra = [w for w in b["watches"] if w not in a["watches"]]
+    assert [w["component_id"] for w in extra] == ["command_chain"] and all(w in b["watches"] for w in a["watches"])
+    (c,) = [w for w in parse_watches(b) if w.is_chain]
+    assert (c.chain["in_topic"], c.chain["out_topic"]) == ("/cmd_vel_nav", "/cmd_vel_smoothed")
+    # bounds derived in docs/M8_RECON.md: 1.5 x the measured maxima, rounded up to 50 ms
+    assert c.chain["in_max_age_s"] == pytest.approx(math.ceil(1.5 * 0.201 / 0.05) * 0.05)
+    assert c.chain["stop_grace_s"] == pytest.approx(math.ceil(1.5 * 0.344 / 0.05) * 0.05)
+    ra = parse_job_config(_watch_doc("nav_rosters_amcl.yaml")).rosters["nav"].components
+    rb = parse_job_config(_watch_doc("nav_rosters_amcl_chain.yaml")).rosters["nav"].components
+    assert [x for x in rb if x not in ra] == [{"component_id": "command_chain", "critical": True, "max_age_sec": 0.15}]
+    assert all(x in rb for x in ra)
+
+
+def test_m7_configs_do_not_use_the_m8_rules():
+    for n in ("nav_watch.yaml", "nav_watch_sim.yaml", "nav_watch_amcl.yaml", "nav_watch_amcl_reactive.yaml", "nav_watch_dock.yaml"):
+        assert not any(w.is_chain or w.is_reverse_fix for w in parse_watches(_watch_doc(n))), n
+
+
+def test_dock_fix_config_is_the_dock_config_plus_one_watch_with_the_derived_bound():
+    a, b = _watch_doc("nav_watch_dock.yaml"), _watch_doc("nav_watch_dock_fix.yaml")
+    extra = [w for w in b["watches"] if w not in a["watches"]]
+    assert [w["component_id"] for w in extra] == ["dock_fix"] and all(w in b["watches"] for w in a["watches"])
+    (r,) = [w for w in parse_watches(b) if w.is_reverse_fix]
+    # recon: p99 of the gaps between consecutive fixes inside reversing episodes 1.202 s; bound = ceil_50ms(1.5 x p99)
+    assert r.reverse_fix["fix_max_age_s"] == pytest.approx(math.ceil(1.5 * 1.202 / 0.05) * 0.05)
+    assert r.reverse_fix["fix_max_age_s"] < 3.0 and r.reverse_fix["from_reverse_start"] is False   # dock_drive's own pose_timeout_s is 3.0
+    ra = parse_job_config(_watch_doc("nav_rosters_dock.yaml")).rosters["nav"].components
+    rb = parse_job_config(_watch_doc("nav_rosters_dock_fix.yaml")).rosters["nav"].components
+    assert [x for x in rb if x not in ra] == [{"component_id": "dock_fix", "critical": True, "max_age_sec": 0.15}] and all(x in rb for x in ra)
+
+
+def test_only_the_dock_config_selects_rule_b():
+    """Rule B treats ANY writer that reverses on /cmd_vel as the dock commander: it may only be used in the dock stack."""
+    users = [p.name for p in sorted((ROOT / "config").glob("nav_watch*.yaml")) if any(w.is_reverse_fix for w in parse_watches(yaml.safe_load(p.read_text())))]
+    assert users == ["nav_watch_dock_fix.yaml"]
+    assert [t for t, v in tk.TASKS.items() if v["watch"] == "nav_watch_dock_fix.yaml"] == ["dock_fix"] and tk.TASKS["dock_fix"]["nav"] is False

@@ -88,6 +88,12 @@ def fake_cmd(kind, name):
         # silent while "off" on ENABLE_TOPIC; the staggered drive of scenario o/o3 is driven by the test
         "drive": ["--kind", "twist", "--topic", "/drive_cmd", "--hz", "20", "--enable-topic", ENABLE_TOPIC],
         "cmd": ["--kind", "twist", "--topic", "/cmd_vel_in", "--hz", "20", "--enable-topic", ENABLE_TOPIC],
+        # M8: a commander upstream of the smoother (5 Hz like controller_server) and the smoother imitation (20 Hz on its output and on the
+        # stand-in input; re-emits the held setpoint for timeout-s after the commander died)
+        "commander": ["--kind", "twist", "--topic", "/nav_cmd", "--hz", "5", "--enable-topic", ENABLE_TOPIC],
+        "smoother": ["--kind", "smoother", "--topic", "/smoothed_cmd", "--also-topic", "/cmd_vel_in", "--in-topic", "/nav_cmd", "--hz", "20"],
+        # M8: a sensor fix at the dock detector's rate during reversing (0.6 s)
+        "fix": ["--kind", "pose", "--topic", "/dock_fix", "--hz", "1.6667"],
     }[kind]
 
 
@@ -95,8 +101,8 @@ def fake_process(kind, extra=()):
     return ExecuteProcess(cmd=[sys.executable, FAKES, *fake_cmd(kind, kind), *extra], name=kind, output="screen")
 
 
-def build_nav_description(roster_doc=None, fakes=("scan", "odom", "tf", "polygon"), odom_extra=("--vx", "0")):
-    """Default: static roster; stationary robot (odom vx 0), no command source."""
+def build_nav_description(roster_doc=None, fakes=("scan", "odom", "tf", "polygon"), odom_extra=("--vx", "0"), watches_doc=None):
+    """Default: static roster; stationary robot (odom vx 0), no command source. `watches_doc`: other watch config (M8 rules)."""
     h.ACTIONS.clear()
     ld = launch.LaunchDescription()
 
@@ -105,7 +111,7 @@ def build_nav_description(roster_doc=None, fakes=("scan", "odom", "tf", "polygon
         ld.add_action(action)
 
     CONFIG_PATHS["rosters"] = write_yaml(roster_doc or static_roster(), "rosters.yaml")
-    CONFIG_PATHS["watch"] = write_yaml(WATCHES, "watch.yaml")
+    CONFIG_PATHS["watch"] = write_yaml(watches_doc or WATCHES, "watch.yaml")
     add("health_monitor", Node(name="health_monitor", package="oomwoo_health_monitor", executable="health_monitor_node"))
     add("mcu_standin", Node(name="mcu_standin", package="oomwoo_health_kit", executable="mcu_standin_node"))
     add("job_roster", Node(
@@ -228,3 +234,36 @@ class NavCase(h.OhkCase):
         if start is not None:
             gaps.append((start - t0, t1 - t0))
         return gaps
+
+
+# ----------------------------------------------------------------------------------------------------- M8 rules (opt-in watch configs)
+# Test copies of the M8 watches with test topic names; the BOUNDS are read from the shipped configs (config/nav_watch_amcl_chain.yaml,
+# config/nav_watch_dock_fix.yaml), so a changed bound changes the tests with it.
+CONFIG_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "config")
+
+
+def _shipped(fname, cid):
+    with open(os.path.join(CONFIG_DIR, fname)) as f:
+        return next(w for w in yaml.safe_load(f)["watches"] if w["component_id"] == cid)
+
+
+_CC = _shipped("nav_watch_amcl_chain.yaml", "command_chain")["command_chain"]
+_RF = _shipped("nav_watch_dock_fix.yaml", "dock_fix")["reverse_fix"]
+CHAIN_IN_MAX_AGE_S, CHAIN_STOP_GRACE_S, REVFIX_MAX_AGE_S = _CC["in_max_age_s"], _CC["stop_grace_s"], _RF["fix_max_age_s"]
+CHAIN = {"component_id": "command_chain", "max_emit_hz": 25,
+         "command_chain": {**_CC, "in_topic": "/nav_cmd", "out_topic": "/smoothed_cmd", "tick_topic": "/odom"}}
+CHAIN_ROSTER = {"component_id": "command_chain", "critical": True, "max_age_sec": 0.15}
+REVFIX = {"component_id": "dock_fix", "max_emit_hz": 25,
+          "reverse_fix": {**_RF, "cmd_topic": "/cmd_vel_in", "fix_topic": "/dock_fix", "tick_topic": "/odom"}}
+REVFIX_ROSTER = {"component_id": "dock_fix", "critical": True, "max_age_sec": 0.15}
+
+
+def m8_description(rule, fakes=("scan", "odom", "tf", "polygon"), odom_extra=("--vx", "0"), chain_overrides=None):
+    """Nav description whose watch config and static roster add the M8 rule `chain` or `revfix` to the test copy of the M7 set.
+    `chain_overrides`: extra keys for the command_chain watch (e.g. msg_type)."""
+    watch, comp = (CHAIN, CHAIN_ROSTER) if rule == "chain" else (REVFIX, REVFIX_ROSTER)
+    if chain_overrides:
+        watch = {**watch, "command_chain": {**watch["command_chain"], **chain_overrides}}
+    roster = static_roster()
+    roster["rosters"]["nav"]["components"] = [*roster["rosters"]["nav"]["components"], comp]
+    return build_nav_description(roster_doc=roster, fakes=fakes, odom_extra=odom_extra, watches_doc={"watches": [*WATCHES["watches"], watch]})

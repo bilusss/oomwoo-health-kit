@@ -12,6 +12,7 @@ stand-in cumulative soft_stops counter delta and the aggregator's healthy_for_se
 import collections
 import datetime as dt
 import json
+import statistics
 import sys
 
 
@@ -113,6 +114,13 @@ def aggregate(paths):
             r["soft"] += d.get("soft_stops_n") or 0
             r["gaps"] += d.get("hb_gaps_n") or 0
             r["uncmd"] += (d.get("uncommanded_motion") or {}).get("n", 0)
+            ls = [x[1] for x in (d.get("loadavg_series") or [])]   # M8: host 1-min load average sampled every 10 s during the session
+            if ls:
+                r.setdefault("load_med", []).append(statistics.median(ls))
+                r["load_max"] = max(r["load_max"], max(ls))
+            r.setdefault("blamed", collections.Counter()).update(
+                "+".join(sorted(e.get("blamed") or [])) or "none" for e in d.get("health_events", []) if e["kind"] == "soft_stop")
+            r.setdefault("phase", collections.Counter()).update(e.get("phase") or "?" for e in d.get("health_events", []) if e["kind"] == "soft_stop")
             acts = [a["epoch"] for g in d.get("goals", []) for a in g.get("harness_actions", [])]
             for e in d.get("health_events", []):
                 if e["kind"] == "soft_stop":
@@ -136,6 +144,11 @@ def by_task(paths):
               f"distance {r['dist_m'] / 1000:.2f} km  soft_stops {int(r['soft'])} {dict(r.get('cls', {}))}, {int(r['soft_active'])} while active = {rate:.1f} per active h, {int(r['soft_idle'])} while idle "
               f"(0-0.5 s after a harness gz action: {int(r.get('soft_after_harness', 0))}, other: {int(r.get('soft_other', 0))})  "
               f"hb_gaps>0.2s {int(r['gaps'])}  uncommanded {int(r['uncmd'])}")
+        if r.get("load_med"):
+            print(f"   host load (1-min avg of the host, sampled every 10 s): median of session medians {statistics.median(r['load_med']):.1f}, "
+                  f"max {r['load_max']:.1f} of 12 logical cores")
+        if r.get("blamed"):
+            print(f"   soft stops by blamed component(s): {dict(r['blamed'])}; by phase: {dict(r['phase'])}")
         print(f"   goals/attempts: {dict(r.get('cat', {}))}")
         print(f"   actions started: {dict(r.get('tally', {}))}")
 

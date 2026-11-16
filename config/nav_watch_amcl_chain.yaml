@@ -1,0 +1,68 @@
+# M8 rule A (opt-in): nav_watch_amcl.yaml plus the `command_chain` watch. Everything else is identical to nav_watch_amcl.yaml.
+# Why: Nav2's velocity_smoother re-emits the held setpoint at 20 Hz for velocity_timeout (1.0 s) after its commander (controller_server,
+# behavior_server) died or froze, so /cmd_vel stays fresh and drive_supervision stays healthy (M7: 1.0-1.3 s of motion, about 60 degrees of
+# spin, never detected). command_chain supervises the stage from both sides: while /cmd_vel_smoothed (the smoother's output) is non-zero
+# there must be a non-zero message on /cmd_vel_nav (its input; written by controller_server and 5 behavior_server publishers) no older than
+# in_max_age_s, or the input must have gone to zero less than stop_grace_s ago (a commanded stop: the smoother is decelerating).
+# Bounds are DERIVED from the recon trace (docs/M8_RECON.md, results/fullstack/m8_recon/), not from a soak:
+#   in_max_age_s 0.35 = ceil_to_50ms(1.5 x the longest period of non-zero /cmd_vel_nav messages, 0.201 s: controller 5 Hz; behavior actions 0.101 s)
+#   stop_grace_s 0.55 = ceil_to_50ms(1.5 x the longest time from the first zero input message to the first zero smoothed message, 0.344 s: spin)
+# Added after the M8 measurements (they only act where the old code said "healthy because nothing was ever seen"; docs/FINDINGS.md M8): msg_type (default
+# geometry_msgs/msg/Twist; TwistStamped selectable), a graph check (both stage topics must have a publisher of that type, else not-ok with the reason in the log), and
+# odometry above motion_linear/motion_angular for more than motion_grace_s while the stage output was never seen is not-ok.
+# Not covered: a commander that dies behind a stage that does not re-emit; writers that bypass the smoother (docking_server and the reactive
+# coverage planner write /cmd_vel directly: drive_supervision covers those); a commander that is alive but wrong.
+watches:
+  - component_id: lidar
+    topic: /scan
+    type: sensor_msgs/msg/LaserScan
+
+  - component_id: odom
+    topic: /odom
+    type: nav_msgs/msg/Odometry
+    max_emit_hz: 50
+
+  - component_id: localization
+    tf: {parent: map, child: odom}      # no writer guard on tf watches: a second writer of the pair is not detected
+    max_emit_hz: 10
+
+  # cmd_topic = what the stand-in receives (cmd_vel_in remapped to /cmd_vel): the last hop before the gate, any writer counts
+  # (max_publishers is not applied to it). Measured on this stack (M7_RECON): collision_monitor and docking_server write it at rest (coverage_planner too when it runs); /cmd_vel_nav has 6 writers (controller_server,
+  # 5x behavior_server), /cmd_vel_smoothed 1: neither is the last hop.
+  # Drive supervision (default critical). Tracks the SETPOINT the MCU holds (last value on cmd_topic). Beats only if a command
+  # newer than cmd_max_age_s exists, or the held setpoint is zero (or none was ever seen) and odom has been below the
+  # thresholds for settle_s, or less than coast_max_s passed since the setpoint became zero (coasting). A non-zero held setpoint
+  # with no fresh command never beats whatever odom says (held creep command, stalled wheels with live odometry).
+  # cmd_topic must be the topic the MCU stand-in receives (the last hop; any writer counts, max_publishers is not applied).
+  # Proves: some fresh command exists whenever a non-zero setpoint is held, and the robot is not moving without a setpoint.
+  # Does NOT prove the command is right, or that the wheels follow it (odom here is ground truth in the sim).
+  - component_id: drive_supervision
+    max_emit_hz: 25
+    motion_consistency:
+      odom_topic: /odom
+      cmd_topic: /cmd_vel
+      linear_threshold: 0.02
+      angular_threshold: 0.05
+      cmd_max_age_s: 0.15
+      odom_max_age_s: 0.3
+      settle_s: 0.1                     # odom below the thresholds this long = settled (zero or unknown setpoint)
+      coast_max_s: 0.5                  # zero setpoint: odom may stay above the thresholds this long. Data: Nav2 flows had 0 uncommanded motion in 104 goals; Gazebo coast after a zero command about 0.12 s (5 trials)
+
+  - component_id: local_costmap
+    topic: /local_costmap/published_footprint
+    type: geometry_msgs/msg/PolygonStamped
+
+  - component_id: global_costmap
+    topic: /global_costmap/published_footprint
+    type: geometry_msgs/msg/PolygonStamped
+
+  # M8 rule A. tick_topic: evaluated at every odometry message (50 Hz, emitted at most 25 Hz), so the heartbeat also continues while the
+  # robot is idle (no command, no output) and stops when odometry stops. Input and output are RELIABLE (graph_nav_amcl.json).
+  - component_id: command_chain
+    max_emit_hz: 25
+    command_chain:
+      in_topic: /cmd_vel_nav
+      out_topic: /cmd_vel_smoothed
+      tick_topic: /odom
+      in_max_age_s: 0.35
+      stop_grace_s: 0.55

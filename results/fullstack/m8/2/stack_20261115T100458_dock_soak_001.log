@@ -1,0 +1,1358 @@
+[INFO] [launch]: All log files can be found below /tmp/.ros/log/2026-11-15-10-04-58-549644-3cb80da612e5-3272
+[INFO] [launch]: Default logging verbosity is set to INFO
+/opt/ros/jazzy/lib/python3.12/site-packages/launch/conditions/launch_configuration_equals.py:53: UserWarning: The 'LaunchConfigurationEquals' and 'LaunchConfigurationNotEquals' Conditions are  deprecated. Use the 'EqualsSubstitution' and 'NotEqualsSubstitution' substitutions instead! E.g.:
+  IfCondition(
+  	EqualsSubstitution(LaunchConfiguration('some_launch_arg'), "some_equality_check")
+  )
+  warnings.warn(
+URDF  file name : /ros_ws/install/oomwoo_one/share/oomwoo_one/urdf/robot.urdf.xacro
+World file name : /ros_ws/install/oomwoo_gazebo/share/oomwoo_gazebo/worlds/kitchen_dining.world
+[INFO] [gazebo-1]: process started with pid [3311]
+[INFO] [parameter_bridge-2]: process started with pid [3312]
+[INFO] [robot_state_publisher-3]: process started with pid [3313]
+[INFO] [create-4]: process started with pid [3314]
+[INFO] [ir_beacon_sim-5]: process started with pid [3316]
+[INFO] [dock_detector-6]: process started with pid [3317]
+[INFO] [dock_drive-7]: process started with pid [3318]
+[INFO] [health_monitor_node-8]: process started with pid [3319]
+[INFO] [mcu_standin_node-9]: process started with pid [3320]
+[INFO] [job_roster-10]: process started with pid [3321]
+[INFO] [topic_heartbeat-11]: process started with pid [3322]
+[robot_state_publisher-3] [INFO] [1794733499.034005713] [robot_state_publisher]: Robot initialized
+[create-4] [INFO] [1794733499.068579776] [ros_gz_sim]: Requesting list of world names.
+[gazebo-1] [1;32m[Msg] [0m[1;32mGazebo Sim Server v[0m[1;32m8.15.0[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mLoading SDF world file[[0m[1;32m/ros_ws/install/oomwoo_gazebo/share/oomwoo_gazebo/worlds/kitchen_dining.world[0m[1;32m].[0m
+[job_roster-10] [INFO] [1794733499.363926722] [job_roster]: roster 'nav' (task_id dock) posted
+[topic_heartbeat-11] [INFO] [1794733499.448536116] [topic_heartbeat]: watching lidar<-/scan, odom<-/odom, drive_supervision<-/odom
+[ir_beacon_sim-5] [INFO] [1794733499.479048275] [ir_beacon_sim]: ir_beacon_sim: dock at (-2.11, -0.50, 180 deg), beacon visible within +-40 deg of the bay axis
+[dock_detector-6] [INFO] [1794733499.486018087] [dock_detector]: dock_detector: fitting the dock cross-section
+[gazebo-1] [1;32m[Msg] [0m[1;32mServing entity system service on [[0m[1;32m/[0m[1;32mentity/system/add[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;36m[Dbg] [Physics.cc:1004] [0m[1;36mLoaded [[0m[1;36mgz::physics::dartsim::Plugin[0m[1;36m] from library [[0m[1;36m/opt/ros/jazzy/opt/gz_physics_vendor/lib/gz-physics-7/engine-plugins/libgz-physics-dartsim-plugin.so[0m[1;36m][0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SystemManager.cc:80] [0m[1;36mLoaded system [[0m[1;36mgz::sim::systems::Physics[0m[1;36m] for entity [[0m[1;36m1[0m[1;36m][0m[1;36m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mCreate[0m[1;32m service on [[0m[1;32m/world/default/create_multiple[0m[1;32m] (async)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mCreate[0m[1;32m service on [[0m[1;32m/world/default/create_multiple/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mRemove[0m[1;32m service on [[0m[1;32m/world/default/remove[0m[1;32m] (async)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mRemove[0m[1;32m service on [[0m[1;32m/world/default/remove/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mPose[0m[1;32m service on [[0m[1;32m/world/default/set_pose[0m[1;32m] (async)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mPose[0m[1;32m service on [[0m[1;32m/world/default/set_pose/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mPose[0m[1;32m service on [[0m[1;32m/world/default/set_pose_vector[0m[1;32m] (async)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mPose[0m[1;32m service on [[0m[1;32m/world/default/set_pose_vector/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mLight configuration[0m[1;32m service on [[0m[1;32m/world/default/light_config[0m[1;32m] (async)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mLight configuration[0m[1;32m service on [[0m[1;32m/world/default/light_config/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mPhysics[0m[1;32m service on [[0m[1;32m/world/default/set_physics[0m[1;32m] (async)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mPhysics[0m[1;32m service on [[0m[1;32m/world/default/set_physics/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mSphericalCoordinates[0m[1;32m service on [[0m[1;32m/world/default/set_spherical_coordinates[0m[1;32m] (async)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mSphericalCoordinates[0m[1;32m service on [[0m[1;32m/world/default/set_spherical_coordinates/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mEnable collision[0m[1;32m service on [[0m[1;32m/world/default/enable_collision[0m[1;32m] (async)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mEnable collision[0m[1;32m service on [[0m[1;32m/world/default/enable_collision/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mDisable collision[0m[1;32m service on [[0m[1;32m/world/default/disable_collision[0m[1;32m] (async)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mDisable collision[0m[1;32m service on [[0m[1;32m/world/default/disable_collision/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mMaterial[0m[1;32m service on [[0m[1;32m/world/default/visual_config[0m[1;32m] (async)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mMaterial[0m[1;32m service on [[0m[1;32m/world/default/visual_config/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mMaterial[0m[1;32m service on [[0m[1;32m/world/default/wheel_slip[0m[1;32m] (async)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mMaterial[0m[1;32m service on [[0m[1;32m/world/default/wheel_slip/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gazebo-1] [1;36m[Dbg] [SystemManager.cc:80] [0m[1;36mLoaded system [[0m[1;36mgz::sim::systems::UserCommands[0m[1;36m] for entity [[0m[1;36m1[0m[1;36m][0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SystemManager.cc:80] [0m[1;36mLoaded system [[0m[1;36mgz::sim::systems::SceneBroadcaster[0m[1;36m] for entity [[0m[1;36m1[0m[1;36m][0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [Sensors.cc:697] [0m[1;36mConfiguring Sensors system[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [Sensors.cc:557] [0m[1;36mSensorsPrivate::Run[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SystemManager.cc:80] [0m[1;36mLoaded system [[0m[1;36mgz::sim::systems::Sensors[0m[1;36m] for entity [[0m[1;36m1[0m[1;36m][0m[1;36m[0m
+[gazebo-1] [1;36mSensorsPrivate::RenderThread started[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [Sensors.cc:337] [0m[1;36mWaiting for init[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SystemManager.cc:80] [0m[1;36mLoaded system [[0m[1;36mgz::sim::systems::Imu[0m[1;36m] for entity [[0m[1;36m1[0m[1;36m][0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SystemManager.cc:80] [0m[1;36mLoaded system [[0m[1;36mgz::sim::systems::Contact[0m[1;36m] for entity [[0m[1;36m1[0m[1;36m][0m[1;36m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mLoaded level [[0m[1;32mdefault[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mServing world controls on [[0m[1;32m/world/default[0m[1;32m/control], [[0m[1;32m/world/default[0m[1;32m/control/state] and [[0m[1;32m/world/default[0m[1;32m/playback/control][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mServing GUI information on [[0m[1;32m/world/default[0m[1;32m/[0m[1;32mgui/info[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mWorld [[0m[1;32mdefault[0m[1;32m] initialized with [[0m[1;32mdefault_physics[0m[1;32m] physics profile.[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mServing world SDF generation service on [[0m[1;32m/world/default[0m[1;32m/[0m[1;32mgenerate_world_sdf[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mServing world names on [[0m[1;32m/gazebo/worlds[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mResource path add service on [[0m[1;32m/gazebo/resource_paths/add[0m[1;32m].[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mResource path get service on [[0m[1;32m/gazebo/resource_paths/get[0m[1;32m].[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mResource path resolve service on [[0m[1;32m/gazebo/resource_paths/resolve[0m[1;32m].[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mResource paths published on [[0m[1;32m/gazebo/resource_paths[0m[1;32m].[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mServer control service on [[0m[1;32m/server_control[0m[1;32m].[0m[1;32m[0m
+[parameter_bridge-2] [INFO] [1794733500.059900397] [ros_gz_bridge]: Creating GZ->ROS Bridge: [clock (gz.msgs.Clock) -> clock (rosgraph_msgs/msg/Clock)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1794733500.061313212] [ros_gz_bridge]: Creating GZ->ROS Bridge: [joint_states (gz.msgs.Model) -> joint_states (sensor_msgs/msg/JointState)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1794733500.063174865] [ros_gz_bridge]: Creating GZ->ROS Bridge: [imu (gz.msgs.IMU) -> imu (sensor_msgs/msg/Imu)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1794733500.063653903] [ros_gz_bridge]: Creating GZ->ROS Bridge: [odom (gz.msgs.Odometry) -> odom (nav_msgs/msg/Odometry)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1794733500.064832318] [ros_gz_bridge]: Creating GZ->ROS Bridge: [odom_wheel (gz.msgs.Odometry) -> odom_wheel (nav_msgs/msg/Odometry)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1794733500.065204866] [ros_gz_bridge]: Creating GZ->ROS Bridge: [odom_truth (gz.msgs.Odometry) -> odom_truth (nav_msgs/msg/Odometry)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1794733500.065738144] [ros_gz_bridge]: Creating GZ->ROS Bridge: [tf (gz.msgs.Pose_V) -> tf (tf2_msgs/msg/TFMessage)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1794733500.066925809] [ros_gz_bridge]: Creating ROS->GZ Bridge: [cmd_vel (geometry_msgs/msg/Twist) -> cmd_vel (gz.msgs.Twist)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1794733500.067577717] [ros_gz_bridge]: Creating GZ->ROS Bridge: [scan (gz.msgs.LaserScan) -> scan (sensor_msgs/msg/LaserScan)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1794733500.068015545] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/world/default/model/oomwoo_one/link/base_footprint/sensor/bumper_left/contact (gz.msgs.Contacts) -> bumper_left/contact (ros_gz_interfaces/msg/Contacts)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1794733500.069350070] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/world/default/model/oomwoo_one/link/base_footprint/sensor/bumper_right/contact (gz.msgs.Contacts) -> bumper_right/contact (ros_gz_interfaces/msg/Contacts)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1794733500.069727319] [ros_gz_bridge]: Creating GZ->ROS Bridge: [range_left (gz.msgs.LaserScan) -> range_left (sensor_msgs/msg/LaserScan)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1794733500.070092407] [ros_gz_bridge]: Creating GZ->ROS Bridge: [range_right (gz.msgs.LaserScan) -> range_right (sensor_msgs/msg/LaserScan)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1794733500.070508635] [ros_gz_bridge]: Creating GZ->ROS Bridge: [tof_front/points (gz.msgs.PointCloudPacked) -> tof_front/points (sensor_msgs/msg/PointCloud2)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1794733500.070985483] [ros_gz_bridge]: Creating GZ->ROS Bridge: [camera/image (gz.msgs.Image) -> camera/image (sensor_msgs/msg/Image)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1794733500.071434321] [ros_gz_bridge]: Creating GZ->ROS Bridge: [camera/camera_info (gz.msgs.CameraInfo) -> camera/camera_info (sensor_msgs/msg/CameraInfo)] (Lazy 0)
+[create-4] [INFO] [1794733500.155868486] [ros_gz_sim]: Waiting messages on topic [robot_description].
+[create-4] [INFO] [1794733500.167756089] [ros_gz_sim]: Entity creation successful.
+[INFO] [create-4]: process has finished cleanly [pid 3314]
+[gazebo-1] [1;32m[Msg] [0m[1;32mFound no publishers on /stats, adding root stats topic[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mFound no publishers on /clock, adding root clock topic[0m[1;32m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:627] [0m[1;36mCreating PostUpdate worker threads: [0m[1;36m5[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:638] [0m[1;36mCreating postupdate worker thread ([0m[1;36m0[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:638] [0m[1;36mCreating postupdate worker thread ([0m[1;36m1[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:638] [0m[1;36mCreating postupdate worker thread ([0m[1;36m2[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:638] [0m[1;36mCreating postupdate worker thread ([0m[1;36m3[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;33mWarning [Utils.cc:132][0m [/sdf/model[@name="oomwoo_one"]/link[@name="base_footprint"]/sensor[@name="laser_scan_sensor"]/gz_frame_id:<urdf-string>:L0]: XML Element[gz_frame_id], child of element[sensor], not defined in SDF. Copying[gz_frame_id] as children of [sensor].
+[gazebo-1] [1;32m[Msg] [0m[1;32mDiffDrive subscribing to twist messages on [[0m[1;32mcmd_vel[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;36m[Dbg] [SystemManager.cc:80] [0m[1;36mLoaded system [[0m[1;36mgz::sim::systems::DiffDrive[0m[1;36m] for entity [[0m[1;36m475[0m[1;36m][0m[1;36m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mOdometryPublisher publishing odometry on [[0m[1;32m/odom[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mOdometryPublisher publishing odometry with covariance on [[0m[1;32m/model/oomwoo_one/odometry_with_covariance[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mOdometryPublisher publishing Pose_V (TF) on [[0m[1;32m/tf[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;36m[Dbg] [SystemManager.cc:80] [0m[1;36mLoaded system [[0m[1;36mgz::sim::systems::OdometryPublisher[0m[1;36m] for entity [[0m[1;36m475[0m[1;36m][0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SystemManager.cc:80] [0m[1;36mLoaded system [[0m[1;36mgz::sim::systems::JointStatePublisher[0m[1;36m] for entity [[0m[1;36m475[0m[1;36m][0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SystemManager.cc:80] [0m[1;36mLoaded system [[0m[1;36mgz::sim::systems::Contact[0m[1;36m] for entity [[0m[1;36m475[0m[1;36m][0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [UserCommands.cc:1093] [0m[1;36mCreated entity [[0m[1;36m475[0m[1;36m] named [[0m[1;36moomwoo_one[0m[1;36m][0m[1;36m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mContact system publishing on [0m[1;32mworld/default/model/oomwoo_one/link/base_footprint/sensor/bumper_left/contact[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mContact system publishing on [0m[1;32mworld/default/model/oomwoo_one/link/base_footprint/sensor/bumper_right/contact[0m[1;32m[0m
+[gazebo-1] [1;36m[Dbg] [SDFFeatures.cc:333] [0m[1;36mMesh construction from an SDF has not been implemented yet for [0m[1;36mdartsim. Use AttachMeshShapeFeature to use mesh shapes.[0m
+[gazebo-1] [1;36m[Dbg] [SDFFeatures.cc:865] [0m[1;36mThe geometry element of collision [[0m[1;36mperson[0m[1;36m] [0m[1;36mcouldn't be created[0m
+[gazebo-1] [1;36m[Dbg] [SDFFeatures.cc:333] [0m[1;36mMesh construction from an SDF has not been implemented yet for [0m[1;36mdartsim. Use AttachMeshShapeFeature to use mesh shapes.[0m
+[gazebo-1] [1;36m[Dbg] [SDFFeatures.cc:865] [0m[1;36mThe geometry element of collision [[0m[1;36mcollision[0m[1;36m] [0m[1;36mcouldn't be created[0m
+[gazebo-1] [1;36m[Dbg] [SDFFeatures.cc:333] [0m[1;36mMesh construction from an SDF has not been implemented yet for [0m[1;36mdartsim. Use AttachMeshShapeFeature to use mesh shapes.[0m
+[gazebo-1] [1;36m[Dbg] [SDFFeatures.cc:865] [0m[1;36mThe geometry element of collision [[0m[1;36mcollision_0[0m[1;36m] [0m[1;36mcouldn't be created[0m
+[gazebo-1] [1;36m[Dbg] [Sensors.cc:953] [0m[1;36mInitialization needed[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [Sensors.cc:349] [0m[1;36mInitializing render context[0m[1;36m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mLoading plugin [[0m[1;32mgz-rendering-ogre2[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mServing scene information on [[0m[1;32m/world/default[0m[1;32m/[0m[1;32mscene/info[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mServing graph information on [[0m[1;32m/world/default[0m[1;32m/[0m[1;32mscene/graph[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mServing full state on [[0m[1;32m/world/default[0m[1;32m/[0m[1;32mstate[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mServing full state (async) on [[0m[1;32m/world/default[0m[1;32m/[0m[1;32mstate_async[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mPublishing scene information on [[0m[1;32m/world/default/scene/info[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mPublishing entity deletions on [[0m[1;32m/world/default/scene/deletion[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mPublishing state changes on [[0m[1;32m/world/default/state[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mPublishing pose messages on [[0m[1;32m/world/default[0m[1;32m/[0m[1;32mpose/info[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mPublishing dynamic pose messages on [[0m[1;32m/world/default[0m[1;32m/[0m[1;32mdynamic_pose/info[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:654] [0m[1;36mExiting postupdate worker thread ([0m[1;36m0[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:654] [0m[1;36mExiting postupdate worker thread ([0m[1;36m3[0m[1;36m)[0m[1;36m
+[gazebo-1] [Dbg] [SimulationRunner.cc:654] [0m[1;36mExiting postupdate worker thread ([0m[1;36m[0m
+[gazebo-1] [1;36m
+[gazebo-1] [Dbg] [SimulationRunner.cc:654] [Dbg] [SimulationRunner.cc:654] [0m[1;36mExiting postupdate worker thread ([0m[1;36m2[0m[1;36m)[0m[1;36m1[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m2[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:627] [0m[1;36mCreating PostUpdate worker threads: [0m[1;36m9[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:638] [0m[1;36mCreating postupdate worker thread ([0m[1;36m0[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:638] [0m[1;36mCreating postupdate worker thread ([0m[1;36m1[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:638] [0m[1;36mCreating postupdate worker thread ([0m[1;36m2[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:638] [0m[1;36mCreating postupdate worker thread ([0m[1;36m3[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:638] [0m[1;36mCreating postupdate worker thread ([0m[1;36m4[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:638] [0m[1;36mCreating postupdate worker thread ([0m[1;36m5[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:638] [0m[1;36mCreating postupdate worker thread ([0m[1;36m6[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:638] [0m[1;36mCreating postupdate worker thread ([0m[1;36m7[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [RenderUtil.cc:2646] [0m[1;36mCreate scene [[0m[1;36mscene[0m[1;36m][0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [Sensors.cc:953] [0m[1;36mInitialization needed[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [Sensors.cc:391] [0m[1;36mRendering Thread initialized[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [Lidar.cc:139] [0m[1;36mLaser scans for [[0m[1;36moomwoo_one::base_footprint::laser_scan_sensor[0m[1;36m] advertised on [[0m[1;36mscan[0m[1;36m][0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [GpuLidarSensor.cc:164] [0m[1;36mLidar points for [[0m[1;36moomwoo_one::base_footprint::laser_scan_sensor[0m[1;36m] advertised on [[0m[1;36mscan/points[0m[1;36m][0m[1;36m[0m
+[topic_heartbeat-11] [WARN] [1794733502.326761283] [topic_heartbeat]: drive_supervision: no heartbeat, robot moving or not yet settled with a zero or unknown setpoint
+[parameter_bridge-2] [INFO] [1794733502.355742317] [ros_gz_bridge]: Passing message from ROS geometry_msgs/msg/Twist to Gazebo gz.msgs.Twist (showing msg only once per type)
+[dock_detector-6] [INFO] [1794733502.382137662] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_detector-6] [INFO] [1794733503.718775983] [dock_detector]: dock fix: +0.54 m ahead, +0.00 m across, +0 deg; coverage 0.68, sides 0.58, 46 points
+[dock_drive-7] [INFO] [1794733507.597179828] [dock_drive]: state -> SEARCH
+[dock_drive-7] [INFO] [1794733507.604882108] [dock_drive]: state -> GOTO
+[dock_detector-6] [INFO] [1794733509.059045042] [dock_detector]: dock fix: +0.35 m ahead, -0.01 m across, +1 deg; coverage 0.72, sides 0.64, 66 points
+[dock_drive-7] [INFO] [1794733509.506113647] [dock_drive]: state -> TURN
+[dock_drive-7] [INFO] [1794733514.007197641] [dock_drive]: state -> BACK
+[dock_detector-6] [INFO] [1794733514.466916146] [dock_detector]: dock fix: -0.40 m ahead, +0.00 m across, +180 deg; coverage 0.70, sides 0.60, 59 points
+[dock_detector-6] [INFO] [1794733515.664532609] [dock_detector]: dock fit rejected: cost 0.00145 (max 0.00400), coverage 0.73 (min 0.35), sides 0.62 (min 0.10), 3 in the bay (max 2), 68 points [tracking]
+[dock_detector-6] [INFO] [1794733519.863335577] [dock_detector]: dock fix: -0.07 m ahead, +0.00 m across, +180 deg; coverage 0.79, sides 0.71, 144 points
+[dock_detector-6] [INFO] [1794733520.466070204] [dock_detector]: dock fit rejected: cost 0.00039 (max 0.00400), coverage 0.80 (min 0.35), sides 0.76 (min 0.10), 3 in the bay (max 2), 161 points [tracking]
+[dock_drive-7] [INFO] [1794733520.658228511] [dock_drive]: state -> DONE
+[dock_drive-7] [INFO] [1794733520.658797459] [dock_drive]: docked: lateral +0.5 mm, yaw +0.02 deg
+[dock_drive-7] [INFO] [1794733520.785757575] [dock_drive]: state -> IDLE
+[topic_heartbeat-11] [WARN] [1794733522.288643818] [topic_heartbeat]: drive_supervision: no heartbeat, robot moving or not yet settled with a zero or unknown setpoint
+[dock_detector-6] [INFO] [1794733522.856415773] [dock_detector]: dock fit rejected: cost 0.00182 (max 0.00400), coverage 0.28 (min 0.35), sides 0.13 (min 0.10), 0 in the bay (max 2), 31 points [tracking]
+[dock_drive-7] [INFO] [1794733524.286846824] [dock_drive]: state -> SEARCH
+[dock_drive-7] [INFO] [1794733524.309489374] [dock_drive]: state -> GOTO
+[dock_detector-6] [INFO] [1794733525.257325861] [dock_detector]: dock fit rejected: cost 0.00183 (max 0.00400), coverage 0.28 (min 0.35), sides 0.13 (min 0.10), 1 in the bay (max 2), 33 points [tracking]
+[dock_drive-7] [WARN] [1794733525.309501844] [dock_drive]: no dock fix for 3.0 s; holding
+[dock_detector-6] [INFO] [1794733525.901570724] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_detector-6] [INFO] [1794733526.499121871] [dock_detector]: dock fix: +0.40 m ahead, +0.14 m across, -3 deg; coverage 0.59, sides 0.36, 56 points
+[dock_drive-7] [INFO] [1794733531.162305250] [dock_drive]: state -> TURN
+[dock_detector-6] [INFO] [1794733531.867555191] [dock_detector]: dock fix: +0.16 m ahead, -0.26 m across, -46 deg; coverage 0.71, sides 0.62, 71 points
+[dock_drive-7] [INFO] [1794733535.363693824] [dock_drive]: state -> BACK
+[dock_detector-6] [INFO] [1794733537.268902662] [dock_detector]: dock fix: -0.31 m ahead, +0.00 m across, -180 deg; coverage 0.71, sides 0.60, 72 points
+[dock_detector-6] [INFO] [1794733537.867857375] [dock_detector]: dock fit rejected: cost 0.00130 (max 0.00400), coverage 0.76 (min 0.35), sides 0.64 (min 0.10), 3 in the bay (max 2), 77 points [tracking]
+[dock_drive-7] [INFO] [1794733542.064635659] [dock_drive]: state -> DONE
+[dock_drive-7] [INFO] [1794733542.065230307] [dock_drive]: docked: lateral +1.1 mm, yaw -0.48 deg
+[dock_drive-7] [INFO] [1794733542.095329517] [dock_drive]: state -> IDLE
+[dock_detector-6] [INFO] [1794733542.677335027] [dock_detector]: dock fix: -0.02 m ahead, +0.00 m across, -179 deg; coverage 0.77, sides 0.69, 169 points
+[dock_detector-6] [INFO] [1794733543.868263001] [dock_detector]: dock fit rejected: cost 0.00207 (max 0.00400), coverage 0.25 (min 0.35), sides 0.11 (min 0.10), 0 in the bay (max 2), 30 points [tracking]
+[dock_drive-7] [INFO] [1794733545.596211845] [dock_drive]: state -> SEARCH
+[dock_drive-7] [INFO] [1794733545.614535682] [dock_drive]: state -> GOTO
+[dock_detector-6] [INFO] [1794733546.303357079] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_drive-7] [WARN] [1794733546.314646884] [dock_drive]: no dock fix for 3.0 s; holding
+[dock_detector-6] [INFO] [1794733548.069662500] [dock_detector]: dock fix: +0.37 m ahead, +0.30 m across, +49 deg; coverage 0.66, sides 0.49, 50 points
+[dock_drive-7] [INFO] [1794733551.964682496] [dock_drive]: state -> TURN
+[dock_detector-6] [INFO] [1794733553.470614182] [dock_detector]: dock fix: +0.02 m ahead, +0.34 m across, +74 deg; coverage 0.71, sides 0.58, 67 points
+[dock_drive-7] [INFO] [1794733556.414675221] [dock_drive]: state -> BACK
+[dock_detector-6] [INFO] [1794733558.870045931] [dock_detector]: dock fix: -0.28 m ahead, -0.00 m across, +180 deg; coverage 0.73, sides 0.62, 76 points
+[dock_drive-7] [INFO] [1794733563.114656884] [dock_drive]: state -> DONE
+[dock_drive-7] [INFO] [1794733563.115125092] [dock_drive]: docked: lateral -3.1 mm, yaw -1.34 deg
+[dock_drive-7] [INFO] [1794733563.204704957] [dock_drive]: state -> IDLE
+[dock_detector-6] [INFO] [1794733564.275978098] [dock_detector]: dock fix: -0.02 m ahead, -0.00 m across, -180 deg; coverage 0.80, sides 0.76, 169 points
+[topic_heartbeat-11] [WARN] [1794733564.715062116] [topic_heartbeat]: drive_supervision: no heartbeat, robot moving or not yet settled with a zero or unknown setpoint
+[dock_detector-6] [INFO] [1794733564.860680598] [dock_detector]: dock fit rejected: cost 0.00212 (max 0.00400), coverage 0.23 (min 0.35), sides 0.11 (min 0.10), 0 in the bay (max 2), 18 points [tracking]
+[dock_drive-7] [INFO] [1794733566.705680191] [dock_drive]: state -> SEARCH
+[dock_drive-7] [INFO] [1794733566.714552195] [dock_drive]: state -> GOTO
+[dock_drive-7] [WARN] [1794733567.314587196] [dock_drive]: no dock fix for 3.0 s; holding
+[dock_detector-6] [INFO] [1794733567.318540830] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_detector-6] [INFO] [1794733569.673839589] [dock_detector]: dock fix: +0.39 m ahead, +0.02 m across, +4 deg; coverage 0.67, sides 0.56, 61 points
+[dock_drive-7] [INFO] [1794733570.365598546] [dock_drive]: state -> TURN
+[dock_drive-7] [INFO] [1794733575.015823604] [dock_drive]: state -> BACK
+[dock_detector-6] [INFO] [1794733575.071286054] [dock_detector]: dock fix: -0.42 m ahead, +0.02 m across, +179 deg; coverage 0.67, sides 0.58, 57 points
+[dock_detector-6] [INFO] [1794733580.474365630] [dock_detector]: dock fit rejected: cost 0.00052 (max 0.00400), coverage 0.78 (min 0.35), sides 0.69 (min 0.10), 3 in the bay (max 2), 132 points [tracking]
+[dock_detector-6] [INFO] [1794733581.075254838] [dock_detector]: dock fix: -0.06 m ahead, +0.00 m across, -180 deg; coverage 0.77, sides 0.71, 149 points
+[dock_drive-7] [INFO] [1794733581.666775483] [dock_drive]: state -> DONE
+[dock_drive-7] [INFO] [1794733581.667296111] [dock_drive]: docked: lateral +2.8 mm, yaw -0.07 deg
+[dock_drive-7] [INFO] [1794733581.712240302] [dock_drive]: state -> IDLE
+[topic_heartbeat-11] [WARN] [1794733583.217132246] [topic_heartbeat]: drive_supervision: no heartbeat, robot moving or not yet settled with a zero or unknown setpoint
+[dock_detector-6] [INFO] [1794733583.464085237] [dock_detector]: dock fit rejected: cost 0.00203 (max 0.00400), coverage 0.24 (min 0.35), sides 0.13 (min 0.10), 0 in the bay (max 2), 20 points [tracking]
+[dock_drive-7] [INFO] [1794733585.212940703] [dock_drive]: state -> SEARCH
+[dock_drive-7] [INFO] [1794733585.216717658] [dock_drive]: state -> GOTO
+[dock_detector-6] [INFO] [1794733585.915763866] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_drive-7] [WARN] [1794733585.916828082] [dock_drive]: no dock fix for 3.0 s; holding
+[dock_detector-6] [INFO] [1794733586.508733246] [dock_detector]: dock fix: +0.59 m ahead, +0.10 m across, +9 deg; coverage 0.59, sides 0.49, 41 points
+[dock_drive-7] [INFO] [1794733588.866732078] [dock_drive]: state -> TURN
+[dock_detector-6] [INFO] [1794733591.874393905] [dock_detector]: dock fix: -0.34 m ahead, +0.22 m across, +140 deg; coverage 0.69, sides 0.53, 57 points
+[dock_drive-7] [INFO] [1794733593.567800683] [dock_drive]: state -> BACK
+[dock_detector-6] [INFO] [1794733597.274526250] [dock_detector]: dock fix: -0.20 m ahead, -0.00 m across, +179 deg; coverage 0.76, sides 0.64, 95 points
+[dock_drive-7] [INFO] [1794733600.268959782] [dock_drive]: state -> DONE
+[dock_drive-7] [INFO] [1794733600.269533670] [dock_drive]: docked: lateral -5.6 mm, yaw +0.58 deg
+[dock_drive-7] [INFO] [1794733600.421432928] [dock_drive]: state -> IDLE
+[dock_detector-6] [INFO] [1794733602.071846277] [dock_detector]: dock fit rejected: cost 0.00205 (max 0.00400), coverage 0.26 (min 0.35), sides 0.22 (min 0.10), 8 in the bay (max 2), 26 points [tracking]
+[dock_drive-7] [INFO] [1794733603.922557963] [dock_drive]: state -> SEARCH
+[dock_drive-7] [INFO] [1794733603.968995169] [dock_drive]: state -> GOTO
+[dock_detector-6] [INFO] [1794733604.471568357] [dock_detector]: dock fit rejected: cost 0.00218 (max 0.00400), coverage 0.15 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 18 points [tracking]
+[dock_drive-7] [WARN] [1794733604.519057559] [dock_drive]: no dock fix for 3.0 s; holding
+[dock_detector-6] [INFO] [1794733605.070907832] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_detector-6] [INFO] [1794733605.671699001] [dock_detector]: dock fix: -0.75 m ahead, -0.01 m across, -179 deg; coverage 0.55, sides 0.40, 33 points
+[dock_detector-6] [INFO] [1794733611.072978438] [dock_detector]: dock fix: +0.40 m ahead, +0.04 m across, +6 deg; coverage 0.71, sides 0.62, 60 points
+[dock_drive-7] [INFO] [1794733611.819014022] [dock_drive]: state -> TURN
+[dock_detector-6] [INFO] [1794733616.477436775] [dock_detector]: dock fix: -0.42 m ahead, +0.01 m across, +177 deg; coverage 0.65, sides 0.53, 56 points
+[dock_drive-7] [INFO] [1794733616.520016006] [dock_drive]: state -> BACK
+[dock_detector-6] [INFO] [1794733617.674450682] [dock_detector]: dock fit rejected: cost 0.00148 (max 0.00400), coverage 0.71 (min 0.35), sides 0.64 (min 0.10), 3 in the bay (max 2), 64 points [tracking]
+[dock_detector-6] [INFO] [1794733621.875616639] [dock_detector]: dock fix: -0.11 m ahead, -0.00 m across, +179 deg; coverage 0.80, sides 0.76, 129 points
+[dock_drive-7] [INFO] [1794733623.220075473] [dock_drive]: state -> DONE
+[dock_drive-7] [INFO] [1794733623.220660460] [dock_drive]: docked: lateral -4.5 mm, yaw -0.14 deg
+[dock_drive-7] [INFO] [1794733623.331278072] [dock_drive]: state -> IDLE
+[dock_detector-6] [INFO] [1794733623.679659592] [dock_detector]: dock fit rejected: cost 0.00035 (max 0.00400), coverage 0.77 (min 0.35), sides 0.69 (min 0.10), 3 in the bay (max 2), 169 points [tracking]
+[topic_heartbeat-11] [WARN] [1794733624.840792533] [topic_heartbeat]: drive_supervision: no heartbeat, robot moving or not yet settled with a zero or unknown setpoint
+[dock_detector-6] [INFO] [1794733626.120215544] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_drive-7] [INFO] [1794733626.832237224] [dock_drive]: state -> SEARCH
+[dock_drive-7] [INFO] [1794733626.871107060] [dock_drive]: state -> GOTO
+[dock_detector-6] [INFO] [1794733627.275857877] [dock_detector]: dock fix: +0.49 m ahead, -0.01 m across, -1 deg; coverage 0.68, sides 0.56, 50 points
+[dock_drive-7] [INFO] [1794733628.721262692] [dock_drive]: state -> TURN
+[dock_detector-6] [INFO] [1794733632.676453916] [dock_detector]: dock fix: -0.42 m ahead, +0.04 m across, +172 deg; coverage 0.63, sides 0.53, 55 points
+[dock_drive-7] [INFO] [1794733633.270996291] [dock_drive]: state -> BACK
+[dock_detector-6] [INFO] [1794733638.077804125] [dock_detector]: dock fix: -0.14 m ahead, +0.00 m across, +181 deg; coverage 0.78, sides 0.69, 115 points
+[dock_drive-7] [INFO] [1794733640.021043199] [dock_drive]: state -> DONE
+[dock_drive-7] [INFO] [1794733640.021647276] [dock_drive]: docked: lateral +0.0 mm, yaw +0.44 deg
+[dock_drive-7] [INFO] [1794733640.038308170] [dock_drive]: state -> IDLE
+[topic_heartbeat-11] [WARN] [1794733641.541618637] [topic_heartbeat]: drive_supervision: no heartbeat, robot moving or not yet settled with a zero or unknown setpoint
+[dock_detector-6] [INFO] [1794733641.670434557] [dock_detector]: dock fit rejected: cost 0.00185 (max 0.00400), coverage 0.28 (min 0.35), sides 0.13 (min 0.10), 1 in the bay (max 2), 32 points [tracking]
+[dock_drive-7] [INFO] [1794733643.539073548] [dock_drive]: state -> SEARCH
+[dock_drive-7] [INFO] [1794733643.572188086] [dock_drive]: state -> GOTO
+[dock_detector-6] [INFO] [1794733644.109968227] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_drive-7] [WARN] [1794733644.122423288] [dock_drive]: no dock fix for 3.0 s; holding
+[dock_detector-6] [INFO] [1794733644.725070862] [dock_detector]: dock fix: +0.47 m ahead, +0.12 m across, -3 deg; coverage 0.52, sides 0.24, 52 points
+[dock_detector-6] [INFO] [1794733650.079983539] [dock_detector]: dock fix: +0.30 m ahead, -0.01 m across, -0 deg; coverage 0.68, sides 0.58, 74 points
+[dock_drive-7] [INFO] [1794733650.122278071] [dock_drive]: state -> TURN
+[dock_drive-7] [INFO] [1794733654.722423509] [dock_drive]: state -> BACK
+[dock_detector-6] [INFO] [1794733655.477393850] [dock_detector]: dock fix: -0.38 m ahead, +0.01 m across, -180 deg; coverage 0.67, sides 0.56, 60 points
+[dock_detector-6] [INFO] [1794733660.879678684] [dock_detector]: dock fix: -0.05 m ahead, +0.00 m across, -179 deg; coverage 0.79, sides 0.73, 150 points
+[dock_drive-7] [INFO] [1794733661.422272936] [dock_drive]: state -> DONE
+[dock_drive-7] [INFO] [1794733661.422851804] [dock_drive]: docked: lateral +3.4 mm, yaw -0.58 deg
+[dock_drive-7] [INFO] [1794733661.549220784] [dock_drive]: state -> IDLE
+[dock_detector-6] [INFO] [1794733663.276850375] [dock_detector]: dock fit rejected: cost 0.00207 (max 0.00400), coverage 0.28 (min 0.35), sides 0.16 (min 0.10), 0 in the bay (max 2), 29 points [tracking]
+[dock_drive-7] [INFO] [1794733665.050155576] [dock_drive]: state -> SEARCH
+[dock_drive-7] [INFO] [1794733665.072049229] [dock_drive]: state -> GOTO
+[dock_detector-6] [INFO] [1794733665.675509271] [dock_detector]: dock fit rejected: cost 0.00218 (max 0.00400), coverage 0.26 (min 0.35), sides 0.13 (min 0.10), 0 in the bay (max 2), 21 points [tracking]
+[dock_drive-7] [WARN] [1794733665.723455201] [dock_drive]: no dock fix for 3.0 s; holding
+[dock_detector-6] [INFO] [1794733666.308570425] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_detector-6] [INFO] [1794733666.899298497] [dock_detector]: dock fix: +0.45 m ahead, -0.14 m across, +1 deg; coverage 0.67, sides 0.44, 50 points
+[dock_drive-7] [INFO] [1794733672.126069690] [dock_drive]: state -> TURN
+[dock_detector-6] [INFO] [1794733672.280834118] [dock_detector]: dock fix: +0.28 m ahead, +0.04 m across, +3 deg; coverage 0.69, sides 0.58, 76 points
+[dock_drive-7] [INFO] [1794733676.776398396] [dock_drive]: state -> BACK
+[dock_detector-6] [INFO] [1794733677.682445241] [dock_detector]: dock fix: -0.37 m ahead, -0.01 m across, +178 deg; coverage 0.68, sides 0.58, 62 points
+[dock_detector-6] [INFO] [1794733683.085509241] [dock_detector]: dock fix: -0.05 m ahead, -0.01 m across, +179 deg; coverage 0.82, sides 0.78, 153 points
+[dock_drive-7] [INFO] [1794733683.577135656] [dock_drive]: state -> DONE
+[dock_drive-7] [INFO] [1794733683.577636644] [dock_drive]: docked: lateral -6.0 mm, yaw +0.54 deg
+[dock_drive-7] [INFO] [1794733683.659889448] [dock_drive]: state -> IDLE
+[topic_heartbeat-11] [WARN] [1794733685.167895782] [topic_heartbeat]: drive_supervision: no heartbeat, robot moving or not yet settled with a zero or unknown setpoint
+[dock_detector-6] [INFO] [1794733685.474874047] [dock_detector]: dock fit rejected: cost 0.00207 (max 0.00400), coverage 0.23 (min 0.35), sides 0.13 (min 0.10), 3 in the bay (max 2), 20 points [tracking]
+[dock_drive-7] [INFO] [1794733687.161307994] [dock_drive]: state -> SEARCH
+[dock_drive-7] [INFO] [1794733687.177208722] [dock_drive]: state -> GOTO
+[dock_detector-6] [INFO] [1794733687.925577080] [dock_detector]: dock fit rejected: cost 0.00219 (max 0.00400), coverage 0.40 (min 0.35), sides 0.04 (min 0.10), 3 in the bay (max 2), 42 points [searching]
+[dock_drive-7] [WARN] [1794733687.927264464] [dock_drive]: no dock fix for 3.0 s; holding
+[dock_detector-6] [INFO] [1794733688.529043093] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_detector-6] [INFO] [1794733689.134811266] [dock_detector]: dock fix: +0.59 m ahead, -0.10 m across, -10 deg; coverage 0.63, sides 0.51, 42 points
+[dock_drive-7] [INFO] [1794733691.477168889] [dock_drive]: state -> TURN
+[dock_detector-6] [INFO] [1794733694.484512891] [dock_detector]: dock fix: -0.33 m ahead, +0.23 m across, +137 deg; coverage 0.71, sides 0.58, 58 points
+[dock_drive-7] [INFO] [1794733695.977165316] [dock_drive]: state -> BACK
+[dock_detector-6] [INFO] [1794733699.882700637] [dock_detector]: dock fix: -0.19 m ahead, +0.00 m across, -180 deg; coverage 0.75, sides 0.67, 98 points
+[dock_detector-6] [INFO] [1794733701.682886696] [dock_detector]: dock fit rejected: cost 0.00041 (max 0.00400), coverage 0.78 (min 0.35), sides 0.71 (min 0.10), 3 in the bay (max 2), 138 points [tracking]
+[dock_drive-7] [INFO] [1794733702.727194765] [dock_drive]: state -> DONE
+[dock_drive-7] [INFO] [1794733702.727725613] [dock_drive]: docked: lateral +0.6 mm, yaw +0.00 deg
+[dock_drive-7] [INFO] [1794733702.770548404] [dock_drive]: state -> IDLE
+[dock_detector-6] [INFO] [1794733704.681366786] [dock_detector]: dock fit rejected: cost 0.00204 (max 0.00400), coverage 0.28 (min 0.35), sides 0.22 (min 0.10), 0 in the bay (max 2), 29 points [tracking]
+[dock_drive-7] [INFO] [1794733706.271319377] [dock_drive]: state -> SEARCH
+[dock_drive-7] [INFO] [1794733706.279000217] [dock_drive]: state -> GOTO
+[dock_detector-6] [INFO] [1794733707.120186710] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.38 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 32 points [searching]
+[dock_drive-7] [WARN] [1794733707.128994225] [dock_drive]: no dock fix for 3.0 s; holding
+[dock_drive-7] [WARN] [1794733709.131373335] [dock_drive]: no dock fix for 5.0 s; holding
+[dock_detector-6] [INFO] [1794733709.527921546] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.41 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 31 points [searching]
+[dock_drive-7] [WARN] [1794733711.131393965] [dock_drive]: no dock fix for 7.0 s; holding
+[dock_detector-6] [INFO] [1794733711.926134322] [dock_detector]: dock fit rejected: cost 0.00224 (max 0.00400), coverage 0.40 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794733713.181223278] [dock_drive]: no dock fix for 9.1 s; holding
+[dock_detector-6] [INFO] [1794733714.322879393] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.40 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 31 points [searching]
+[dock_drive-7] [WARN] [1794733715.182466554] [dock_drive]: no dock fix for 11.1 s; holding
+[dock_detector-6] [INFO] [1794733716.722562644] [dock_detector]: dock fit rejected: cost 0.00226 (max 0.00400), coverage 0.39 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 30 points [searching]
+[dock_drive-7] [WARN] [1794733717.232391527] [dock_drive]: no dock fix for 13.1 s; holding
+[dock_detector-6] [INFO] [1794733717.920963274] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_detector-6] [INFO] [1794733719.132721363] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.41 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794733719.232446138] [dock_drive]: no dock fix for 15.1 s; holding
+[dock_drive-7] [WARN] [1794733721.282473412] [dock_drive]: no dock fix for 17.2 s; holding
+[dock_detector-6] [INFO] [1794733721.531168948] [dock_detector]: dock fit rejected: cost 0.00224 (max 0.00400), coverage 0.44 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794733723.332337156] [dock_drive]: no dock fix for 19.2 s; holding
+[dock_detector-6] [INFO] [1794733723.930169593] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.39 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 31 points [searching]
+[dock_drive-7] [WARN] [1794733725.332584517] [dock_drive]: no dock fix for 21.2 s; holding
+[dock_detector-6] [INFO] [1794733726.331755117] [dock_detector]: dock fit rejected: cost 0.00224 (max 0.00400), coverage 0.38 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794733727.335928106] [dock_drive]: no dock fix for 23.2 s; holding
+[dock_detector-6] [INFO] [1794733728.725939220] [dock_detector]: dock fit rejected: cost 0.00224 (max 0.00400), coverage 0.38 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 32 points [searching]
+[dock_drive-7] [WARN] [1794733729.336038318] [dock_drive]: no dock fix for 25.2 s; holding
+[dock_detector-6] [INFO] [1794733731.127760115] [dock_detector]: dock fit rejected: cost 0.00221 (max 0.00400), coverage 0.42 (min 0.35), sides 0.24 (min 0.10), 5 in the bay (max 2), 39 points [searching]
+[dock_drive-7] [WARN] [1794733731.336086061] [dock_drive]: no dock fix for 27.2 s; holding
+[dock_detector-6] [INFO] [1794733732.928980683] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_drive-7] [WARN] [1794733733.336604832] [dock_drive]: no dock fix for 29.2 s; holding
+[dock_detector-6] [INFO] [1794733733.525370766] [dock_detector]: dock fit rejected: cost 0.00224 (max 0.00400), coverage 0.45 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794733735.385990850] [dock_drive]: no dock fix for 31.3 s; holding
+[dock_detector-6] [INFO] [1794733735.939537642] [dock_detector]: dock fit rejected: cost 0.00223 (max 0.00400), coverage 0.43 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_detector-6] [INFO] [1794733737.127746874] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_drive-7] [WARN] [1794733737.386019233] [dock_drive]: no dock fix for 33.3 s; holding
+[dock_detector-6] [INFO] [1794733738.332834930] [dock_detector]: dock fit rejected: cost 0.00224 (max 0.00400), coverage 0.38 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794733739.436038549] [dock_drive]: no dock fix for 35.3 s; holding
+[dock_detector-6] [INFO] [1794733740.730525042] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.42 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 31 points [searching]
+[dock_drive-7] [WARN] [1794733741.436139933] [dock_drive]: no dock fix for 37.3 s; holding
+[dock_detector-6] [INFO] [1794733743.129368480] [dock_detector]: dock fit rejected: cost 0.00224 (max 0.00400), coverage 0.39 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794733743.485996870] [dock_drive]: no dock fix for 39.4 s; holding
+[dock_detector-6] [INFO] [1794733745.526009716] [dock_detector]: dock fit rejected: cost 0.00224 (max 0.00400), coverage 0.43 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794733745.536066487] [dock_drive]: no dock fix for 41.4 s; holding
+[dock_drive-7] [WARN] [1794733747.536105372] [dock_drive]: no dock fix for 43.4 s; holding
+[dock_detector-6] [INFO] [1794733747.922310105] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.36 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 31 points [searching]
+[dock_drive-7] [WARN] [1794733749.585937090] [dock_drive]: no dock fix for 45.5 s; holding
+[dock_detector-6] [INFO] [1794733750.335992175] [dock_detector]: dock fit rejected: cost 0.00224 (max 0.00400), coverage 0.44 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 32 points [searching]
+[dock_drive-7] [WARN] [1794733751.636101656] [dock_drive]: no dock fix for 47.5 s; holding
+[dock_detector-6] [INFO] [1794733752.732533243] [dock_detector]: dock fit rejected: cost 0.00224 (max 0.00400), coverage 0.39 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794733753.686013905] [dock_drive]: no dock fix for 49.6 s; holding
+[dock_detector-6] [INFO] [1794733755.125844994] [dock_detector]: dock fit rejected: cost 0.00219 (max 0.00400), coverage 0.46 (min 0.35), sides 0.29 (min 0.10), 5 in the bay (max 2), 44 points [searching]
+[dock_drive-7] [WARN] [1794733755.686723728] [dock_drive]: no dock fix for 51.6 s; holding
+[dock_detector-6] [INFO] [1794733756.934571346] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_detector-6] [INFO] [1794733757.532652253] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.40 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 31 points [searching]
+[dock_drive-7] [WARN] [1794733757.735985379] [dock_drive]: no dock fix for 53.6 s; holding
+[dock_drive-7] [WARN] [1794733759.739038634] [dock_drive]: no dock fix for 55.6 s; holding
+[dock_detector-6] [INFO] [1794733759.943792224] [dock_detector]: dock fit rejected: cost 0.00224 (max 0.00400), coverage 0.42 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 32 points [searching]
+[dock_drive-7] [WARN] [1794733761.739868697] [dock_drive]: no dock fix for 57.6 s; holding
+[dock_detector-6] [INFO] [1794733762.331734668] [dock_detector]: dock fit rejected: cost 0.00224 (max 0.00400), coverage 0.41 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794733763.740685121] [dock_drive]: no dock fix for 59.6 s; holding
+[dock_detector-6] [INFO] [1794733764.728931945] [dock_detector]: dock fit rejected: cost 0.00224 (max 0.00400), coverage 0.45 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 32 points [searching]
+[dock_drive-7] [WARN] [1794733765.740767947] [dock_drive]: no dock fix for 61.6 s; holding
+[dock_detector-6] [INFO] [1794733767.150865625] [dock_detector]: dock fit rejected: cost 0.00226 (max 0.00400), coverage 0.41 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 31 points [searching]
+[dock_drive-7] [WARN] [1794733767.790554808] [dock_drive]: no dock fix for 63.7 s; holding
+[dock_detector-6] [INFO] [1794733769.535942571] [dock_detector]: dock fit rejected: cost 0.00224 (max 0.00400), coverage 0.43 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794733769.791590951] [dock_drive]: no dock fix for 65.7 s; holding
+[dock_drive-7] [WARN] [1794733771.791629609] [dock_drive]: no dock fix for 67.7 s; holding
+[dock_detector-6] [INFO] [1794733771.932775441] [dock_detector]: dock fit rejected: cost 0.00224 (max 0.00400), coverage 0.43 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794733773.841769219] [dock_drive]: no dock fix for 69.7 s; holding
+[dock_detector-6] [INFO] [1794733774.334514272] [dock_detector]: dock fit rejected: cost 0.00224 (max 0.00400), coverage 0.38 (min 0.35), sides 0.00 (min 0.10), 2 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794733775.843864279] [dock_drive]: no dock fix for 71.7 s; holding
+[dock_detector-6] [INFO] [1794733776.741055714] [dock_detector]: dock fit rejected: cost 0.00224 (max 0.00400), coverage 0.40 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794733777.892589225] [dock_drive]: no dock fix for 73.8 s; holding
+[dock_detector-6] [INFO] [1794733779.134020250] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.42 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 31 points [searching]
+[dock_drive-7] [WARN] [1794733779.942808765] [dock_drive]: no dock fix for 75.8 s; holding
+[dock_detector-6] [INFO] [1794733781.531329190] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_drive-7] [WARN] [1794733781.992574098] [dock_drive]: no dock fix for 77.9 s; holding
+[dock_detector-6] [INFO] [1794733782.139326948] [dock_detector]: dock fit rejected: cost 0.00224 (max 0.00400), coverage 0.41 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_detector-6] [INFO] [1794733783.944549946] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_drive-7] [WARN] [1794733783.993927161] [dock_drive]: no dock fix for 79.9 s; holding
+[dock_detector-6] [INFO] [1794733784.535135363] [dock_detector]: dock fit rejected: cost 0.00226 (max 0.00400), coverage 0.36 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 30 points [searching]
+[dock_drive-7] [WARN] [1794733786.044201532] [dock_drive]: no dock fix for 81.9 s; holding
+[dock_detector-6] [INFO] [1794733786.333469870] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_detector-6] [INFO] [1794733786.933545349] [dock_detector]: dock fit rejected: cost 0.00224 (max 0.00400), coverage 0.43 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794733788.046670232] [dock_drive]: no dock fix for 83.9 s; holding
+[dock_detector-6] [INFO] [1794733789.346032000] [dock_detector]: dock fit rejected: cost 0.00224 (max 0.00400), coverage 0.40 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 32 points [searching]
+[dock_drive-7] [WARN] [1794733790.047982877] [dock_drive]: no dock fix for 85.9 s; holding
+[dock_detector-6] [INFO] [1794733791.749567296] [dock_detector]: dock fit rejected: cost 0.00224 (max 0.00400), coverage 0.39 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794733792.048092647] [dock_drive]: no dock fix for 87.9 s; holding
+[dock_drive-7] [WARN] [1794733794.097971720] [dock_drive]: no dock fix for 90.0 s; holding
+[dock_detector-6] [INFO] [1794733794.142130196] [dock_detector]: dock fit rejected: cost 0.00224 (max 0.00400), coverage 0.42 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794733796.099811333] [dock_drive]: no dock fix for 92.0 s; holding
+[dock_detector-6] [INFO] [1794733796.551521779] [dock_detector]: dock fit rejected: cost 0.00224 (max 0.00400), coverage 0.42 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_detector-6] [INFO] [1794733797.741045541] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_drive-7] [WARN] [1794733798.099860294] [dock_drive]: no dock fix for 94.0 s; holding
+[dock_detector-6] [INFO] [1794733798.937560466] [dock_detector]: dock fit rejected: cost 0.00224 (max 0.00400), coverage 0.45 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794733800.099865175] [dock_drive]: no dock fix for 96.0 s; holding
+[dock_detector-6] [INFO] [1794733801.351552792] [dock_detector]: dock fit rejected: cost 0.00224 (max 0.00400), coverage 0.43 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794733802.099871337] [dock_drive]: no dock fix for 98.0 s; holding
+[dock_detector-6] [INFO] [1794733803.750396048] [dock_detector]: dock fit rejected: cost 0.00226 (max 0.00400), coverage 0.38 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 31 points [searching]
+[dock_drive-7] [WARN] [1794733804.099989988] [dock_drive]: no dock fix for 100.0 s; holding
+[dock_detector-6] [INFO] [1794733805.555561379] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_drive-7] [WARN] [1794733806.149778283] [dock_drive]: no dock fix for 102.0 s; holding
+[dock_detector-6] [INFO] [1794733806.151338687] [dock_detector]: dock fit rejected: cost 0.00224 (max 0.00400), coverage 0.41 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794733808.149865545] [dock_drive]: no dock fix for 104.0 s; holding
+[dock_detector-6] [INFO] [1794733808.543279411] [dock_detector]: dock fit rejected: cost 0.00224 (max 0.00400), coverage 0.39 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794733810.149888076] [dock_drive]: no dock fix for 106.0 s; holding
+[dock_detector-6] [INFO] [1794733810.934363809] [dock_detector]: dock fit rejected: cost 0.00224 (max 0.00400), coverage 0.43 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794733812.199828572] [dock_drive]: no dock fix for 108.1 s; holding
+[dock_detector-6] [INFO] [1794733813.343042738] [dock_detector]: dock fit rejected: cost 0.00218 (max 0.00400), coverage 0.53 (min 0.35), sides 0.38 (min 0.10), 5 in the bay (max 2), 43 points [searching]
+[dock_detector-6] [INFO] [1794733813.951918903] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_drive-7] [WARN] [1794733814.200816280] [dock_drive]: no dock fix for 110.1 s; holding
+[dock_detector-6] [INFO] [1794733815.740724580] [dock_detector]: dock fit rejected: cost 0.00224 (max 0.00400), coverage 0.42 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 32 points [searching]
+[dock_drive-7] [WARN] [1794733816.201337701] [dock_drive]: no dock fix for 112.1 s; holding
+[dock_detector-6] [INFO] [1794733818.154614109] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.43 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 31 points [searching]
+[dock_drive-7] [WARN] [1794733818.251085878] [dock_drive]: no dock fix for 114.1 s; holding
+[dock_drive-7] [WARN] [1794733820.300880335] [dock_drive]: no dock fix for 116.2 s; holding
+[dock_detector-6] [INFO] [1794733820.552551461] [dock_detector]: dock fit rejected: cost 0.00224 (max 0.00400), coverage 0.44 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 32 points [searching]
+[dock_drive-7] [WARN] [1794733822.300884819] [dock_drive]: no dock fix for 118.2 s; holding
+[dock_detector-6] [INFO] [1794733822.941682308] [dock_detector]: dock fit rejected: cost 0.00224 (max 0.00400), coverage 0.43 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 32 points [searching]
+[dock_drive-7] [WARN] [1794733824.301936308] [dock_drive]: no dock fix for 120.2 s; holding
+[dock_detector-6] [INFO] [1794733825.344908460] [dock_detector]: dock fit rejected: cost 0.00224 (max 0.00400), coverage 0.42 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 32 points [searching]
+[dock_drive-7] [WARN] [1794733826.301974752] [dock_drive]: no dock fix for 122.2 s; holding
+[dock_detector-6] [INFO] [1794733827.750795432] [dock_detector]: dock fit rejected: cost 0.00224 (max 0.00400), coverage 0.41 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794733828.304235317] [dock_drive]: no dock fix for 124.2 s; holding
+[dock_detector-6] [INFO] [1794733830.160788648] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.42 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 31 points [searching]
+[dock_drive-7] [WARN] [1794733830.354097625] [dock_drive]: no dock fix for 126.2 s; holding
+[dock_detector-6] [INFO] [1794733831.946844797] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_drive-7] [WARN] [1794733832.403929932] [dock_drive]: no dock fix for 128.3 s; holding
+[dock_detector-6] [INFO] [1794733832.548713011] [dock_detector]: dock fit rejected: cost 0.00224 (max 0.00400), coverage 0.41 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794733834.403969827] [dock_drive]: no dock fix for 130.3 s; holding
+[dock_detector-6] [INFO] [1794733834.945895278] [dock_detector]: dock fit rejected: cost 0.00226 (max 0.00400), coverage 0.40 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 30 points [searching]
+[dock_drive-7] [WARN] [1794733836.405999474] [dock_drive]: no dock fix for 132.3 s; holding
+[dock_detector-6] [INFO] [1794733837.348777373] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_detector-6] [INFO] [1794733837.946252734] [dock_detector]: dock fit rejected: cost 0.00224 (max 0.00400), coverage 0.43 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794733838.406013460] [dock_drive]: no dock fix for 134.3 s; holding
+[dock_detector-6] [INFO] [1794733840.348309923] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.40 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 31 points [searching]
+[dock_drive-7] [WARN] [1794733840.407379550] [dock_drive]: no dock fix for 136.3 s; holding
+[dock_drive-7] [WARN] [1794733842.457283259] [dock_drive]: no dock fix for 138.3 s; holding
+[dock_detector-6] [INFO] [1794733842.748572078] [dock_detector]: dock fit rejected: cost 0.00224 (max 0.00400), coverage 0.40 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_detector-6] [INFO] [1794733843.353255842] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_drive-7] [WARN] [1794733844.457397604] [dock_drive]: no dock fix for 140.3 s; holding
+[dock_detector-6] [INFO] [1794733845.159243974] [dock_detector]: dock fit rejected: cost 0.00224 (max 0.00400), coverage 0.43 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 32 points [searching]
+[dock_detector-6] [INFO] [1794733846.358087912] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_drive-7] [WARN] [1794733846.458740605] [dock_drive]: no dock fix for 142.3 s; holding
+[dock_detector-6] [INFO] [1794733847.542763796] [dock_detector]: dock fit rejected: cost 0.00221 (max 0.00400), coverage 0.49 (min 0.35), sides 0.31 (min 0.10), 5 in the bay (max 2), 43 points [searching]
+[dock_drive-7] [WARN] [1794733848.458920900] [dock_drive]: no dock fix for 144.3 s; holding
+[dock_detector-6] [INFO] [1794733849.958976130] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.39 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 31 points [searching]
+[dock_drive-7] [WARN] [1794733850.508787000] [dock_drive]: no dock fix for 146.4 s; holding
+[dock_detector-6] [INFO] [1794733852.350385932] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_drive-7] [WARN] [1794733852.508792727] [dock_drive]: no dock fix for 148.4 s; holding
+[dock_detector-6] [INFO] [1794733852.961074672] [dock_detector]: dock fit rejected: cost 0.00224 (max 0.00400), coverage 0.41 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794733854.558719557] [dock_drive]: no dock fix for 150.4 s; holding
+[dock_detector-6] [INFO] [1794733855.351567368] [dock_detector]: dock fit rejected: cost 0.00224 (max 0.00400), coverage 0.41 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [INFO] [1794733856.343119305] [dock_drive]: state -> IDLE
+[dock_detector-6] [INFO] [1794733857.766188739] [dock_detector]: dock fit rejected: cost 0.00224 (max 0.00400), coverage 0.38 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_detector-6] [INFO] [1794733858.316390527] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_detector-6] [INFO] [1794733858.910501693] [dock_detector]: dock fix: -0.68 m ahead, +0.00 m across, +180 deg; coverage 0.60, sides 0.44, 36 points
+[dock_drive-7] [INFO] [1794733859.844007549] [dock_drive]: state -> SEARCH
+[dock_drive-7] [INFO] [1794733859.859958717] [dock_drive]: state -> GOTO
+[dock_detector-6] [INFO] [1794733864.313795691] [dock_detector]: dock fix: +0.44 m ahead, +0.02 m across, +0 deg; coverage 0.68, sides 0.60, 55 points
+[dock_drive-7] [INFO] [1794733865.409781686] [dock_drive]: state -> TURN
+[dock_detector-6] [INFO] [1794733869.715487207] [dock_detector]: dock fix: -0.42 m ahead, -0.03 m across, -176 deg; coverage 0.64, sides 0.53, 56 points
+[dock_drive-7] [INFO] [1794733869.961996854] [dock_drive]: state -> BACK
+[dock_detector-6] [INFO] [1794733875.119546545] [dock_detector]: dock fix: -0.11 m ahead, +0.00 m across, -179 deg; coverage 0.78, sides 0.69, 123 points
+[dock_drive-7] [INFO] [1794733876.711976522] [dock_drive]: state -> DONE
+[dock_drive-7] [INFO] [1794733876.712537260] [dock_drive]: docked: lateral -3.5 mm, yaw +0.61 deg
+[dock_drive-7] [INFO] [1794733876.852519557] [dock_drive]: state -> IDLE
+[topic_heartbeat-11] [WARN] [1794733878.362479600] [topic_heartbeat]: drive_supervision: no heartbeat, robot moving or not yet settled with a zero or unknown setpoint
+[dock_detector-6] [INFO] [1794733878.709273892] [dock_detector]: dock fit rejected: cost 0.00202 (max 0.00400), coverage 0.27 (min 0.35), sides 0.16 (min 0.10), 0 in the bay (max 2), 23 points [tracking]
+[dock_drive-7] [INFO] [1794733880.353173916] [dock_drive]: state -> SEARCH
+[dock_drive-7] [INFO] [1794733880.362094801] [dock_drive]: state -> GOTO
+[dock_detector-6] [INFO] [1794733881.152746702] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_drive-7] [WARN] [1794733881.161999186] [dock_drive]: no dock fix for 3.0 s; holding
+[dock_detector-6] [INFO] [1794733881.750870513] [dock_detector]: dock fix: +0.43 m ahead, +0.01 m across, +1 deg; coverage 0.67, sides 0.56, 56 points
+[dock_drive-7] [INFO] [1794733882.911939102] [dock_drive]: state -> TURN
+[dock_detector-6] [INFO] [1794733887.115344919] [dock_detector]: dock fix: -0.41 m ahead, -0.02 m across, -176 deg; coverage 0.65, sides 0.56, 57 points
+[dock_drive-7] [INFO] [1794733887.263056127] [dock_drive]: state -> BACK
+[dock_detector-6] [INFO] [1794733891.318681938] [dock_detector]: dock fit rejected: cost 0.00091 (max 0.00400), coverage 0.76 (min 0.35), sides 0.69 (min 0.10), 3 in the bay (max 2), 102 points [tracking]
+[dock_detector-6] [INFO] [1794733892.520670887] [dock_detector]: dock fix: -0.10 m ahead, -0.00 m across, -181 deg; coverage 0.76, sides 0.69, 128 points
+[dock_drive-7] [INFO] [1794733893.863083602] [dock_drive]: state -> DONE
+[dock_drive-7] [INFO] [1794733893.863630690] [dock_drive]: docked: lateral -1.2 mm, yaw +0.64 deg
+[dock_drive-7] [INFO] [1794733893.959363672] [dock_drive]: state -> IDLE
+[topic_heartbeat-11] [WARN] [1794733895.465660400] [topic_heartbeat]: drive_supervision: no heartbeat, robot moving or not yet settled with a zero or unknown setpoint
+[dock_detector-6] [INFO] [1794733895.513302493] [dock_detector]: dock fit rejected: cost 0.00201 (max 0.00400), coverage 0.23 (min 0.35), sides 0.13 (min 0.10), 3 in the bay (max 2), 25 points [tracking]
+[dock_drive-7] [INFO] [1794733897.460117554] [dock_drive]: state -> SEARCH
+[dock_drive-7] [INFO] [1794733897.465040304] [dock_drive]: state -> GOTO
+[dock_detector-6] [INFO] [1794733897.955965518] [dock_detector]: dock fit rejected: cost 0.00211 (max 0.00400), coverage 0.62 (min 0.35), sides 0.38 (min 0.10), 3 in the bay (max 2), 49 points [searching]
+[dock_drive-7] [WARN] [1794733897.965032482] [dock_drive]: no dock fix for 3.0 s; holding
+[dock_detector-6] [INFO] [1794733898.552011007] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_detector-6] [INFO] [1794733899.161995361] [dock_detector]: dock fix: +0.47 m ahead, +0.12 m across, -1 deg; coverage 0.57, sides 0.31, 50 points
+[dock_detector-6] [INFO] [1794733900.920006927] [dock_detector]: dock fit rejected: cost 0.00180 (max 0.00400), coverage 0.66 (min 0.35), sides 0.53 (min 0.10), 3 in the bay (max 2), 45 points [tracking]
+[dock_drive-7] [INFO] [1794733904.315012257] [dock_drive]: state -> TURN
+[dock_detector-6] [INFO] [1794733904.520165837] [dock_detector]: dock fix: +0.28 m ahead, -0.04 m across, -6 deg; coverage 0.71, sides 0.56, 78 points
+[dock_drive-7] [INFO] [1794733908.814961739] [dock_drive]: state -> BACK
+[dock_detector-6] [INFO] [1794733909.923740376] [dock_detector]: dock fix: -0.36 m ahead, -0.00 m across, +180 deg; coverage 0.69, sides 0.60, 64 points
+[dock_detector-6] [INFO] [1794733913.523578019] [dock_detector]: dock fit rejected: cost 0.00076 (max 0.00400), coverage 0.78 (min 0.35), sides 0.71 (min 0.10), 3 in the bay (max 2), 114 points [tracking]
+[dock_detector-6] [INFO] [1794733915.329217599] [dock_detector]: dock fix: -0.03 m ahead, -0.00 m across, +180 deg; coverage 0.79, sides 0.73, 162 points
+[dock_drive-7] [INFO] [1794733915.517939725] [dock_drive]: state -> DONE
+[dock_drive-7] [INFO] [1794733915.518520952] [dock_drive]: docked: lateral -4.5 mm, yaw +0.12 deg
+[dock_drive-7] [INFO] [1794733915.671264040] [dock_drive]: state -> IDLE
+[dock_detector-6] [INFO] [1794733917.721573844] [dock_detector]: dock fit rejected: cost 0.00208 (max 0.00400), coverage 0.24 (min 0.35), sides 0.11 (min 0.10), 0 in the bay (max 2), 28 points [tracking]
+[dock_drive-7] [INFO] [1794733919.172007675] [dock_drive]: state -> SEARCH
+[dock_drive-7] [INFO] [1794733919.217953504] [dock_drive]: state -> GOTO
+[dock_detector-6] [INFO] [1794733920.167481229] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_drive-7] [WARN] [1794733920.168100307] [dock_drive]: no dock fix for 3.0 s; holding
+[dock_detector-6] [INFO] [1794733920.751953475] [dock_detector]: dock fix: +0.40 m ahead, -0.14 m across, +2 deg; coverage 0.65, sides 0.40, 55 points
+[dock_detector-6] [INFO] [1794733923.124537499] [dock_detector]: dock fit rejected: cost 0.00169 (max 0.00400), coverage 0.62 (min 0.35), sides 0.53 (min 0.10), 3 in the bay (max 2), 51 points [tracking]
+[dock_drive-7] [INFO] [1794733925.370337803] [dock_drive]: state -> TURN
+[dock_detector-6] [INFO] [1794733926.128681853] [dock_detector]: dock fix: +0.19 m ahead, +0.23 m across, +43 deg; coverage 0.70, sides 0.58, 73 points
+[dock_drive-7] [INFO] [1794733929.771317270] [dock_drive]: state -> BACK
+[dock_detector-6] [INFO] [1794733931.525322125] [dock_detector]: dock fix: -0.32 m ahead, +0.00 m across, +180 deg; coverage 0.70, sides 0.60, 69 points
+[dock_detector-6] [INFO] [1794733933.326254704] [dock_detector]: dock fit rejected: cost 0.00108 (max 0.00400), coverage 0.73 (min 0.35), sides 0.64 (min 0.10), 3 in the bay (max 2), 92 points [tracking]
+[dock_drive-7] [INFO] [1794733936.521298987] [dock_drive]: state -> DONE
+[dock_drive-7] [INFO] [1794733936.521849594] [dock_drive]: docked: lateral -0.3 mm, yaw +0.90 deg
+[dock_drive-7] [INFO] [1794733936.580397084] [dock_drive]: state -> IDLE
+[dock_detector-6] [INFO] [1794733936.931978238] [dock_detector]: dock fix: -0.01 m ahead, -0.00 m across, +179 deg; coverage 0.79, sides 0.71, 170 points
+[topic_heartbeat-11] [WARN] [1794733938.092095714] [topic_heartbeat]: drive_supervision: no heartbeat, robot moving or not yet settled with a zero or unknown setpoint
+[dock_drive-7] [INFO] [1794733940.081861449] [dock_drive]: state -> SEARCH
+[dock_drive-7] [INFO] [1794733940.121361423] [dock_drive]: state -> GOTO
+[dock_detector-6] [INFO] [1794733941.157425559] [dock_detector]: dock fit rejected: cost 0.00224 (max 0.00400), coverage 0.42 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794733941.171484243] [dock_drive]: no dock fix for 3.0 s; holding
+[dock_drive-7] [WARN] [1794733943.172555945] [dock_drive]: no dock fix for 5.0 s; holding
+[dock_detector-6] [INFO] [1794733943.565699304] [dock_detector]: dock fit rejected: cost 0.00223 (max 0.00400), coverage 0.42 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 34 points [searching]
+[dock_drive-7] [WARN] [1794733945.172736619] [dock_drive]: no dock fix for 7.0 s; holding
+[dock_detector-6] [INFO] [1794733945.964044370] [dock_detector]: dock fit rejected: cost 0.00223 (max 0.00400), coverage 0.43 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 35 points [searching]
+[dock_detector-6] [INFO] [1794733947.161511609] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_drive-7] [WARN] [1794733947.222515358] [dock_drive]: no dock fix for 9.1 s; holding
+[dock_detector-6] [INFO] [1794733948.364524747] [dock_detector]: dock fit rejected: cost 0.00223 (max 0.00400), coverage 0.42 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 35 points [searching]
+[dock_drive-7] [WARN] [1794733949.222532604] [dock_drive]: no dock fix for 11.1 s; holding
+[dock_detector-6] [INFO] [1794733950.761335308] [dock_detector]: dock fit rejected: cost 0.00223 (max 0.00400), coverage 0.39 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 35 points [searching]
+[dock_drive-7] [WARN] [1794733951.222582840] [dock_drive]: no dock fix for 13.1 s; holding
+[dock_detector-6] [INFO] [1794733953.169166387] [dock_detector]: dock fit rejected: cost 0.00224 (max 0.00400), coverage 0.28 (min 0.35), sides 0.18 (min 0.10), 3 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794733953.272644389] [dock_drive]: no dock fix for 15.1 s; holding
+[dock_drive-7] [WARN] [1794733955.273053154] [dock_drive]: no dock fix for 17.1 s; holding
+[dock_detector-6] [INFO] [1794733955.566397977] [dock_detector]: dock fit rejected: cost 0.00223 (max 0.00400), coverage 0.39 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 34 points [searching]
+[dock_detector-6] [INFO] [1794733956.165490166] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_drive-7] [WARN] [1794733957.322558315] [dock_drive]: no dock fix for 19.2 s; holding
+[dock_detector-6] [INFO] [1794733957.964688654] [dock_detector]: dock fit rejected: cost 0.00223 (max 0.00400), coverage 0.42 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 35 points [searching]
+[dock_drive-7] [WARN] [1794733959.372631404] [dock_drive]: no dock fix for 21.2 s; holding
+[dock_detector-6] [INFO] [1794733960.370494441] [dock_detector]: dock fit rejected: cost 0.00223 (max 0.00400), coverage 0.40 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 35 points [searching]
+[dock_drive-7] [WARN] [1794733961.422565954] [dock_drive]: no dock fix for 23.3 s; holding
+[dock_detector-6] [INFO] [1794733962.770676811] [dock_detector]: dock fit rejected: cost 0.00223 (max 0.00400), coverage 0.39 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 35 points [searching]
+[dock_drive-7] [WARN] [1794733963.472571244] [dock_drive]: no dock fix for 25.3 s; holding
+[dock_detector-6] [INFO] [1794733965.161821376] [dock_detector]: dock fit rejected: cost 0.00223 (max 0.00400), coverage 0.41 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 35 points [searching]
+[dock_drive-7] [WARN] [1794733965.522561294] [dock_drive]: no dock fix for 27.4 s; holding
+[dock_detector-6] [INFO] [1794733965.764933729] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_detector-6] [INFO] [1794733967.557311214] [dock_detector]: dock fit rejected: cost 0.00223 (max 0.00400), coverage 0.42 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 35 points [searching]
+[dock_drive-7] [WARN] [1794733967.572435955] [dock_drive]: no dock fix for 29.4 s; holding
+[dock_detector-6] [INFO] [1794733968.756859877] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_drive-7] [WARN] [1794733969.572569212] [dock_drive]: no dock fix for 31.4 s; holding
+[dock_detector-6] [INFO] [1794733969.964445998] [dock_detector]: dock fit rejected: cost 0.00223 (max 0.00400), coverage 0.41 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 36 points [searching]
+[dock_drive-7] [WARN] [1794733971.622527353] [dock_drive]: no dock fix for 33.5 s; holding
+[dock_detector-6] [INFO] [1794733972.357719635] [dock_detector]: dock fit rejected: cost 0.00223 (max 0.00400), coverage 0.41 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 35 points [searching]
+[dock_drive-7] [WARN] [1794733973.672622923] [dock_drive]: no dock fix for 35.5 s; holding
+[dock_detector-6] [INFO] [1794733974.765909064] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_detector-6] [INFO] [1794733975.361427167] [dock_detector]: dock fit rejected: cost 0.00223 (max 0.00400), coverage 0.38 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 35 points [searching]
+[dock_drive-7] [WARN] [1794733975.672625831] [dock_drive]: no dock fix for 37.5 s; holding
+[dock_drive-7] [WARN] [1794733977.673871305] [dock_drive]: no dock fix for 39.5 s; holding
+[dock_detector-6] [INFO] [1794733977.769932506] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_detector-6] [INFO] [1794733978.363849045] [dock_detector]: dock fix: +0.46 m ahead, +0.21 m across, +18 deg; coverage 0.68, sides 0.51, 47 points
+[dock_drive-7] [INFO] [1794733980.323779162] [dock_drive]: state -> TURN
+[dock_detector-6] [INFO] [1794733983.729648140] [dock_detector]: dock fix: -0.41 m ahead, -0.09 m across, -165 deg; coverage 0.67, sides 0.58, 57 points
+[dock_drive-7] [INFO] [1794733984.623708267] [dock_drive]: state -> BACK
+[dock_detector-6] [INFO] [1794733989.133235347] [dock_detector]: dock fix: -0.15 m ahead, -0.00 m across, +180 deg; coverage 0.73, sides 0.64, 109 points
+[dock_drive-7] [INFO] [1794733991.327029352] [dock_drive]: state -> DONE
+[dock_drive-7] [INFO] [1794733991.327596640] [dock_drive]: docked: lateral -2.4 mm, yaw +0.39 deg
+[dock_drive-7] [INFO] [1794733991.507751480] [dock_drive]: state -> IDLE
+[dock_detector-6] [INFO] [1794733991.535469841] [dock_detector]: dock fit rejected: cost 0.00037 (max 0.00400), coverage 0.77 (min 0.35), sides 0.69 (min 0.10), 3 in the bay (max 2), 169 points [tracking]
+[topic_heartbeat-11] [WARN] [1794733993.018682917] [topic_heartbeat]: drive_supervision: no heartbeat, robot moving or not yet settled with a zero or unknown setpoint
+[dock_detector-6] [INFO] [1794733993.926802648] [dock_detector]: dock fit rejected: cost 0.00204 (max 0.00400), coverage 0.23 (min 0.35), sides 0.13 (min 0.10), 0 in the bay (max 2), 20 points [tracking]
+[dock_drive-7] [INFO] [1794733995.008193768] [dock_drive]: state -> SEARCH
+[dock_drive-7] [INFO] [1794733995.030279481] [dock_drive]: state -> GOTO
+[dock_detector-6] [INFO] [1794733995.772159077] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_drive-7] [WARN] [1794733995.779883097] [dock_drive]: no dock fix for 3.0 s; holding
+[dock_detector-6] [INFO] [1794733996.377824581] [dock_detector]: dock fix: +0.59 m ahead, +0.10 m across, +9 deg; coverage 0.67, sides 0.58, 42 points
+[dock_drive-7] [INFO] [1794733998.730031233] [dock_drive]: state -> TURN
+[dock_detector-6] [INFO] [1794734001.737973452] [dock_detector]: dock fix: -0.33 m ahead, -0.23 m across, -140 deg; coverage 0.71, sides 0.60, 58 points
+[dock_drive-7] [INFO] [1794734002.979928869] [dock_drive]: state -> BACK
+[dock_detector-6] [INFO] [1794734004.737401035] [dock_detector]: dock fit rejected: cost 0.00137 (max 0.00400), coverage 0.68 (min 0.35), sides 0.60 (min 0.10), 3 in the bay (max 2), 71 points [tracking]
+[dock_detector-6] [INFO] [1794734007.139732100] [dock_detector]: dock fix: -0.17 m ahead, +0.00 m across, -180 deg; coverage 0.78, sides 0.69, 104 points
+[dock_drive-7] [INFO] [1794734009.631322064] [dock_drive]: state -> DONE
+[dock_drive-7] [INFO] [1794734009.631922501] [dock_drive]: docked: lateral +0.4 mm, yaw -0.53 deg
+[dock_drive-7] [INFO] [1794734009.815605438] [dock_drive]: state -> IDLE
+[dock_detector-6] [INFO] [1794734010.143760285] [dock_detector]: dock fit rejected: cost 0.00034 (max 0.00400), coverage 0.79 (min 0.35), sides 0.73 (min 0.10), 3 in the bay (max 2), 172 points [tracking]
+[topic_heartbeat-11] [WARN] [1794734011.322150582] [topic_heartbeat]: drive_supervision: no heartbeat, robot moving or not yet settled with a zero or unknown setpoint
+[dock_drive-7] [INFO] [1794734013.316379266] [dock_drive]: state -> SEARCH
+[dock_drive-7] [INFO] [1794734013.331328248] [dock_drive]: state -> GOTO
+[dock_detector-6] [INFO] [1794734014.334887944] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_drive-7] [WARN] [1794734014.381398480] [dock_drive]: no dock fix for 3.0 s; holding
+[dock_detector-6] [INFO] [1794734014.933418166] [dock_detector]: dock fix: -0.83 m ahead, +0.00 m across, +180 deg; coverage 0.54, sides 0.40, 31 points
+[dock_detector-6] [INFO] [1794734020.337135159] [dock_detector]: dock fix: +0.46 m ahead, +0.00 m across, +2 deg; coverage 0.69, sides 0.60, 53 points
+[dock_drive-7] [INFO] [1794734021.533612245] [dock_drive]: state -> TURN
+[dock_detector-6] [INFO] [1794734023.338976064] [dock_detector]: dock fit rejected: cost 0.00146 (max 0.00400), coverage 0.68 (min 0.35), sides 0.58 (min 0.10), 3 in the bay (max 2), 65 points [tracking]
+[dock_detector-6] [INFO] [1794734025.739358089] [dock_detector]: dock fix: -0.42 m ahead, +0.03 m across, +175 deg; coverage 0.71, sides 0.60, 57 points
+[dock_drive-7] [INFO] [1794734026.033804629] [dock_drive]: state -> BACK
+[dock_detector-6] [INFO] [1794734028.740727886] [dock_detector]: dock fit rejected: cost 0.00124 (max 0.00400), coverage 0.73 (min 0.35), sides 0.62 (min 0.10), 3 in the bay (max 2), 80 points [tracking]
+[dock_detector-6] [INFO] [1794734031.139572428] [dock_detector]: dock fix: -0.12 m ahead, +0.00 m across, -181 deg; coverage 0.76, sides 0.64, 120 points
+[dock_detector-6] [INFO] [1794734032.342798998] [dock_detector]: dock fit rejected: cost 0.00040 (max 0.00400), coverage 0.79 (min 0.35), sides 0.73 (min 0.10), 3 in the bay (max 2), 153 points [tracking]
+[dock_drive-7] [INFO] [1794734032.783630732] [dock_drive]: state -> DONE
+[dock_drive-7] [INFO] [1794734032.784184620] [dock_drive]: docked: lateral -0.5 mm, yaw -0.02 deg
+[dock_drive-7] [INFO] [1794734032.926320480] [dock_drive]: state -> IDLE
+[dock_detector-6] [INFO] [1794734034.738679932] [dock_detector]: dock fit rejected: cost 0.00216 (max 0.00400), coverage 0.27 (min 0.35), sides 0.22 (min 0.10), 0 in the bay (max 2), 23 points [tracking]
+[dock_drive-7] [INFO] [1794734036.427051292] [dock_drive]: state -> SEARCH
+[dock_drive-7] [INFO] [1794734036.433530386] [dock_drive]: state -> GOTO
+[dock_detector-6] [INFO] [1794734037.177520586] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_drive-7] [WARN] [1794734037.183669231] [dock_drive]: no dock fix for 3.0 s; holding
+[dock_detector-6] [INFO] [1794734037.781407607] [dock_detector]: dock fix: +0.44 m ahead, -0.01 m across, +1 deg; coverage 0.71, sides 0.60, 55 points
+[dock_drive-7] [INFO] [1794734038.933640429] [dock_drive]: state -> TURN
+[dock_detector-6] [INFO] [1794734043.140475900] [dock_detector]: dock fix: -0.42 m ahead, -0.04 m across, -174 deg; coverage 0.67, sides 0.56, 56 points
+[dock_drive-7] [INFO] [1794734043.584680521] [dock_drive]: state -> BACK
+[dock_detector-6] [INFO] [1794734044.939792084] [dock_detector]: dock fit rejected: cost 0.00145 (max 0.00400), coverage 0.70 (min 0.35), sides 0.58 (min 0.10), 3 in the bay (max 2), 66 points [tracking]
+[dock_detector-6] [INFO] [1794734048.542555855] [dock_detector]: dock fix: -0.12 m ahead, -0.00 m across, +180 deg; coverage 0.79, sides 0.71, 119 points
+[dock_drive-7] [INFO] [1794734050.286932046] [dock_drive]: state -> DONE
+[dock_drive-7] [INFO] [1794734050.287551353] [dock_drive]: docked: lateral -5.9 mm, yaw +0.53 deg
+[dock_drive-7] [INFO] [1794734050.433723738] [dock_drive]: state -> IDLE
+[dock_detector-6] [INFO] [1794734052.141741711] [dock_detector]: dock fit rejected: cost 0.00209 (max 0.00400), coverage 0.21 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 24 points [tracking]
+[dock_drive-7] [INFO] [1794734053.934880379] [dock_drive]: state -> SEARCH
+[dock_drive-7] [INFO] [1794734053.936707922] [dock_drive]: state -> GOTO
+[dock_detector-6] [INFO] [1794734054.584475891] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_drive-7] [WARN] [1794734054.586723773] [dock_drive]: no dock fix for 3.0 s; holding
+[dock_detector-6] [INFO] [1794734055.179564958] [dock_detector]: dock fix: +0.45 m ahead, +0.14 m across, -3 deg; coverage 0.66, sides 0.44, 52 points
+[dock_detector-6] [INFO] [1794734055.740512129] [dock_detector]: dock fit rejected: cost 0.00169 (max 0.00400), coverage 0.63 (min 0.35), sides 0.47 (min 0.10), 3 in the bay (max 2), 51 points [tracking]
+[dock_drive-7] [INFO] [1794734060.338950561] [dock_drive]: state -> TURN
+[dock_detector-6] [INFO] [1794734060.542778608] [dock_detector]: dock fix: +0.29 m ahead, -0.03 m across, -2 deg; coverage 0.70, sides 0.58, 77 points
+[dock_drive-7] [INFO] [1794734064.790257353] [dock_drive]: state -> BACK
+[dock_detector-6] [INFO] [1794734065.947097247] [dock_detector]: dock fix: -0.36 m ahead, +0.00 m across, -180 deg; coverage 0.71, sides 0.56, 62 points
+[dock_detector-6] [INFO] [1794734071.350881270] [dock_detector]: dock fix: -0.04 m ahead, +0.00 m across, -180 deg; coverage 0.78, sides 0.71, 159 points
+[dock_drive-7] [INFO] [1794734071.591515882] [dock_drive]: state -> DONE
+[dock_drive-7] [INFO] [1794734071.592126080] [dock_drive]: docked: lateral +2.4 mm, yaw +0.22 deg
+[dock_drive-7] [INFO] [1794734071.743918932] [dock_drive]: state -> IDLE
+[dock_detector-6] [INFO] [1794734073.152882725] [dock_detector]: dock fit rejected: cost 0.00036 (max 0.00400), coverage 0.79 (min 0.35), sides 0.71 (min 0.10), 3 in the bay (max 2), 169 points [tracking]
+[topic_heartbeat-11] [WARN] [1794734073.251739735] [topic_heartbeat]: drive_supervision: no heartbeat, robot moving or not yet settled with a zero or unknown setpoint
+[dock_drive-7] [INFO] [1794734075.244522539] [dock_drive]: state -> SEARCH
+[dock_drive-7] [INFO] [1794734075.292942398] [dock_drive]: state -> GOTO
+[dock_detector-6] [INFO] [1794734075.581714381] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_drive-7] [WARN] [1794734075.592931867] [dock_drive]: no dock fix for 3.0 s; holding
+[dock_detector-6] [INFO] [1794734076.750335720] [dock_detector]: dock fix: +0.51 m ahead, +0.08 m across, +23 deg; coverage 0.64, sides 0.44, 48 points
+[dock_drive-7] [INFO] [1794734081.742843534] [dock_drive]: state -> TURN
+[dock_detector-6] [INFO] [1794734082.147088292] [dock_detector]: dock fix: +0.25 m ahead, -0.12 m across, -21 deg; coverage 0.70, sides 0.60, 77 points
+[dock_drive-7] [INFO] [1794734086.242759317] [dock_drive]: state -> BACK
+[dock_detector-6] [INFO] [1794734087.546329845] [dock_detector]: dock fix: -0.34 m ahead, -0.00 m across, +179 deg; coverage 0.72, sides 0.62, 66 points
+[dock_drive-7] [INFO] [1794734092.843034003] [dock_drive]: state -> DONE
+[dock_drive-7] [INFO] [1794734092.843746420] [dock_drive]: docked: lateral -5.0 mm, yaw +0.52 deg
+[dock_drive-7] [INFO] [1794734092.852551816] [dock_drive]: state -> IDLE
+[dock_detector-6] [INFO] [1794734092.954444814] [dock_detector]: dock fix: -0.02 m ahead, -0.01 m across, +178 deg; coverage 0.79, sides 0.71, 168 points
+[dock_detector-6] [INFO] [1794734094.747720425] [dock_detector]: dock fit rejected: cost 0.00199 (max 0.00400), coverage 0.29 (min 0.35), sides 0.27 (min 0.10), 0 in the bay (max 2), 32 points [tracking]
+[dock_drive-7] [INFO] [1794734096.353931211] [dock_drive]: state -> SEARCH
+[dock_drive-7] [INFO] [1794734096.392810209] [dock_drive]: state -> GOTO
+[dock_detector-6] [INFO] [1794734097.187081022] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_drive-7] [WARN] [1794734097.192859169] [dock_drive]: no dock fix for 3.0 s; holding
+[dock_detector-6] [INFO] [1794734097.779938428] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.41 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 32 points [searching]
+[dock_drive-7] [WARN] [1794734099.192915456] [dock_drive]: no dock fix for 5.0 s; holding
+[dock_detector-6] [INFO] [1794734100.192557160] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.41 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 32 points [searching]
+[dock_drive-7] [WARN] [1794734101.242848806] [dock_drive]: no dock fix for 7.1 s; holding
+[dock_detector-6] [INFO] [1794734102.582583702] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.39 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_detector-6] [INFO] [1794734103.183302607] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_drive-7] [WARN] [1794734103.244066019] [dock_drive]: no dock fix for 9.1 s; holding
+[dock_detector-6] [INFO] [1794734104.983430712] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.40 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 32 points [searching]
+[dock_drive-7] [WARN] [1794734105.294081279] [dock_drive]: no dock fix for 11.1 s; holding
+[dock_drive-7] [WARN] [1794734107.294098406] [dock_drive]: no dock fix for 13.1 s; holding
+[dock_detector-6] [INFO] [1794734107.383102196] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.44 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 32 points [searching]
+[dock_drive-7] [WARN] [1794734109.294232893] [dock_drive]: no dock fix for 15.1 s; holding
+[dock_detector-6] [INFO] [1794734109.785525109] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_detector-6] [INFO] [1794734110.381709922] [dock_detector]: dock fit rejected: cost 0.00226 (max 0.00400), coverage 0.46 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 32 points [searching]
+[dock_drive-7] [WARN] [1794734111.343938475] [dock_drive]: no dock fix for 17.2 s; holding
+[dock_detector-6] [INFO] [1794734112.784420915] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.43 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 32 points [searching]
+[dock_drive-7] [WARN] [1794734113.346274813] [dock_drive]: no dock fix for 19.2 s; holding
+[dock_detector-6] [INFO] [1794734115.183365132] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.45 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 32 points [searching]
+[dock_drive-7] [WARN] [1794734115.346285171] [dock_drive]: no dock fix for 21.2 s; holding
+[dock_drive-7] [WARN] [1794734117.396460612] [dock_drive]: no dock fix for 23.2 s; holding
+[dock_detector-6] [INFO] [1794734117.587165711] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.41 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 32 points [searching]
+[dock_drive-7] [WARN] [1794734119.446335393] [dock_drive]: no dock fix for 25.3 s; holding
+[dock_detector-6] [INFO] [1794734119.985663260] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.42 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794734121.448495363] [dock_drive]: no dock fix for 27.3 s; holding
+[dock_detector-6] [INFO] [1794734122.388722163] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_detector-6] [INFO] [1794734122.992742335] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.44 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794734123.497868367] [dock_drive]: no dock fix for 29.3 s; holding
+[dock_detector-6] [INFO] [1794734125.385117910] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.39 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794734125.497934736] [dock_drive]: no dock fix for 31.3 s; holding
+[dock_drive-7] [WARN] [1794734127.498039773] [dock_drive]: no dock fix for 33.3 s; holding
+[dock_detector-6] [INFO] [1794734127.789814355] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.39 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794734129.547846406] [dock_drive]: no dock fix for 35.4 s; holding
+[dock_detector-6] [INFO] [1794734130.190415578] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_detector-6] [INFO] [1794734130.803478125] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.40 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 32 points [searching]
+[dock_drive-7] [WARN] [1794734131.547861245] [dock_drive]: no dock fix for 37.4 s; holding
+[dock_detector-6] [INFO] [1794734133.183974476] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.41 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 32 points [searching]
+[dock_drive-7] [WARN] [1794734133.547865604] [dock_drive]: no dock fix for 39.4 s; holding
+[dock_drive-7] [WARN] [1794734135.548026882] [dock_drive]: no dock fix for 41.4 s; holding
+[dock_detector-6] [INFO] [1794734135.586426901] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.39 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794734137.597968085] [dock_drive]: no dock fix for 43.4 s; holding
+[dock_detector-6] [INFO] [1794734137.987588742] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.42 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 32 points [searching]
+[dock_drive-7] [WARN] [1794734139.599011520] [dock_drive]: no dock fix for 45.4 s; holding
+[dock_detector-6] [INFO] [1794734140.387859256] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.41 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794734141.648874353] [dock_drive]: no dock fix for 47.5 s; holding
+[dock_detector-6] [INFO] [1794734142.790403441] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.41 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794734143.699180745] [dock_drive]: no dock fix for 49.5 s; holding
+[dock_detector-6] [INFO] [1794734145.185257147] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.43 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794734145.748913039] [dock_drive]: no dock fix for 51.6 s; holding
+[dock_detector-6] [INFO] [1794734147.594943535] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.43 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 32 points [searching]
+[dock_drive-7] [WARN] [1794734147.750456952] [dock_drive]: no dock fix for 53.6 s; holding
+[dock_drive-7] [WARN] [1794734149.800280136] [dock_drive]: no dock fix for 55.6 s; holding
+[dock_detector-6] [INFO] [1794734149.986931482] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.43 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 31 points [searching]
+[dock_drive-7] [WARN] [1794734151.850361020] [dock_drive]: no dock fix for 57.7 s; holding
+[dock_detector-6] [INFO] [1794734152.389992376] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.41 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 32 points [searching]
+[dock_drive-7] [WARN] [1794734153.900263753] [dock_drive]: no dock fix for 59.7 s; holding
+[dock_detector-6] [INFO] [1794734154.195923900] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_detector-6] [INFO] [1794734154.794966672] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.39 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 32 points [searching]
+[dock_drive-7] [WARN] [1794734155.900299003] [dock_drive]: no dock fix for 61.7 s; holding
+[dock_detector-6] [INFO] [1794734157.188883273] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.39 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 32 points [searching]
+[dock_drive-7] [WARN] [1794734157.950175167] [dock_drive]: no dock fix for 63.8 s; holding
+[dock_detector-6] [INFO] [1794734159.593049823] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.42 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794734159.950281277] [dock_drive]: no dock fix for 65.8 s; holding
+[dock_detector-6] [INFO] [1794734160.205140255] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_detector-6] [INFO] [1794734161.991702305] [dock_detector]: dock fit rejected: cost 0.00226 (max 0.00400), coverage 0.41 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 32 points [searching]
+[dock_drive-7] [WARN] [1794734162.000189482] [dock_drive]: no dock fix for 67.8 s; holding
+[dock_detector-6] [INFO] [1794734163.791067535] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_drive-7] [WARN] [1794734164.000262192] [dock_drive]: no dock fix for 69.8 s; holding
+[dock_detector-6] [INFO] [1794734164.395090518] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.45 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 32 points [searching]
+[dock_drive-7] [WARN] [1794734166.001905447] [dock_drive]: no dock fix for 71.8 s; holding
+[dock_detector-6] [INFO] [1794734166.789779576] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.40 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 32 points [searching]
+[dock_drive-7] [WARN] [1794734168.001960397] [dock_drive]: no dock fix for 73.8 s; holding
+[dock_detector-6] [INFO] [1794734169.186352997] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_detector-6] [INFO] [1794734169.792091994] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.41 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 32 points [searching]
+[dock_drive-7] [WARN] [1794734170.003060274] [dock_drive]: no dock fix for 75.8 s; holding
+[dock_drive-7] [WARN] [1794734172.053181768] [dock_drive]: no dock fix for 77.9 s; holding
+[dock_detector-6] [INFO] [1794734172.190981416] [dock_detector]: dock fit rejected: cost 0.00226 (max 0.00400), coverage 0.39 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 32 points [searching]
+[dock_drive-7] [WARN] [1794734174.103022433] [dock_drive]: no dock fix for 79.9 s; holding
+[dock_detector-6] [INFO] [1794734174.591464511] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.39 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 32 points [searching]
+[dock_drive-7] [WARN] [1794734176.103141514] [dock_drive]: no dock fix for 81.9 s; holding
+[dock_detector-6] [INFO] [1794734176.402817855] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_detector-6] [INFO] [1794734176.989999294] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.40 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 32 points [searching]
+[dock_drive-7] [WARN] [1794734178.104657729] [dock_drive]: no dock fix for 83.9 s; holding
+[dock_detector-6] [INFO] [1794734179.404206726] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.38 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794734180.154846983] [dock_drive]: no dock fix for 86.0 s; holding
+[dock_detector-6] [INFO] [1794734181.791142216] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.40 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794734182.204332370] [dock_drive]: no dock fix for 88.0 s; holding
+[dock_detector-6] [INFO] [1794734184.192703458] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.41 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 32 points [searching]
+[dock_drive-7] [WARN] [1794734184.206051365] [dock_drive]: no dock fix for 90.0 s; holding
+[dock_detector-6] [INFO] [1794734184.791805931] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_drive-7] [WARN] [1794734186.206108057] [dock_drive]: no dock fix for 92.0 s; holding
+[dock_detector-6] [INFO] [1794734186.593757542] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.41 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 32 points [searching]
+[dock_drive-7] [WARN] [1794734188.255942903] [dock_drive]: no dock fix for 94.1 s; holding
+[dock_detector-6] [INFO] [1794734188.993629511] [dock_detector]: dock fit rejected: cost 0.00226 (max 0.00400), coverage 0.41 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 31 points [searching]
+[dock_drive-7] [WARN] [1794734190.256000235] [dock_drive]: no dock fix for 96.1 s; holding
+[dock_detector-6] [INFO] [1794734191.392668854] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.38 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794734192.306273070] [dock_drive]: no dock fix for 98.1 s; holding
+[dock_detector-6] [INFO] [1794734193.806578918] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.40 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794734194.356011166] [dock_drive]: no dock fix for 100.2 s; holding
+[dock_detector-6] [INFO] [1794734196.195878099] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_drive-7] [WARN] [1794734196.406073982] [dock_drive]: no dock fix for 102.2 s; holding
+[dock_detector-6] [INFO] [1794734196.792599981] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.42 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794734198.406078714] [dock_drive]: no dock fix for 104.2 s; holding
+[dock_detector-6] [INFO] [1794734199.194918391] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_detector-6] [INFO] [1794734199.793060708] [dock_detector]: dock fit rejected: cost 0.00226 (max 0.00400), coverage 0.38 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794734200.406093516] [dock_drive]: no dock fix for 106.2 s; holding
+[dock_detector-6] [INFO] [1794734202.194944440] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.39 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794734202.406372338] [dock_drive]: no dock fix for 108.2 s; holding
+[dock_drive-7] [WARN] [1794734204.407179328] [dock_drive]: no dock fix for 110.2 s; holding
+[dock_detector-6] [INFO] [1794734204.601454884] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.44 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 31 points [searching]
+[dock_drive-7] [WARN] [1794734206.407254440] [dock_drive]: no dock fix for 112.2 s; holding
+[dock_detector-6] [INFO] [1794734206.994330641] [dock_detector]: dock fit rejected: cost 0.00226 (max 0.00400), coverage 0.40 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 32 points [searching]
+[dock_drive-7] [WARN] [1794734208.457076658] [dock_drive]: no dock fix for 114.3 s; holding
+[dock_detector-6] [INFO] [1794734209.399095812] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.42 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 32 points [searching]
+[dock_drive-7] [WARN] [1794734210.507224744] [dock_drive]: no dock fix for 116.3 s; holding
+[dock_detector-6] [INFO] [1794734211.795544536] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.43 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794734212.507277557] [dock_drive]: no dock fix for 118.3 s; holding
+[dock_detector-6] [INFO] [1794734214.196792771] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.41 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 32 points [searching]
+[dock_drive-7] [WARN] [1794734214.557305753] [dock_drive]: no dock fix for 120.4 s; holding
+[dock_detector-6] [INFO] [1794734216.605451518] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.42 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794734216.607402150] [dock_drive]: no dock fix for 122.4 s; holding
+[dock_drive-7] [WARN] [1794734218.609263846] [dock_drive]: no dock fix for 124.4 s; holding
+[dock_detector-6] [INFO] [1794734219.002025721] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_detector-6] [INFO] [1794734219.597102801] [dock_detector]: dock fix: +0.50 m ahead, +0.20 m across, +17 deg; coverage 0.65, sides 0.56, 46 points
+[dock_drive-7] [INFO] [1794734221.659075291] [dock_drive]: state -> TURN
+[dock_detector-6] [INFO] [1794734224.966584342] [dock_detector]: dock fix: -0.38 m ahead, -0.17 m across, -152 deg; coverage 0.70, sides 0.62, 58 points
+[dock_drive-7] [INFO] [1794734226.260135385] [dock_drive]: state -> BACK
+[dock_detector-6] [INFO] [1794734230.365263679] [dock_detector]: dock fix: -0.18 m ahead, -0.01 m across, +180 deg; coverage 0.73, sides 0.62, 101 points
+[dock_drive-7] [INFO] [1794734233.013980562] [dock_drive]: state -> DONE
+[dock_drive-7] [INFO] [1794734233.014573870] [dock_drive]: docked: lateral -5.8 mm, yaw +0.29 deg
+[dock_drive-7] [INFO] [1794734233.019391231] [dock_drive]: state -> IDLE
+[dock_detector-6] [INFO] [1794734235.168779578] [dock_detector]: dock fit rejected: cost 0.00204 (max 0.00400), coverage 0.29 (min 0.35), sides 0.24 (min 0.10), 0 in the bay (max 2), 29 points [tracking]
+[dock_drive-7] [INFO] [1794734236.520402522] [dock_drive]: state -> SEARCH
+[dock_drive-7] [INFO] [1794734236.565122186] [dock_drive]: state -> GOTO
+[dock_detector-6] [INFO] [1794734237.601839119] [dock_detector]: dock fit rejected: cost 0.00223 (max 0.00400), coverage 0.38 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794734237.615143697] [dock_drive]: no dock fix for 3.0 s; holding
+[dock_drive-7] [WARN] [1794734239.665006016] [dock_drive]: no dock fix for 5.1 s; holding
+[dock_detector-6] [INFO] [1794734240.018652325] [dock_detector]: dock fit rejected: cost 0.00222 (max 0.00400), coverage 0.38 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 34 points [searching]
+[dock_drive-7] [WARN] [1794734241.665037880] [dock_drive]: no dock fix for 7.1 s; holding
+[dock_detector-6] [INFO] [1794734242.407976718] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.42 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 31 points [searching]
+[dock_drive-7] [WARN] [1794734243.665078775] [dock_drive]: no dock fix for 9.1 s; holding
+[dock_detector-6] [INFO] [1794734244.815625730] [dock_detector]: dock fit rejected: cost 0.00222 (max 0.00400), coverage 0.42 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 34 points [searching]
+[dock_drive-7] [WARN] [1794734245.665254119] [dock_drive]: no dock fix for 11.1 s; holding
+[dock_detector-6] [INFO] [1794734247.204242817] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.39 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 32 points [searching]
+[dock_drive-7] [WARN] [1794734247.715205368] [dock_drive]: no dock fix for 13.1 s; holding
+[dock_detector-6] [INFO] [1794734248.417098907] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_detector-6] [INFO] [1794734249.605836583] [dock_detector]: dock fit rejected: cost 0.00223 (max 0.00400), coverage 0.43 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 34 points [searching]
+[dock_drive-7] [WARN] [1794734249.765042316] [dock_drive]: no dock fix for 15.2 s; holding
+[dock_drive-7] [WARN] [1794734251.765158802] [dock_drive]: no dock fix for 17.2 s; holding
+[dock_detector-6] [INFO] [1794734252.015914155] [dock_detector]: dock fit rejected: cost 0.00224 (max 0.00400), coverage 0.39 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 32 points [searching]
+[dock_drive-7] [WARN] [1794734253.765181676] [dock_drive]: no dock fix for 19.2 s; holding
+[dock_detector-6] [INFO] [1794734254.407577480] [dock_detector]: dock fit rejected: cost 0.00224 (max 0.00400), coverage 0.40 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 32 points [searching]
+[dock_drive-7] [WARN] [1794734255.815271265] [dock_drive]: no dock fix for 21.2 s; holding
+[dock_detector-6] [INFO] [1794734256.806651977] [dock_detector]: dock fit rejected: cost 0.00222 (max 0.00400), coverage 0.43 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 34 points [searching]
+[dock_drive-7] [WARN] [1794734257.865142614] [dock_drive]: no dock fix for 23.3 s; holding
+[dock_detector-6] [INFO] [1794734259.218445923] [dock_detector]: dock fit rejected: cost 0.00223 (max 0.00400), coverage 0.42 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794734259.915225513] [dock_drive]: no dock fix for 25.3 s; holding
+[dock_detector-6] [INFO] [1794734261.605919605] [dock_detector]: dock fit rejected: cost 0.00222 (max 0.00400), coverage 0.46 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 34 points [searching]
+[dock_drive-7] [WARN] [1794734261.915393408] [dock_drive]: no dock fix for 27.3 s; holding
+[dock_detector-6] [INFO] [1794734262.206776532] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_drive-7] [WARN] [1794734263.965087648] [dock_drive]: no dock fix for 29.4 s; holding
+[dock_detector-6] [INFO] [1794734264.016605696] [dock_detector]: dock fit rejected: cost 0.00222 (max 0.00400), coverage 0.40 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 34 points [searching]
+[dock_drive-7] [WARN] [1794734266.015067218] [dock_drive]: no dock fix for 31.4 s; holding
+[dock_detector-6] [INFO] [1794734266.415136055] [dock_detector]: dock fit rejected: cost 0.00222 (max 0.00400), coverage 0.43 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 34 points [searching]
+[dock_drive-7] [WARN] [1794734268.016318949] [dock_drive]: no dock fix for 33.4 s; holding
+[dock_detector-6] [INFO] [1794734268.817411649] [dock_detector]: dock fit rejected: cost 0.00222 (max 0.00400), coverage 0.40 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 35 points [searching]
+[dock_drive-7] [WARN] [1794734270.066247769] [dock_drive]: no dock fix for 35.5 s; holding
+[dock_detector-6] [INFO] [1794734271.207709850] [dock_detector]: dock fit rejected: cost 0.00222 (max 0.00400), coverage 0.40 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 34 points [searching]
+[dock_drive-7] [WARN] [1794734272.116306818] [dock_drive]: no dock fix for 37.5 s; holding
+[dock_detector-6] [INFO] [1794734273.009722795] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_detector-6] [INFO] [1794734273.617066557] [dock_detector]: dock fit rejected: cost 0.00223 (max 0.00400), coverage 0.41 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794734274.166376507] [dock_drive]: no dock fix for 39.6 s; holding
+[dock_detector-6] [INFO] [1794734276.006874391] [dock_detector]: dock fit rejected: cost 0.00223 (max 0.00400), coverage 0.43 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 34 points [searching]
+[dock_drive-7] [WARN] [1794734276.216265107] [dock_drive]: no dock fix for 41.6 s; holding
+[dock_drive-7] [WARN] [1794734278.266109548] [dock_drive]: no dock fix for 43.7 s; holding
+[dock_detector-6] [INFO] [1794734278.406028748] [dock_detector]: dock fit rejected: cost 0.00224 (max 0.00400), coverage 0.42 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 32 points [searching]
+[dock_drive-7] [WARN] [1794734280.316269347] [dock_drive]: no dock fix for 45.7 s; holding
+[dock_detector-6] [INFO] [1794734280.801941928] [dock_detector]: dock fit rejected: cost 0.00223 (max 0.00400), coverage 0.41 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 34 points [searching]
+[dock_drive-7] [WARN] [1794734282.316384553] [dock_drive]: no dock fix for 47.7 s; holding
+[dock_detector-6] [INFO] [1794734282.616020535] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_detector-6] [INFO] [1794734283.218231737] [dock_detector]: dock fit rejected: cost 0.00223 (max 0.00400), coverage 0.42 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 34 points [searching]
+[dock_drive-7] [WARN] [1794734284.366168334] [dock_drive]: no dock fix for 49.8 s; holding
+[dock_detector-6] [INFO] [1794734285.606523188] [dock_detector]: dock fit rejected: cost 0.00224 (max 0.00400), coverage 0.38 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 32 points [searching]
+[dock_drive-7] [WARN] [1794734286.366201461] [dock_drive]: no dock fix for 51.8 s; holding
+[dock_detector-6] [INFO] [1794734288.006617631] [dock_detector]: dock fit rejected: cost 0.00222 (max 0.00400), coverage 0.40 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 35 points [searching]
+[dock_drive-7] [WARN] [1794734288.366236938] [dock_drive]: no dock fix for 53.8 s; holding
+[dock_detector-6] [INFO] [1794734288.619745691] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_detector-6] [INFO] [1794734290.406071488] [dock_detector]: dock fit rejected: cost 0.00218 (max 0.00400), coverage 0.47 (min 0.35), sides 0.33 (min 0.10), 8 in the bay (max 2), 44 points [searching]
+[dock_drive-7] [WARN] [1794734290.416288268] [dock_drive]: no dock fix for 55.8 s; holding
+[dock_detector-6] [INFO] [1794734291.606838257] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_drive-7] [WARN] [1794734292.416332615] [dock_drive]: no dock fix for 57.8 s; holding
+[dock_detector-6] [INFO] [1794734292.809374589] [dock_detector]: dock fit rejected: cost 0.00222 (max 0.00400), coverage 0.40 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 35 points [searching]
+[dock_drive-7] [WARN] [1794734294.466171476] [dock_drive]: no dock fix for 59.9 s; holding
+[dock_detector-6] [INFO] [1794734294.616749314] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_detector-6] [INFO] [1794734295.204267124] [dock_detector]: dock fit rejected: cost 0.00223 (max 0.00400), coverage 0.40 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 34 points [searching]
+[dock_drive-7] [WARN] [1794734296.466198863] [dock_drive]: no dock fix for 61.9 s; holding
+[dock_detector-6] [INFO] [1794734297.617837996] [dock_detector]: dock fit rejected: cost 0.00223 (max 0.00400), coverage 0.39 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 34 points [searching]
+[dock_drive-7] [WARN] [1794734298.466210260] [dock_drive]: no dock fix for 63.9 s; holding
+[dock_detector-6] [INFO] [1794734299.406387924] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_detector-6] [INFO] [1794734300.007050832] [dock_detector]: dock fit rejected: cost 0.00224 (max 0.00400), coverage 0.36 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 32 points [searching]
+[dock_drive-7] [WARN] [1794734300.466216747] [dock_drive]: no dock fix for 65.9 s; holding
+[dock_detector-6] [INFO] [1794734302.416077252] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_drive-7] [WARN] [1794734302.516327778] [dock_drive]: no dock fix for 67.9 s; holding
+[dock_detector-6] [INFO] [1794734303.004986737] [dock_detector]: dock fit rejected: cost 0.00222 (max 0.00400), coverage 0.38 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 34 points [searching]
+[dock_drive-7] [WARN] [1794734304.566129730] [dock_drive]: no dock fix for 70.0 s; holding
+[dock_detector-6] [INFO] [1794734305.412122734] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_detector-6] [INFO] [1794734306.016593118] [dock_detector]: dock fix: +0.47 m ahead, -0.20 m across, -18 deg; coverage 0.64, sides 0.49, 48 points
+[dock_drive-7] [INFO] [1794734308.166109257] [dock_drive]: state -> TURN
+[dock_detector-6] [INFO] [1794734308.370788703] [dock_detector]: dock fit rejected: cost 0.00133 (max 0.00400), coverage 0.74 (min 0.35), sides 0.67 (min 0.10), 3 in the bay (max 2), 75 points [tracking]
+[dock_detector-6] [INFO] [1794734311.373619209] [dock_detector]: dock fix: -0.41 m ahead, +0.10 m across, +165 deg; coverage 0.68, sides 0.58, 56 points
+[dock_drive-7] [INFO] [1794734312.069298924] [dock_drive]: state -> BACK
+[dock_detector-6] [INFO] [1794734314.375713817] [dock_detector]: dock fit rejected: cost 0.00132 (max 0.00400), coverage 0.72 (min 0.35), sides 0.60 (min 0.10), 4 in the bay (max 2), 75 points [tracking]
+[dock_detector-6] [INFO] [1794734315.574898723] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_detector-6] [INFO] [1794734316.776296531] [dock_detector]: dock fix: -0.15 m ahead, +0.01 m across, -180 deg; coverage 0.75, sides 0.67, 112 points
+[dock_detector-6] [INFO] [1794734317.978587564] [dock_detector]: dock fit rejected: cost 0.00044 (max 0.00400), coverage 0.75 (min 0.35), sides 0.67 (min 0.10), 3 in the bay (max 2), 141 points [tracking]
+[dock_drive-7] [INFO] [1794734318.870261599] [dock_drive]: state -> DONE
+[dock_drive-7] [INFO] [1794734318.870849897] [dock_drive]: docked: lateral +8.3 mm, yaw -0.44 deg
+[dock_drive-7] [INFO] [1794734318.959987667] [dock_drive]: state -> IDLE
+[topic_heartbeat-11] [WARN] [1794734320.462093342] [topic_heartbeat]: drive_supervision: no heartbeat, robot moving or not yet settled with a zero or unknown setpoint
+[dock_detector-6] [INFO] [1794734320.966816898] [dock_detector]: dock fit rejected: cost 0.00250 (max 0.00400), coverage 0.00 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 0 points [tracking]
+[dock_drive-7] [INFO] [1794734322.460853675] [dock_drive]: state -> SEARCH
+[dock_drive-7] [INFO] [1794734322.472428910] [dock_drive]: state -> GOTO
+[dock_drive-7] [WARN] [1794734323.422730874] [dock_drive]: no dock fix for 3.0 s; holding
+[dock_detector-6] [INFO] [1794734323.447658156] [dock_detector]: dock fit rejected: cost 0.00212 (max 0.00400), coverage 0.29 (min 0.35), sides 0.13 (min 0.10), 1 in the bay (max 2), 23 points [tracking]
+[dock_detector-6] [INFO] [1794734324.042558288] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_drive-7] [WARN] [1794734325.472475687] [dock_drive]: no dock fix for 5.1 s; holding
+[dock_detector-6] [INFO] [1794734325.819574233] [dock_detector]: dock fit rejected: cost 0.00230 (max 0.00400), coverage 0.38 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 26 points [searching]
+[dock_drive-7] [WARN] [1794734327.522557049] [dock_drive]: no dock fix for 7.1 s; holding
+[dock_detector-6] [INFO] [1794734327.616914208] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_detector-6] [INFO] [1794734328.219961637] [dock_detector]: dock fit rejected: cost 0.00229 (max 0.00400), coverage 0.38 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 27 points [searching]
+[dock_drive-7] [WARN] [1794734329.522561277] [dock_drive]: no dock fix for 9.1 s; holding
+[dock_detector-6] [INFO] [1794734330.612997031] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_detector-6] [INFO] [1794734331.234656978] [dock_detector]: dock fit rejected: cost 0.00230 (max 0.00400), coverage 0.39 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 26 points [searching]
+[dock_drive-7] [WARN] [1794734331.522655516] [dock_drive]: no dock fix for 11.1 s; holding
+[dock_drive-7] [WARN] [1794734333.572462479] [dock_drive]: no dock fix for 13.2 s; holding
+[dock_detector-6] [INFO] [1794734333.614953572] [dock_detector]: dock fit rejected: cost 0.00231 (max 0.00400), coverage 0.26 (min 0.35), sides 0.16 (min 0.10), 5 in the bay (max 2), 27 points [searching]
+[dock_drive-7] [WARN] [1794734335.572547537] [dock_drive]: no dock fix for 15.2 s; holding
+[dock_detector-6] [INFO] [1794734336.024052103] [dock_detector]: dock fit rejected: cost 0.00229 (max 0.00400), coverage 0.27 (min 0.35), sides 0.13 (min 0.10), 4 in the bay (max 2), 28 points [searching]
+[dock_drive-7] [WARN] [1794734337.622602329] [dock_drive]: no dock fix for 17.2 s; holding
+[dock_detector-6] [INFO] [1794734338.415517063] [dock_detector]: dock fit rejected: cost 0.00229 (max 0.00400), coverage 0.42 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 26 points [searching]
+[dock_drive-7] [WARN] [1794734339.672422202] [dock_drive]: no dock fix for 19.3 s; holding
+[dock_detector-6] [INFO] [1794734340.820030002] [dock_detector]: dock fit rejected: cost 0.00230 (max 0.00400), coverage 0.39 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 26 points [searching]
+[dock_drive-7] [WARN] [1794734341.673808016] [dock_drive]: no dock fix for 21.3 s; holding
+[dock_detector-6] [INFO] [1794734343.221959051] [dock_detector]: dock fit rejected: cost 0.00230 (max 0.00400), coverage 0.41 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 26 points [searching]
+[dock_drive-7] [WARN] [1794734343.723889178] [dock_drive]: no dock fix for 23.3 s; holding
+[dock_detector-6] [INFO] [1794734345.627784515] [dock_detector]: dock fit rejected: cost 0.00230 (max 0.00400), coverage 0.42 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 26 points [searching]
+[dock_drive-7] [WARN] [1794734345.724965164] [dock_drive]: no dock fix for 25.3 s; holding
+[dock_drive-7] [WARN] [1794734347.728272840] [dock_drive]: no dock fix for 27.3 s; holding
+[dock_detector-6] [INFO] [1794734348.019615364] [dock_detector]: dock fit rejected: cost 0.00230 (max 0.00400), coverage 0.38 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 27 points [searching]
+[dock_drive-7] [WARN] [1794734349.777066767] [dock_drive]: no dock fix for 29.4 s; holding
+[dock_detector-6] [INFO] [1794734350.421558794] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_detector-6] [INFO] [1794734351.024105726] [dock_detector]: dock fit rejected: cost 0.00230 (max 0.00400), coverage 0.41 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 26 points [searching]
+[dock_drive-7] [WARN] [1794734351.778054573] [dock_drive]: no dock fix for 31.4 s; holding
+[dock_detector-6] [INFO] [1794734353.438553287] [dock_detector]: dock fit rejected: cost 0.00230 (max 0.00400), coverage 0.42 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 26 points [searching]
+[dock_drive-7] [WARN] [1794734353.779478877] [dock_drive]: no dock fix for 33.4 s; holding
+[dock_detector-6] [INFO] [1794734355.826682701] [dock_detector]: dock fit rejected: cost 0.00230 (max 0.00400), coverage 0.42 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 26 points [searching]
+[dock_drive-7] [WARN] [1794734355.829616229] [dock_drive]: no dock fix for 35.4 s; holding
+[dock_drive-7] [WARN] [1794734357.879325264] [dock_drive]: no dock fix for 37.5 s; holding
+[dock_detector-6] [INFO] [1794734358.222468455] [dock_detector]: dock fit rejected: cost 0.00230 (max 0.00400), coverage 0.42 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 26 points [searching]
+[dock_drive-7] [WARN] [1794734359.879329073] [dock_drive]: no dock fix for 39.5 s; holding
+[dock_detector-6] [INFO] [1794734360.623317089] [dock_detector]: dock fit rejected: cost 0.00229 (max 0.00400), coverage 0.42 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 26 points [searching]
+[dock_drive-7] [WARN] [1794734361.879378023] [dock_drive]: no dock fix for 41.5 s; holding
+[dock_detector-6] [INFO] [1794734363.020229389] [dock_detector]: dock fit rejected: cost 0.00229 (max 0.00400), coverage 0.37 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 27 points [searching]
+[dock_drive-7] [WARN] [1794734363.879477503] [dock_drive]: no dock fix for 43.5 s; holding
+[dock_detector-6] [INFO] [1794734365.420717676] [dock_detector]: dock fit rejected: cost 0.00229 (max 0.00400), coverage 0.39 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 26 points [searching]
+[dock_drive-7] [WARN] [1794734365.880504769] [dock_drive]: no dock fix for 45.5 s; holding
+[dock_detector-6] [INFO] [1794734367.830546055] [dock_detector]: dock fit rejected: cost 0.00232 (max 0.00400), coverage 0.34 (min 0.35), sides 0.00 (min 0.10), 1 in the bay (max 2), 25 points [searching]
+[dock_drive-7] [WARN] [1794734367.880516019] [dock_drive]: no dock fix for 47.5 s; holding
+[dock_drive-7] [WARN] [1794734369.930807511] [dock_drive]: no dock fix for 49.5 s; holding
+[dock_detector-6] [INFO] [1794734370.231190471] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_detector-6] [INFO] [1794734370.827542957] [dock_detector]: dock fit rejected: cost 0.00229 (max 0.00400), coverage 0.38 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 26 points [searching]
+[dock_drive-7] [WARN] [1794734371.932215666] [dock_drive]: no dock fix for 51.5 s; holding
+[dock_detector-6] [INFO] [1794734373.223566221] [dock_detector]: dock fit rejected: cost 0.00230 (max 0.00400), coverage 0.41 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 26 points [searching]
+[dock_drive-7] [WARN] [1794734373.932260756] [dock_drive]: no dock fix for 53.5 s; holding
+[dock_detector-6] [INFO] [1794734375.621698137] [dock_detector]: dock fit rejected: cost 0.00230 (max 0.00400), coverage 0.40 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 26 points [searching]
+[dock_drive-7] [WARN] [1794734375.981919221] [dock_drive]: no dock fix for 55.6 s; holding
+[dock_drive-7] [WARN] [1794734377.982068501] [dock_drive]: no dock fix for 57.6 s; holding
+[dock_detector-6] [INFO] [1794734378.024595474] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_detector-6] [INFO] [1794734378.638630781] [dock_detector]: dock fit rejected: cost 0.00229 (max 0.00400), coverage 0.42 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 26 points [searching]
+[dock_drive-7] [WARN] [1794734380.032021465] [dock_drive]: no dock fix for 59.6 s; holding
+[dock_detector-6] [INFO] [1794734381.028660509] [dock_detector]: dock fit rejected: cost 0.00230 (max 0.00400), coverage 0.39 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 26 points [searching]
+[dock_drive-7] [WARN] [1794734382.081871900] [dock_drive]: no dock fix for 61.7 s; holding
+[dock_detector-6] [INFO] [1794734383.429482544] [dock_detector]: dock fit rejected: cost 0.00230 (max 0.00400), coverage 0.39 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 26 points [searching]
+[dock_drive-7] [WARN] [1794734384.082055460] [dock_drive]: no dock fix for 63.7 s; holding
+[dock_detector-6] [INFO] [1794734385.838907756] [dock_detector]: dock fit rejected: cost 0.00229 (max 0.00400), coverage 0.40 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 26 points [searching]
+[dock_drive-7] [WARN] [1794734386.132068814] [dock_drive]: no dock fix for 65.7 s; holding
+[dock_drive-7] [WARN] [1794734388.182039939] [dock_drive]: no dock fix for 67.8 s; holding
+[dock_detector-6] [INFO] [1794734388.244392244] [dock_detector]: dock fit rejected: cost 0.00229 (max 0.00400), coverage 0.37 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 27 points [searching]
+[dock_drive-7] [WARN] [1794734390.232057553] [dock_drive]: no dock fix for 69.8 s; holding
+[dock_detector-6] [INFO] [1794734390.625958565] [dock_detector]: dock fit rejected: cost 0.00230 (max 0.00400), coverage 0.28 (min 0.35), sides 0.16 (min 0.10), 4 in the bay (max 2), 27 points [searching]
+[dock_drive-7] [WARN] [1794734392.281957498] [dock_drive]: no dock fix for 71.9 s; holding
+[dock_detector-6] [INFO] [1794734393.025755625] [dock_detector]: dock fit rejected: cost 0.00230 (max 0.00400), coverage 0.40 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 26 points [searching]
+[dock_drive-7] [WARN] [1794734394.281965309] [dock_drive]: no dock fix for 73.9 s; holding
+[dock_detector-6] [INFO] [1794734395.425910944] [dock_detector]: dock fit rejected: cost 0.00230 (max 0.00400), coverage 0.39 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 26 points [searching]
+[dock_drive-7] [WARN] [1794734396.332000873] [dock_drive]: no dock fix for 75.9 s; holding
+[dock_detector-6] [INFO] [1794734397.826529891] [dock_detector]: dock fit rejected: cost 0.00229 (max 0.00400), coverage 0.41 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 26 points [searching]
+[dock_drive-7] [WARN] [1794734398.332046714] [dock_drive]: no dock fix for 77.9 s; holding
+[dock_detector-6] [INFO] [1794734400.244162011] [dock_detector]: dock fit rejected: cost 0.00231 (max 0.00400), coverage 0.28 (min 0.35), sides 0.00 (min 0.10), 2 in the bay (max 2), 26 points [searching]
+[dock_drive-7] [WARN] [1794734400.333054952] [dock_drive]: no dock fix for 79.9 s; holding
+[dock_drive-7] [WARN] [1794734402.334762737] [dock_drive]: no dock fix for 81.9 s; holding
+[dock_detector-6] [INFO] [1794734402.629288459] [dock_detector]: dock fit rejected: cost 0.00229 (max 0.00400), coverage 0.27 (min 0.35), sides 0.13 (min 0.10), 3 in the bay (max 2), 27 points [searching]
+[dock_drive-7] [WARN] [1794734404.334910327] [dock_drive]: no dock fix for 83.9 s; holding
+[dock_detector-6] [INFO] [1794734405.029993616] [dock_detector]: dock fit rejected: cost 0.00229 (max 0.00400), coverage 0.42 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 26 points [searching]
+[dock_drive-7] [WARN] [1794734406.384859513] [dock_drive]: no dock fix for 86.0 s; holding
+[dock_detector-6] [INFO] [1794734407.428858710] [dock_detector]: dock fit rejected: cost 0.00229 (max 0.00400), coverage 0.41 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 27 points [searching]
+[dock_drive-7] [WARN] [1794734408.434820728] [dock_drive]: no dock fix for 88.0 s; holding
+[dock_detector-6] [INFO] [1794734409.833601871] [dock_detector]: dock fit rejected: cost 0.00229 (max 0.00400), coverage 0.41 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 27 points [searching]
+[dock_drive-7] [WARN] [1794734410.434889199] [dock_drive]: no dock fix for 90.0 s; holding
+[dock_detector-6] [INFO] [1794734412.228771130] [dock_detector]: dock fit rejected: cost 0.00229 (max 0.00400), coverage 0.40 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 26 points [searching]
+[dock_drive-7] [WARN] [1794734412.434905771] [dock_drive]: no dock fix for 92.0 s; holding
+[dock_drive-7] [WARN] [1794734414.485186885] [dock_drive]: no dock fix for 94.1 s; holding
+[dock_detector-6] [INFO] [1794734414.630667953] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_detector-6] [INFO] [1794734415.230117928] [dock_detector]: dock fit rejected: cost 0.00230 (max 0.00400), coverage 0.42 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 26 points [searching]
+[dock_drive-7] [WARN] [1794734416.534848911] [dock_drive]: no dock fix for 96.1 s; holding
+[dock_detector-6] [INFO] [1794734417.629309462] [dock_detector]: dock fit rejected: cost 0.00229 (max 0.00400), coverage 0.40 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 26 points [searching]
+[dock_drive-7] [WARN] [1794734418.534893183] [dock_drive]: no dock fix for 98.1 s; holding
+[dock_detector-6] [INFO] [1794734419.427276597] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_detector-6] [INFO] [1794734420.028563864] [dock_detector]: dock fit rejected: cost 0.00230 (max 0.00400), coverage 0.38 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 26 points [searching]
+[dock_drive-7] [WARN] [1794734420.534951525] [dock_drive]: no dock fix for 100.1 s; holding
+[dock_detector-6] [INFO] [1794734422.433787314] [dock_detector]: dock fit rejected: cost 0.00229 (max 0.00400), coverage 0.43 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 26 points [searching]
+[dock_drive-7] [WARN] [1794734422.536001332] [dock_drive]: no dock fix for 102.1 s; holding
+[dock_drive-7] [WARN] [1794734424.536164974] [dock_drive]: no dock fix for 104.1 s; holding
+[dock_detector-6] [INFO] [1794734424.830630447] [dock_detector]: dock fit rejected: cost 0.00229 (max 0.00400), coverage 0.38 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 27 points [searching]
+[dock_drive-7] [WARN] [1794734426.536185666] [dock_drive]: no dock fix for 106.1 s; holding
+[dock_detector-6] [INFO] [1794734427.245583619] [dock_detector]: dock fit rejected: cost 0.00229 (max 0.00400), coverage 0.40 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 27 points [searching]
+[dock_drive-7] [WARN] [1794734428.537221584] [dock_drive]: no dock fix for 108.1 s; holding
+[dock_detector-6] [INFO] [1794734429.634663043] [dock_detector]: dock fit rejected: cost 0.00229 (max 0.00400), coverage 0.42 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 27 points [searching]
+[dock_drive-7] [WARN] [1794734430.540169275] [dock_drive]: no dock fix for 110.1 s; holding
+[dock_detector-6] [INFO] [1794734432.049162567] [dock_detector]: dock fit rejected: cost 0.00229 (max 0.00400), coverage 0.44 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 26 points [searching]
+[dock_drive-7] [WARN] [1794734432.541118774] [dock_drive]: no dock fix for 112.1 s; holding
+[dock_detector-6] [INFO] [1794734434.453721650] [dock_detector]: dock fit rejected: cost 0.00229 (max 0.00400), coverage 0.42 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 26 points [searching]
+[dock_drive-7] [WARN] [1794734434.591272879] [dock_drive]: no dock fix for 114.2 s; holding
+[dock_detector-6] [INFO] [1794734435.634116212] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_drive-7] [WARN] [1794734436.640942916] [dock_drive]: no dock fix for 116.2 s; holding
+[dock_detector-6] [INFO] [1794734436.844799236] [dock_detector]: dock fit rejected: cost 0.00229 (max 0.00400), coverage 0.42 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 26 points [searching]
+[dock_drive-7] [WARN] [1794734438.641078969] [dock_drive]: no dock fix for 118.2 s; holding
+[dock_detector-6] [INFO] [1794734439.232089197] [dock_detector]: dock fit rejected: cost 0.00229 (max 0.00400), coverage 0.42 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 26 points [searching]
+[dock_drive-7] [WARN] [1794734440.641089991] [dock_drive]: no dock fix for 120.2 s; holding
+[dock_detector-6] [INFO] [1794734441.636007212] [dock_detector]: dock fit rejected: cost 0.00229 (max 0.00400), coverage 0.40 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 27 points [searching]
+[dock_drive-7] [WARN] [1794734442.691088987] [dock_drive]: no dock fix for 122.3 s; holding
+[dock_detector-6] [INFO] [1794734444.032379108] [dock_detector]: dock fit rejected: cost 0.00230 (max 0.00400), coverage 0.35 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 26 points [searching]
+[dock_drive-7] [WARN] [1794734444.741023124] [dock_drive]: no dock fix for 124.3 s; holding
+[dock_detector-6] [INFO] [1794734446.440153539] [dock_detector]: dock fit rejected: cost 0.00229 (max 0.00400), coverage 0.38 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 27 points [searching]
+[dock_drive-7] [WARN] [1794734446.741102326] [dock_drive]: no dock fix for 126.3 s; holding
+[dock_drive-7] [WARN] [1794734448.790890443] [dock_drive]: no dock fix for 128.4 s; holding
+[dock_detector-6] [INFO] [1794734448.833073228] [dock_detector]: dock fit rejected: cost 0.00229 (max 0.00400), coverage 0.43 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 26 points [searching]
+[dock_drive-7] [WARN] [1794734450.791019346] [dock_drive]: no dock fix for 130.4 s; holding
+[dock_detector-6] [INFO] [1794734451.240081192] [dock_detector]: dock fit rejected: cost 0.00229 (max 0.00400), coverage 0.38 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 27 points [searching]
+[dock_drive-7] [WARN] [1794734452.793646349] [dock_drive]: no dock fix for 132.4 s; holding
+[dock_detector-6] [INFO] [1794734453.643034502] [dock_detector]: dock fit rejected: cost 0.00230 (max 0.00400), coverage 0.41 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 27 points [searching]
+[dock_drive-7] [WARN] [1794734454.793686952] [dock_drive]: no dock fix for 134.4 s; holding
+[dock_detector-6] [INFO] [1794734456.035542373] [dock_detector]: dock fit rejected: cost 0.00231 (max 0.00400), coverage 0.29 (min 0.35), sides 0.13 (min 0.10), 0 in the bay (max 2), 26 points [searching]
+[dock_drive-7] [WARN] [1794734456.793715545] [dock_drive]: no dock fix for 136.4 s; holding
+[dock_detector-6] [INFO] [1794734458.446262803] [dock_detector]: dock fit rejected: cost 0.00229 (max 0.00400), coverage 0.42 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 26 points [searching]
+[dock_drive-7] [WARN] [1794734458.794111106] [dock_drive]: no dock fix for 138.4 s; holding
+[dock_detector-6] [INFO] [1794734460.838923224] [dock_detector]: dock fit rejected: cost 0.00230 (max 0.00400), coverage 0.28 (min 0.35), sides 0.13 (min 0.10), 4 in the bay (max 2), 27 points [searching]
+[dock_drive-7] [WARN] [1794734460.843788295] [dock_drive]: no dock fix for 140.4 s; holding
+[dock_drive-7] [WARN] [1794734462.843829958] [dock_drive]: no dock fix for 142.4 s; holding
+[dock_detector-6] [INFO] [1794734463.243857296] [dock_detector]: dock fit rejected: cost 0.00229 (max 0.00400), coverage 0.38 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 27 points [searching]
+[dock_drive-7] [WARN] [1794734464.893639905] [dock_drive]: no dock fix for 144.5 s; holding
+[dock_detector-6] [INFO] [1794734465.641761397] [dock_detector]: dock fit rejected: cost 0.00229 (max 0.00400), coverage 0.38 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 26 points [searching]
+[dock_drive-7] [WARN] [1794734466.893644579] [dock_drive]: no dock fix for 146.5 s; holding
+[dock_detector-6] [INFO] [1794734468.037597805] [dock_detector]: dock fit rejected: cost 0.00230 (max 0.00400), coverage 0.42 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 26 points [searching]
+[dock_drive-7] [WARN] [1794734468.893668992] [dock_drive]: no dock fix for 148.5 s; holding
+[dock_detector-6] [INFO] [1794734470.448740814] [dock_detector]: dock fit rejected: cost 0.00230 (max 0.00400), coverage 0.25 (min 0.35), sides 0.13 (min 0.10), 4 in the bay (max 2), 27 points [searching]
+[dock_drive-7] [WARN] [1794734470.943710189] [dock_drive]: no dock fix for 150.5 s; holding
+[dock_drive-7] [INFO] [1794734472.538296185] [dock_drive]: state -> IDLE
+[dock_detector-6] [INFO] [1794734472.837779919] [dock_detector]: dock fit rejected: cost 0.00229 (max 0.00400), coverage 0.41 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 27 points [searching]
+[topic_heartbeat-11] [WARN] [1794734474.046079833] [topic_heartbeat]: drive_supervision: no heartbeat, robot moving or not yet settled with a zero or unknown setpoint
+[dock_detector-6] [INFO] [1794734474.642862048] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_detector-6] [INFO] [1794734475.242606982] [dock_detector]: dock fix: +0.54 m ahead, -0.00 m across, +1 deg; coverage 0.63, sides 0.49, 46 points
+[dock_drive-7] [INFO] [1794734476.039252093] [dock_drive]: state -> SEARCH
+[dock_drive-7] [INFO] [1794734476.044931091] [dock_drive]: state -> GOTO
+[dock_drive-7] [INFO] [1794734477.946072763] [dock_drive]: state -> TURN
+[dock_detector-6] [INFO] [1794734480.601668422] [dock_detector]: dock fix: -0.24 m ahead, -0.30 m across, -122 deg; coverage 0.69, sides 0.53, 60 points
+[dock_detector-6] [INFO] [1794734482.403379634] [dock_detector]: dock fit rejected: cost 0.00160 (max 0.00400), coverage 0.65 (min 0.35), sides 0.56 (min 0.10), 3 in the bay (max 2), 56 points [tracking]
+[dock_drive-7] [INFO] [1794734482.547025290] [dock_drive]: state -> BACK
+[dock_detector-6] [INFO] [1794734486.004265690] [dock_detector]: dock fix: -0.22 m ahead, -0.00 m across, +181 deg; coverage 0.72, sides 0.64, 91 points
+[dock_drive-7] [INFO] [1794734489.198920302] [dock_drive]: state -> DONE
+[dock_drive-7] [INFO] [1794734489.199367220] [dock_drive]: docked: lateral -4.0 mm, yaw +0.44 deg
+[dock_drive-7] [INFO] [1794734489.245821757] [dock_drive]: state -> IDLE
+[topic_heartbeat-11] [WARN] [1794734490.749757350] [topic_heartbeat]: drive_supervision: no heartbeat, robot moving or not yet settled with a zero or unknown setpoint
+[dock_detector-6] [INFO] [1794734490.797847351] [dock_detector]: dock fit rejected: cost 0.00206 (max 0.00400), coverage 0.22 (min 0.35), sides 0.16 (min 0.10), 0 in the bay (max 2), 23 points [tracking]
+[dock_drive-7] [INFO] [1794734492.746681996] [dock_drive]: state -> SEARCH
+[dock_drive-7] [INFO] [1794734492.748968957] [dock_drive]: state -> GOTO
+[dock_detector-6] [INFO] [1794734493.239121202] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_drive-7] [WARN] [1794734493.248964054] [dock_drive]: no dock fix for 3.0 s; holding
+[dock_detector-6] [INFO] [1794734493.841879695] [dock_detector]: dock fix: +0.47 m ahead, +0.14 m across, -2 deg; coverage 0.63, sides 0.40, 49 points
+[dock_drive-7] [INFO] [1794734499.001036030] [dock_drive]: state -> TURN
+[dock_detector-6] [INFO] [1794734499.205917686] [dock_detector]: dock fix: +0.27 m ahead, -0.06 m across, -11 deg; coverage 0.70, sides 0.60, 78 points
+[dock_drive-7] [INFO] [1794734503.451045152] [dock_drive]: state -> BACK
+[dock_detector-6] [INFO] [1794734504.607704129] [dock_detector]: dock fit rejected: cost 0.00149 (max 0.00400), coverage 0.71 (min 0.35), sides 0.62 (min 0.10), 3 in the bay (max 2), 64 points [tracking]
+[dock_detector-6] [INFO] [1794734505.207925642] [dock_detector]: dock fix: -0.32 m ahead, +0.00 m across, -181 deg; coverage 0.71, sides 0.60, 69 points
+[dock_detector-6] [INFO] [1794734510.010162240] [dock_detector]: dock fit rejected: cost 0.00038 (max 0.00400), coverage 0.78 (min 0.35), sides 0.71 (min 0.10), 4 in the bay (max 2), 163 points [tracking]
+[dock_drive-7] [INFO] [1794734510.154248894] [dock_drive]: state -> DONE
+[dock_drive-7] [INFO] [1794734510.154824332] [dock_drive]: docked: lateral -1.9 mm, yaw +0.09 deg
+[dock_drive-7] [INFO] [1794734510.156657094] [dock_drive]: state -> IDLE
+[dock_detector-6] [INFO] [1794734510.608432420] [dock_detector]: dock fix: -0.02 m ahead, -0.00 m across, +180 deg; coverage 0.81, sides 0.73, 170 points
+[dock_detector-6] [INFO] [1794734512.400812800] [dock_detector]: dock fit rejected: cost 0.00207 (max 0.00400), coverage 0.25 (min 0.35), sides 0.13 (min 0.10), 0 in the bay (max 2), 30 points [tracking]
+[dock_drive-7] [INFO] [1794734513.657177626] [dock_drive]: state -> SEARCH
+[dock_drive-7] [INFO] [1794734513.658850979] [dock_drive]: state -> GOTO
+[dock_detector-6] [INFO] [1794734514.232664925] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_drive-7] [WARN] [1794734514.259007762] [dock_drive]: no dock fix for 3.0 s; holding
+[dock_detector-6] [INFO] [1794734516.009441088] [dock_detector]: dock fix: +0.39 m ahead, +0.30 m across, +50 deg; coverage 0.63, sides 0.51, 48 points
+[dock_drive-7] [INFO] [1794734519.911807821] [dock_drive]: state -> TURN
+[dock_detector-6] [INFO] [1794734521.414579859] [dock_detector]: dock fix: +0.08 m ahead, -0.31 m across, -66 deg; coverage 0.70, sides 0.62, 70 points
+[dock_drive-7] [INFO] [1794734524.711851969] [dock_drive]: state -> BACK
+[dock_detector-6] [INFO] [1794734526.814883389] [dock_detector]: dock fix: -0.30 m ahead, -0.00 m across, +180 deg; coverage 0.71, sides 0.64, 74 points
+[dock_drive-7] [INFO] [1794734531.412966881] [dock_drive]: state -> DONE
+[dock_drive-7] [INFO] [1794734531.413558888] [dock_drive]: docked: lateral -4.9 mm, yaw +0.45 deg
+[dock_drive-7] [INFO] [1794734531.466227512] [dock_drive]: state -> IDLE
+[dock_detector-6] [INFO] [1794734532.216546925] [dock_detector]: dock fit rejected: cost 0.00037 (max 0.00400), coverage 0.79 (min 0.35), sides 0.73 (min 0.10), 3 in the bay (max 2), 170 points [tracking]
+[dock_detector-6] [INFO] [1794734532.815468303] [dock_detector]: dock fix: -0.02 m ahead, -0.00 m across, +180 deg; coverage 0.81, sides 0.76, 170 points
+[dock_detector-6] [INFO] [1794734534.613528822] [dock_detector]: dock fit rejected: cost 0.00198 (max 0.00400), coverage 0.29 (min 0.35), sides 0.24 (min 0.10), 0 in the bay (max 2), 33 points [tracking]
+[dock_drive-7] [INFO] [1794734534.967001903] [dock_drive]: state -> SEARCH
+[dock_drive-7] [INFO] [1794734535.012893313] [dock_drive]: state -> GOTO
+[dock_drive-7] [WARN] [1794734535.862813405] [dock_drive]: no dock fix for 3.0 s; holding
+[dock_detector-6] [INFO] [1794734537.048774778] [dock_detector]: dock fit rejected: cost 0.00224 (max 0.00400), coverage 0.40 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794734537.863909676] [dock_drive]: no dock fix for 5.0 s; holding
+[dock_detector-6] [INFO] [1794734539.445141367] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.40 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794734539.864022671] [dock_drive]: no dock fix for 7.0 s; holding
+[dock_detector-6] [INFO] [1794734541.846103377] [dock_detector]: dock fit rejected: cost 0.00224 (max 0.00400), coverage 0.34 (min 0.35), sides 0.16 (min 0.10), 3 in the bay (max 2), 37 points [searching]
+[dock_drive-7] [WARN] [1794734541.864116577] [dock_drive]: no dock fix for 9.0 s; holding
+[dock_detector-6] [INFO] [1794734542.449978466] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_drive-7] [WARN] [1794734543.913913737] [dock_drive]: no dock fix for 11.1 s; holding
+[dock_detector-6] [INFO] [1794734544.251869329] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.42 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 32 points [searching]
+[dock_drive-7] [WARN] [1794734545.964007666] [dock_drive]: no dock fix for 13.1 s; holding
+[dock_detector-6] [INFO] [1794734546.645265350] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.41 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794734547.964059741] [dock_drive]: no dock fix for 15.1 s; holding
+[dock_detector-6] [INFO] [1794734549.042372387] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.41 (min 0.35), sides 0.00 (min 0.10), 1 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794734550.013940331] [dock_drive]: no dock fix for 17.2 s; holding
+[dock_detector-6] [INFO] [1794734551.447886120] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.39 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 32 points [searching]
+[dock_drive-7] [WARN] [1794734552.016000849] [dock_drive]: no dock fix for 19.2 s; holding
+[dock_detector-6] [INFO] [1794734553.843495262] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.40 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794734554.066045528] [dock_drive]: no dock fix for 21.2 s; holding
+[dock_drive-7] [WARN] [1794734556.068978343] [dock_drive]: no dock fix for 23.2 s; holding
+[dock_detector-6] [INFO] [1794734556.264741284] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.44 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 32 points [searching]
+[dock_drive-7] [WARN] [1794734558.071137110] [dock_drive]: no dock fix for 25.2 s; holding
+[dock_detector-6] [INFO] [1794734558.653513743] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.39 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794734560.071139486] [dock_drive]: no dock fix for 27.2 s; holding
+[dock_detector-6] [INFO] [1794734561.053203980] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.42 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794734562.120854877] [dock_drive]: no dock fix for 29.3 s; holding
+[dock_detector-6] [INFO] [1794734563.454489480] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.43 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794734564.121844850] [dock_drive]: no dock fix for 31.3 s; holding
+[dock_detector-6] [INFO] [1794734565.858514370] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.41 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794734566.121938806] [dock_drive]: no dock fix for 33.3 s; holding
+[dock_drive-7] [WARN] [1794734568.172088635] [dock_drive]: no dock fix for 35.3 s; holding
+[dock_detector-6] [INFO] [1794734568.254460051] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.41 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_detector-6] [INFO] [1794734570.057199242] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_drive-7] [WARN] [1794734570.172258750] [dock_drive]: no dock fix for 37.3 s; holding
+[dock_detector-6] [INFO] [1794734570.657607995] [dock_detector]: dock fit rejected: cost 0.00224 (max 0.00400), coverage 0.42 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794734572.221969052] [dock_drive]: no dock fix for 39.4 s; holding
+[dock_detector-6] [INFO] [1794734573.057234252] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.39 (min 0.35), sides 0.00 (min 0.10), 1 in the bay (max 2), 34 points [searching]
+[dock_drive-7] [WARN] [1794734574.223973430] [dock_drive]: no dock fix for 41.4 s; holding
+[dock_detector-6] [INFO] [1794734575.448649391] [dock_detector]: dock fit rejected: cost 0.00224 (max 0.00400), coverage 0.41 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794734576.223988717] [dock_drive]: no dock fix for 43.4 s; holding
+[dock_detector-6] [INFO] [1794734577.851809575] [dock_detector]: dock fit rejected: cost 0.00224 (max 0.00400), coverage 0.42 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794734578.224021303] [dock_drive]: no dock fix for 45.4 s; holding
+[dock_drive-7] [WARN] [1794734580.224059060] [dock_drive]: no dock fix for 47.4 s; holding
+[dock_detector-6] [INFO] [1794734580.251515322] [dock_detector]: dock fit rejected: cost 0.00224 (max 0.00400), coverage 0.42 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794734582.273877381] [dock_drive]: no dock fix for 49.4 s; holding
+[dock_detector-6] [INFO] [1794734582.665011205] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.40 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 32 points [searching]
+[dock_drive-7] [WARN] [1794734584.274106946] [dock_drive]: no dock fix for 51.4 s; holding
+[dock_detector-6] [INFO] [1794734585.050129930] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.40 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 32 points [searching]
+[dock_drive-7] [WARN] [1794734586.323921227] [dock_drive]: no dock fix for 53.5 s; holding
+[dock_detector-6] [INFO] [1794734587.454570638] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.38 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794734588.324940950] [dock_drive]: no dock fix for 55.5 s; holding
+[dock_detector-6] [INFO] [1794734589.857621042] [dock_detector]: dock fit rejected: cost 0.00224 (max 0.00400), coverage 0.37 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794734590.326933730] [dock_drive]: no dock fix for 57.5 s; holding
+[dock_detector-6] [INFO] [1794734592.260570407] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.41 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 32 points [searching]
+[dock_drive-7] [WARN] [1794734592.326937436] [dock_drive]: no dock fix for 59.5 s; holding
+[dock_drive-7] [WARN] [1794734594.326940813] [dock_drive]: no dock fix for 61.5 s; holding
+[dock_detector-6] [INFO] [1794734594.661258481] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_detector-6] [INFO] [1794734595.253899463] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.41 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794734596.326987720] [dock_drive]: no dock fix for 63.5 s; holding
+[dock_detector-6] [INFO] [1794734597.653900790] [dock_detector]: dock fit rejected: cost 0.00224 (max 0.00400), coverage 0.42 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794734598.328047063] [dock_drive]: no dock fix for 65.5 s; holding
+[dock_detector-6] [INFO] [1794734600.056603496] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.44 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794734600.328117960] [dock_drive]: no dock fix for 67.5 s; holding
+[dock_drive-7] [WARN] [1794734602.378303500] [dock_drive]: no dock fix for 69.5 s; holding
+[dock_detector-6] [INFO] [1794734602.462334760] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.41 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794734604.428117621] [dock_drive]: no dock fix for 71.6 s; holding
+[dock_detector-6] [INFO] [1794734604.865218445] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.41 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794734606.478067663] [dock_drive]: no dock fix for 73.6 s; holding
+[dock_detector-6] [INFO] [1794734607.261279347] [dock_detector]: dock fit rejected: cost 0.00224 (max 0.00400), coverage 0.39 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794734608.478195349] [dock_drive]: no dock fix for 75.6 s; holding
+[dock_detector-6] [INFO] [1794734609.668506606] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_detector-6] [INFO] [1794734610.268160191] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.41 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794734610.481993532] [dock_drive]: no dock fix for 77.6 s; holding
+[dock_drive-7] [WARN] [1794734612.531952163] [dock_drive]: no dock fix for 79.7 s; holding
+[dock_detector-6] [INFO] [1794734612.667725720] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.43 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_detector-6] [INFO] [1794734614.464691614] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_drive-7] [WARN] [1794734614.581989024] [dock_drive]: no dock fix for 81.7 s; holding
+[dock_detector-6] [INFO] [1794734615.056496941] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.42 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 32 points [searching]
+[dock_drive-7] [WARN] [1794734616.585811486] [dock_drive]: no dock fix for 83.7 s; holding
+[dock_detector-6] [INFO] [1794734617.464938664] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.41 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_detector-6] [INFO] [1794734618.066882981] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_drive-7] [WARN] [1794734618.589859278] [dock_drive]: no dock fix for 85.7 s; holding
+[dock_detector-6] [INFO] [1794734619.867716711] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.38 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794734620.639840619] [dock_drive]: no dock fix for 87.8 s; holding
+[dock_detector-6] [INFO] [1794734622.268580644] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.42 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 32 points [searching]
+[dock_drive-7] [WARN] [1794734622.689926110] [dock_drive]: no dock fix for 89.8 s; holding
+[dock_detector-6] [INFO] [1794734624.674999157] [dock_detector]: dock fit rejected: cost 0.00224 (max 0.00400), coverage 0.44 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794734624.691968700] [dock_drive]: no dock fix for 91.8 s; holding
+[dock_drive-7] [WARN] [1794734626.695045925] [dock_drive]: no dock fix for 93.8 s; holding
+[dock_detector-6] [INFO] [1794734627.072717073] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.41 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 32 points [searching]
+[dock_drive-7] [WARN] [1794734628.695857810] [dock_drive]: no dock fix for 95.8 s; holding
+[dock_detector-6] [INFO] [1794734629.476353195] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.41 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794734630.697836870] [dock_drive]: no dock fix for 97.8 s; holding
+[dock_detector-6] [INFO] [1794734631.278628640] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_detector-6] [INFO] [1794734631.877725717] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.39 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 32 points [searching]
+[dock_drive-7] [WARN] [1794734632.697965467] [dock_drive]: no dock fix for 99.8 s; holding
+[dock_detector-6] [INFO] [1794734634.274594827] [dock_detector]: dock fit rejected: cost 0.00224 (max 0.00400), coverage 0.42 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794734634.698862442] [dock_drive]: no dock fix for 101.8 s; holding
+[dock_detector-6] [INFO] [1794734636.685509412] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.40 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794734636.699036939] [dock_drive]: no dock fix for 103.8 s; holding
+[dock_drive-7] [WARN] [1794734638.699039517] [dock_drive]: no dock fix for 105.8 s; holding
+[dock_detector-6] [INFO] [1794734639.082809810] [dock_detector]: dock fit rejected: cost 0.00226 (max 0.00400), coverage 0.37 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 31 points [searching]
+[dock_drive-7] [WARN] [1794734640.699070974] [dock_drive]: no dock fix for 107.8 s; holding
+[dock_detector-6] [INFO] [1794734641.473899563] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.41 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794734642.700818416] [dock_drive]: no dock fix for 109.8 s; holding
+[dock_detector-6] [INFO] [1794734643.884333879] [dock_detector]: dock fit rejected: cost 0.00226 (max 0.00400), coverage 0.43 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 32 points [searching]
+[dock_drive-7] [WARN] [1794734644.701037773] [dock_drive]: no dock fix for 111.8 s; holding
+[dock_detector-6] [INFO] [1794734646.276901866] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.44 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 31 points [searching]
+[dock_drive-7] [WARN] [1794734646.750831106] [dock_drive]: no dock fix for 113.9 s; holding
+[dock_detector-6] [INFO] [1794734648.683587648] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.38 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794734648.801041347] [dock_drive]: no dock fix for 115.9 s; holding
+[dock_detector-6] [INFO] [1794734649.878520467] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_drive-7] [WARN] [1794734650.805053679] [dock_drive]: no dock fix for 117.9 s; holding
+[dock_detector-6] [INFO] [1794734651.680715132] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.42 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 32 points [searching]
+[dock_drive-7] [WARN] [1794734652.806958450] [dock_drive]: no dock fix for 119.9 s; holding
+[dock_detector-6] [INFO] [1794734652.885567171] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_detector-6] [INFO] [1794734654.083810617] [dock_detector]: dock fit rejected: cost 0.00224 (max 0.00400), coverage 0.42 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794734654.807025148] [dock_drive]: no dock fix for 121.9 s; holding
+[dock_detector-6] [INFO] [1794734655.890446045] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_detector-6] [INFO] [1794734656.485583648] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.39 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 32 points [searching]
+[dock_drive-7] [WARN] [1794734656.807049646] [dock_drive]: no dock fix for 123.9 s; holding
+[dock_drive-7] [WARN] [1794734658.857069099] [dock_drive]: no dock fix for 126.0 s; holding
+[dock_detector-6] [INFO] [1794734658.884672260] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_detector-6] [INFO] [1794734659.492518063] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.43 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794734660.907010181] [dock_drive]: no dock fix for 128.0 s; holding
+[dock_detector-6] [INFO] [1794734661.887868290] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.40 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 32 points [searching]
+[dock_drive-7] [WARN] [1794734662.907254878] [dock_drive]: no dock fix for 130.0 s; holding
+[dock_detector-6] [INFO] [1794734664.292777989] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.40 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 32 points [searching]
+[dock_drive-7] [WARN] [1794734664.910973382] [dock_drive]: no dock fix for 132.0 s; holding
+[dock_detector-6] [INFO] [1794734666.686457672] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.42 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 32 points [searching]
+[dock_drive-7] [WARN] [1794734666.911117540] [dock_drive]: no dock fix for 134.0 s; holding
+[dock_detector-6] [INFO] [1794734667.897200899] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_drive-7] [WARN] [1794734668.913184231] [dock_drive]: no dock fix for 136.0 s; holding
+[dock_detector-6] [INFO] [1794734669.090021026] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.39 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794734670.962809554] [dock_drive]: no dock fix for 138.1 s; holding
+[dock_detector-6] [INFO] [1794734671.496625089] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.41 (min 0.35), sides 0.00 (min 0.10), 1 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794734672.962894643] [dock_drive]: no dock fix for 140.1 s; holding
+[dock_detector-6] [INFO] [1794734673.896565478] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.40 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794734674.963933357] [dock_drive]: no dock fix for 142.1 s; holding
+[dock_detector-6] [INFO] [1794734676.307372914] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.44 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 32 points [searching]
+[dock_drive-7] [WARN] [1794734677.013911230] [dock_drive]: no dock fix for 144.1 s; holding
+[dock_detector-6] [INFO] [1794734678.696058727] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_drive-7] [WARN] [1794734679.013997628] [dock_drive]: no dock fix for 146.1 s; holding
+[dock_detector-6] [INFO] [1794734679.301112492] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.45 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 32 points [searching]
+[dock_drive-7] [WARN] [1794734681.014184587] [dock_drive]: no dock fix for 148.1 s; holding
+[dock_detector-6] [INFO] [1794734681.702577794] [dock_detector]: dock fit rejected: cost 0.00225 (max 0.00400), coverage 0.39 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [WARN] [1794734683.064005960] [dock_drive]: no dock fix for 150.2 s; holding
+[dock_detector-6] [INFO] [1794734684.100516911] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_detector-6] [INFO] [1794734684.700674845] [dock_detector]: dock fit rejected: cost 0.00224 (max 0.00400), coverage 0.38 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 33 points [searching]
+[dock_drive-7] [INFO] [1794734685.041403207] [dock_drive]: state -> IDLE
+[dock_detector-6] [INFO] [1794734687.104376419] [dock_detector]: dock fit rejected: cost 0.00228 (max 0.00400), coverage 0.41 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 28 points [searching]
+[dock_drive-7] [INFO] [1794734688.542609793] [dock_drive]: state -> SEARCH
+[dock_detector-6] [INFO] [1794734689.511367101] [dock_detector]: dock fit rejected: cost 0.00229 (max 0.00400), coverage 0.42 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 27 points [searching]
+[dock_detector-6] [INFO] [1794734690.712002668] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_detector-6] [INFO] [1794734691.907182996] [dock_detector]: dock fit rejected: cost 0.00230 (max 0.00400), coverage 0.39 (min 0.35), sides 0.00 (min 0.10), 0 in the bay (max 2), 25 points [searching]
+[dock_detector-6] [INFO] [1794734694.272649591] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_detector-6] [INFO] [1794734694.869946106] [dock_detector]: dock fix: -0.75 m ahead, -0.19 m across, -163 deg; coverage 0.59, sides 0.49, 33 points
+[dock_drive-7] [INFO] [1794734695.476781654] [dock_drive]: state -> GOTO
+[dock_detector-6] [INFO] [1794734700.278856244] [dock_detector]: dock fix: +0.44 m ahead, +0.04 m across, +4 deg; coverage 0.68, sides 0.60, 55 points
+[dock_drive-7] [INFO] [1794734701.378705497] [dock_drive]: state -> TURN
+[dock_drive-7] [INFO] [1794734705.351281893] [dock_drive]: state -> IDLE
+[dock_detector-6] [INFO] [1794734705.680641110] [dock_detector]: dock fix: -0.41 m ahead, -0.05 m across, -172 deg; coverage 0.66, sides 0.56, 57 points
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[INFO] [topic_heartbeat-11]: sending signal 'SIGINT' to process[topic_heartbeat-11]
+[INFO] [job_roster-10]: sending signal 'SIGINT' to process[job_roster-10]
+[INFO] [mcu_standin_node-9]: sending signal 'SIGINT' to process[mcu_standin_node-9]
+[INFO] [health_monitor_node-8]: sending signal 'SIGINT' to process[health_monitor_node-8]
+[INFO] [dock_drive-7]: sending signal 'SIGINT' to process[dock_drive-7]
+[INFO] [dock_detector-6]: sending signal 'SIGINT' to process[dock_detector-6]
+[INFO] [ir_beacon_sim-5]: sending signal 'SIGINT' to process[ir_beacon_sim-5]
+[INFO] [robot_state_publisher-3]: sending signal 'SIGINT' to process[robot_state_publisher-3]
+[INFO] [parameter_bridge-2]: sending signal 'SIGINT' to process[parameter_bridge-2]
+[INFO] [gazebo-1]: sending signal 'SIGINT' to process[gazebo-1]
+[robot_state_publisher-3] [INFO] [1794734708.354403814] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[gazebo-1] [1;36m[Dbg] [SignalHandler.cc:142] [0m[1;36mReceived signal[[0m[1;36m2[0m[1;36m].[0m
+[gazebo-1] [1;36m[Dbg] [ServerPrivate.cc:122] [0m[1;36mServer received signal[[0m[1;36m2[0m[1;36m][0m
+[gazebo-1] [1;36m[Dbg] [Sensors.cc:565] [0m[1;36mSensorsPrivate::Stop[0m[1;36m[0m
+[parameter_bridge-2] [INFO] [1794734708.354604103] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[topic_heartbeat-11] Traceback (most recent call last):
+[topic_heartbeat-11]   File "/ws/install/oomwoo_health_kit/lib/oomwoo_health_kit/topic_heartbeat", line 33, in <module>
+[topic_heartbeat-11]     sys.exit(load_entry_point('oomwoo-health-kit==0.0.1', 'console_scripts', 'topic_heartbeat')())
+[topic_heartbeat-11]              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[topic_heartbeat-11]   File "/ws/install/oomwoo_health_kit/lib/python3.12/site-packages/oomwoo_health_kit/topic_heartbeat_node.py", line 206, in main
+[topic_heartbeat-11]     node.destroy_node()
+[topic_heartbeat-11]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py", line 1956, in destroy_node
+[topic_heartbeat-11]     self.destroy_publisher(self._publishers[0])
+[topic_heartbeat-11]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py", line 1836, in destroy_publisher
+[topic_heartbeat-11]     publisher.destroy()
+[topic_heartbeat-11]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/publisher.py", line 105, in destroy
+[topic_heartbeat-11]     self.__publisher.destroy_when_not_in_use()
+[topic_heartbeat-11] KeyboardInterrupt
+[job_roster-10] Traceback (most recent call last):
+[job_roster-10]   File "/ws/install/oomwoo_health_kit/lib/oomwoo_health_kit/job_roster", line 33, in <module>
+[job_roster-10]     sys.exit(load_entry_point('oomwoo-health-kit==0.0.1', 'console_scripts', 'job_roster')())
+[job_roster-10]              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[job_roster-10]   File "/ws/install/oomwoo_health_kit/lib/python3.12/site-packages/oomwoo_health_kit/job_roster_node.py", line 131, in main
+[job_roster-10]     node.destroy_node()
+[job_roster-10]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py", line 1956, in destroy_node
+[job_roster-10]     self.destroy_publisher(self._publishers[0])
+[mcu_standin_node-9] Traceback (most recent call last):
+[mcu_standin_node-9]   File "/ws/install/oomwoo_health_kit/lib/oomwoo_health_kit/mcu_standin_node", line 33, in <module>
+[mcu_standin_node-9]     sys.exit(load_entry_point('oomwoo-health-kit==0.0.1', 'console_scripts', 'mcu_standin_node')())
+[mcu_standin_node-9]              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[mcu_standin_node-9]   File "/ws/install/oomwoo_health_kit/lib/python3.12/site-packages/oomwoo_health_kit/mcu_standin_node.py", line 121, in main
+[job_roster-10]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py", line 1836, in destroy_publisher
+[job_roster-10]     publisher.destroy()
+[job_roster-10]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/publisher.py", line 105, in destroy
+[job_roster-10]     self.__publisher.destroy_when_not_in_use()
+[job_roster-10] KeyboardInterrupt
+[mcu_standin_node-9]     node.destroy_node()
+[mcu_standin_node-9]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py", line 1956, in destroy_node
+[mcu_standin_node-9]     self.destroy_publisher(self._publishers[0])
+[mcu_standin_node-9]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py", line 1836, in destroy_publisher
+[mcu_standin_node-9]     publisher.destroy()
+[mcu_standin_node-9]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/publisher.py", line 105, in destroy
+[mcu_standin_node-9]     self.__publisher.destroy_when_not_in_use()
+[mcu_standin_node-9] KeyboardInterrupt
+[health_monitor_node-8] Traceback (most recent call last):
+[health_monitor_node-8]   File "/ws/install/oomwoo_health_monitor/lib/oomwoo_health_monitor/health_monitor_node", line 33, in <module>
+[health_monitor_node-8]     sys.exit(load_entry_point('oomwoo-health-monitor==0.1.0', 'console_scripts', 'health_monitor_node')())
+[health_monitor_node-8]              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[health_monitor_node-8]   File "/ws/install/oomwoo_health_monitor/lib/python3.12/site-packages/oomwoo_health_monitor/health_monitor_node.py", line 137, in main
+[health_monitor_node-8]     node.destroy_node()
+[health_monitor_node-8]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py", line 1956, in destroy_node
+[health_monitor_node-8]     self.destroy_publisher(self._publishers[0])
+[health_monitor_node-8]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py", line 1836, in destroy_publisher
+[health_monitor_node-8]     publisher.destroy()
+[dock_drive-7] Traceback (most recent call last):
+[dock_drive-7]   File "/ros_ws/install/oomwoo_dock/lib/oomwoo_dock/dock_drive", line 33, in <module>
+[dock_drive-7]     sys.exit(load_entry_point('oomwoo-dock', 'console_scripts', 'dock_drive')())
+[dock_drive-7]              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[dock_drive-7]   File "/ros_ws/build/oomwoo_dock/oomwoo_dock/dock_drive_node.py", line 370, in main
+[dock_detector-6] Traceback (most recent call last):
+[dock_detector-6]   File "/ros_ws/install/oomwoo_dock/lib/oomwoo_dock/dock_detector", line 33, in <module>
+[dock_detector-6]     sys.exit(load_entry_point('oomwoo-dock', 'console_scripts', 'dock_detector')())
+[dock_detector-6]              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[dock_detector-6]   File "/ros_ws/build/oomwoo_dock/oomwoo_dock/dock_detector_node.py", line 413, in main
+[health_monitor_node-8]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/publisher.py", line 105, in destroy
+[health_monitor_node-8]     self.__publisher.destroy_when_not_in_use()
+[health_monitor_node-8] KeyboardInterrupt
+[dock_drive-7]     node.destroy_node()
+[dock_drive-7]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py", line 1956, in destroy_node
+[dock_drive-7]     self.destroy_publisher(self._publishers[0])
+[dock_drive-7]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py", line 1836, in destroy_publisher
+[dock_drive-7]     publisher.destroy()
+[dock_drive-7]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/publisher.py", line 105, in destroy
+[dock_drive-7]     self.__publisher.destroy_when_not_in_use()
+[dock_drive-7] KeyboardInterrupt
+[dock_detector-6]     node.destroy_node()
+[dock_detector-6]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py", line 1956, in destroy_node
+[dock_detector-6]     self.destroy_publisher(self._publishers[0])
+[dock_detector-6]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py", line 1836, in destroy_publisher
+[dock_detector-6]     publisher.destroy()
+[dock_detector-6]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/publisher.py", line 105, in destroy
+[dock_detector-6]     self.__publisher.destroy_when_not_in_use()
+[dock_detector-6] KeyboardInterrupt
+[ir_beacon_sim-5] Traceback (most recent call last):
+[ir_beacon_sim-5]   File "/ros_ws/install/oomwoo_sim_support/lib/oomwoo_sim_support/ir_beacon_sim", line 33, in <module>
+[ir_beacon_sim-5]     sys.exit(load_entry_point('oomwoo-sim-support', 'console_scripts', 'ir_beacon_sim')())
+[ir_beacon_sim-5]              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[ir_beacon_sim-5]   File "/ros_ws/build/oomwoo_sim_support/oomwoo_sim_support/ir_beacon_sim_node.py", line 224, in main
+[ir_beacon_sim-5]     node.destroy_node()
+[ir_beacon_sim-5]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py", line 1958, in destroy_node
+[ir_beacon_sim-5]     self.destroy_subscription(self._subscriptions[0])
+[ir_beacon_sim-5]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py", line 1854, in destroy_subscription
+[ir_beacon_sim-5]     subscription.destroy()
+[ir_beacon_sim-5]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/subscription.py", line 101, in destroy
+[parameter_bridge-2] [INFO] [1794734708.363090060] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[ir_beacon_sim-5]     self.handle.destroy_when_not_in_use()
+[ir_beacon_sim-5] KeyboardInterrupt
+[robot_state_publisher-3] [INFO] [1794734708.363153020] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[ERROR] [job_roster-10]: process has died [pid 3321, exit code -2, cmd '/ws/install/oomwoo_health_kit/lib/oomwoo_health_kit/job_roster --ros-args -r __node:=job_roster --params-file /tmp/launch_params_9wx8anx2'].
+[gazebo-1] [1;36m[Dbg] [Sensors.cc:551] [0m[1;36mSensorsPrivate::RenderThread stopped[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [gz.cc:434] [0m[1;36mShutting down gz-sim-server[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:654] [Dbg] [SimulationRunner.cc:654] [0m[1;36mExiting postupdate worker thread ([0m[1;36m5[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:654] [0m[1;36m[Dbg] [SimulationRunner.cc:654] [0m[1;36m[Dbg] [SimulationRunner.cc:654] [0m[1;36mExiting postupdate worker thread ([0m[1;36m4[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36mExiting postupdate worker thread ([0m[1;36m6[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:654] [0m[1;36mExiting postupdate worker thread ([0m[1;36m0[0m[1;36m)[0m[1;36m)[0m[1;36mExiting postupdate worker thread ([0m[1;36m)[0m[1;36mExiting postupdate worker thread ([0m[1;36m1[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36mExiting postupdate worker thread (7[0m[1;36m2[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:654] [0m[1;36mExiting postupdate worker thread ([0m[1;36m3[0m[1;36m)[0m[1;36m[0m
+[ERROR] [topic_heartbeat-11]: process has died [pid 3322, exit code -2, cmd '/ws/install/oomwoo_health_kit/lib/oomwoo_health_kit/topic_heartbeat --ros-args -r __node:=topic_heartbeat --params-file /tmp/launch_params_tl3xmblr'].
+[ERROR] [mcu_standin_node-9]: process has died [pid 3320, exit code -2, cmd '/ws/install/oomwoo_health_kit/lib/oomwoo_health_kit/mcu_standin_node --ros-args -r __node:=mcu_standin --params-file /tmp/launch_params_uzf9k68x -r cmd_vel_in:=cmd_vel -r cmd_vel:=cmd_vel_gated'].
+[ERROR] [health_monitor_node-8]: process has died [pid 3319, exit code -2, cmd '/ws/install/oomwoo_health_monitor/lib/oomwoo_health_monitor/health_monitor_node --ros-args -r __node:=health_monitor --params-file /tmp/launch_params_afckq89d'].
+[ERROR] [dock_detector-6]: process has died [pid 3317, exit code -2, cmd '/ros_ws/install/oomwoo_dock/lib/oomwoo_dock/dock_detector --ros-args -r __node:=dock_detector --params-file /tmp/launch_params_efaj3hg9'].
+[ERROR] [ir_beacon_sim-5]: process has died [pid 3316, exit code -2, cmd '/ros_ws/install/oomwoo_sim_support/lib/oomwoo_sim_support/ir_beacon_sim --ros-args -r __node:=ir_beacon_sim --params-file /tmp/launch_params_wx4o79kp -r ~/bearing:=/dock_detector/beacon_bearing -r ~/visible:=/dock_drive/beacon_visible'].
+[ERROR] [dock_drive-7]: process has died [pid 3318, exit code -2, cmd '/ros_ws/install/oomwoo_dock/lib/oomwoo_dock/dock_drive --ros-args -r __node:=dock_drive --params-file /tmp/launch_params_ok6_f05d -r ~/dock_pose:=/dock_detector/dock_pose'].
+[INFO] [parameter_bridge-2]: process has finished cleanly [pid 3312]
+[INFO] [robot_state_publisher-3]: process has finished cleanly [pid 3313]
+[gazebo-1] [1;36m[Dbg] [Sensors.cc:565] [0m[1;36mSensorsPrivate::Stop[0m[1;36m[0m
+[ERROR] [gazebo-1]: process has died [pid 3311, exit code -2, cmd 'ruby /opt/ros/jazzy/opt/gz_tools_vendor/bin/gz sim -s -r --headless-rendering -v 4 /ros_ws/install/oomwoo_gazebo/share/oomwoo_gazebo/worlds/kitchen_dining.world --force-version 8'].
+[INFO] [launch]: process[gazebo-1] was required: shutting down launched system

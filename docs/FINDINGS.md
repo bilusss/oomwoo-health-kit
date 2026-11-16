@@ -1,3 +1,169 @@
+# M8 (2026-11-15 and 16): what the watcher alone can still close of the M7 gaps
+
+Raw data: `results/fullstack/faults_m8_2026-11-15_kitwip.jsonl` (fault trials), `results/fullstack/soak_m8_<task>_2026-11-15_kitwip.jsonl` (soak sessions; the two item-D runs on 2026-11-16 carry the same tag),
+`results/fullstack/m8/<i>/` (per-instance run logs and **every stack log, one file per session or trial**: `stack_<run start>_<task>_<soak|faults>_<n>.log`; the record's `stack_log` names it and `instance` the directory),
+`results/fullstack/m8_recon/` (message traces and recon sessions), `results/fullstack/_m8_smoke/` (smoke runs and the first fault attempt, not counted). Kit: dirty tree on top of
+`f5dd15e` (`kitwip`), aggregator `b2b9796`. Recon, graph facts and the derivation of the bounds: `docs/M8_RECON.md`. Every table below is printed by the commands at the end of
+`bench/fullstack/README.md` (M8). Same setup as M6/M7 (software GL, RTF 1.0, wall-time health nodes, 150 ms soft stop), **at most 2 instances in parallel**.
+
+**Provenance.** The records carry no hash of the watch/roster files (`run.py` now records `config_sha256` for future runs). The two chain and dock configs were written before the first trial and their
+bounds were never changed; their file times predate every trial. Afterwards only comments (and, below, nothing else in the YAML) were edited. The analysis scripts (`summarize*.py`, `m8_analysis.py`) and, after the
+measurements, the rule code (see "Changes after the measurements") were edited; the tree is dirty. The rotation figures of M7 and M8 were recomputed after a review (see "Rotation").
+
+## Result in one table
+| Gap | Rule (opt-in watch type) | Verdict | Key numbers (exposed trials, default profile) |
+|---|---|---|---|
+| A. commander behind Nav2's velocity smoother stops commanding while the smoother keeps replaying the setpoint | `command_chain` on `/cmd_vel_nav` -> `/cmd_vel_smoothed`, `in_max_age_s` 0.35 | **partly closed**: stale motion is stopped in 24 of 24 trials, in about half the time | behavior_server spin: zero at the gate 0.53-0.64 s (same trials, M7 watch set: 1.26-1.34 s, 0 of 10 SIGKILL ever stopped by the loop), rotation after the signal median 32 degrees (control: 64) |
+| B. dock detector stops while `dock_drive` reverses | `reverse_fix` on `/cmd_vel` + `/dock_detector/dock_pose`, `fix_max_age_s` 1.85 | **partly closed**: 20 of 20 stopped, coast shortened | zero at the gate 1.50-2.11 s (M7: 2.61-3.00 s, 0 of 10), reversing 0.09-0.13 m (M7: 0.16-0.18 m); 2 of 216 soak attempts (95% CI 0.1-3.3%) got a soft stop |
+| C. nav2-executor coverage planner killed | none | **not closed, by design** | the controller finishes the waypoint (M7: 6.0-6.2 s, 0.5 m); not a motion-safety matter; nothing built |
+| D. reactive planner command period | none (measurement) | measured, with one instance running | period 0.200 s p50; a missed 5 Hz tick in 7.2% of the periods (n=3597, 12.9 min) |
+
+False trips with the rules enabled: **0 soft stops in 4.0 sim hours (recovery_chain 2.0 h, nav_amcl_chain 2.0 h; both composed Nav2)**; dock: 2 `dock_fix` stops in 2.0 sim hours (216 attempts), both in the shm_hc60 profile.
+
+## What was built (details in `docs/SPEC.md` M8)
+Two ROS-free cores in `topic_watch.py` (`CommandChainGuard`, `ReverseFixGuard`), two thin rclpy adapters, two YAML watch types (`command_chain`, `reverse_fix`), configs
+`nav_watch_amcl_chain.yaml` / `nav_rosters_amcl_chain.yaml` and `nav_watch_dock_fix.yaml` / `nav_rosters_dock_fix.yaml`. Nothing upstream was changed. No M6/M7 config selects the rules.
+Fail-safe cases (non-finite value, backwards clock, no input ever seen while the stage replays, no fix ever seen while reversing) are unit-tested; launch tests `u1`-`u8` give a fault and a
+no-fault case per rule, a control showing the M7 watch set does not see the replayed setpoint, and the two "must not switch off silently" cases below.
+**Scope of rule B.** "Reversing" is inferred from the held command of ANY writer on `/cmd_vel`. `dock_drive` must be the only reverser on that stream: Nav2 BackUp (about 3 s at -0.1..-0.15 m/s) or teleop would trip the rule
+1.85 s into the reverse, because no dock fix exists (unit test `test_reverse_by_any_writer_trips_without_a_fix`). Only `nav_watch_dock_fix.yaml` (task `dock_fix`, no Nav2) selects it (test `test_only_the_dock_config_selects_rule_b`).
+
+## Changes after the measurements (review)
+After the soaks and trials, the rule code was changed so that rule A cannot switch itself off silently: a message-type option per watch (`msg_type` / `cmd_type`, Twist or TwistStamped), a graph check (both stage topics need a
+publisher of that type, else the component is not-ok with the reason in the watcher log; for rule B a command topic whose publishers have another type), and "odometry above 0.02 m/s / 0.05 rad/s for more than 0.5 s while the stage
+output was NEVER seen" is not-ok. **All measurements below were taken with the code before this change.** The change acts only in states in which the old code said "healthy because nothing was ever seen / nothing was checked":
+(a) a stage topic without a publisher or of another type, (b) motion with no output ever. Evidence that the measured runs did not depend on those states: every `command_chain: no heartbeat` warning in the 46 fault-trial stack logs of the
+rule is the "no non-zero input newer than ..." path of the original code, and the 4.0 h of soak logs contain none; the types and publishers on the stage topics are Twist and present in `graph_nav_amcl.json`. I did not re-run anything, so the
+claim that the numbers would be the same rests on this reasoning and on the container tests (launch tests `u1`-`u8` and the unit tests pass with the new code; `u7` and `u8` exercise the new paths). One known side effect: a stage that disappears from the graph
+(for example during Nav2's own lifecycle reset) is now not-ok at once, which only matters in a state that is already a fault.
+
+## Method
+1. **Recon first** (`docs/M8_RECON.md`): message traces on the live stacks (469 s of the BT recovery task, 2916 s / 89 reversing episodes of the dock task). `behavior_server` writes the
+   same input topic as the controller (`/cmd_vel_nav`: controller 5 Hz, BT spin and backup 10 Hz, wait nothing; the rate during DIRECT spin actions, which the fault trials use, was not traced), so one pair of topics covers both commanders.
+   `/dock_drive/state` is published only on change, so reversing is inferred from the held command (linear x <= -0.02 m/s).
+2. **Bounds from the traces, by formulas written down before any trial or soak** (`m8_analysis.py derive` prints them): `in_max_age_s` = ceil_50ms(1.5 x longest non-zero input period 0.201 s) = 0.35;
+   `stop_grace_s` = ceil_50ms(1.5 x longest zero-input-to-zero-output time 0.344 s) = 0.55; `fix_max_age_s` = ceil_50ms(1.5 x p99 of the fix gaps inside reversing episodes 1.202 s) = 1.85. **A uses 1.5 x the maximum, B 1.5 x the p99: this was a choice**
+   (1.5 x the maximum fix gap, 2.403 s, would be 3.65 s, beyond dock_drive's own 3.0 s hold). The fix gaps come in steps of the 0.6 s period, so 1.85 s sits 50 ms above three periods. No bound was changed after a trial or soak; no second variant was run.
+3. **Exposure criteria, written down in `summarize_faults.py` before the first M8 trial.** behavior_server: signal only while a spin runs at >= 0.9 rad/s or a backup at >= 0.10 m/s (trigger
+   `recovery_nominal`, 0.2 s dwell); controller_server: moving >= 0.12 m/s for 2 s; dock_detector: dock_drive in BACK, moving >= 0.03 m/s for 2 s. Invalid trials (did not arm, no trigger in 150 s) are not
+   counted; a series needs >= 10 exposed trials per fault. Exposed trials: behavior 12 + 12 (rule) and 10 + 10 (control), controller 12 + 10 (rule) and **9** + 10 (control: one SIGKILL trial did not arm and was not repeated, so
+   that control cell is below the 10 required), dock detector 10 + 10. The rule's controller SIGKILL cell has 3 extra repetitions (reps 11-13) run to replace one trial (rep 10) that did not arm.
+4. **Workload for behavior_server faults changed after one attempt.** The first attempt (task `recovery_chain`, BT recoveries with a wall) reached no spin at the nominal rate in 150 s (spins aborted
+   after 0.2-0.3 s with "Collision Ahead - Exiting Spin"; `_m8_smoke/records_smoke.jsonl`, 1 invalid, 1 interrupted by me). All behavior trials therefore use `jobs.RecoveryProbeJob`: NavigateToPose to an open pose,
+   then a direct 3.14 rad spin and a direct 0.45 m backup at 0.15 m/s. **In all 44 behavior trials the trigger fired in the spin; no backup was exposed.**
+5. **Control series with the same workload, trigger and kit but the M7 watch set** (`recovery_probe`, `nav_amcl`; label `m8_faults_control`) so the comparison does not rest on M7's different trigger and load.
+6. **Composition.** The fault trials of rule A (and the recon trace of the recovery task) ran non-composed Nav2 (`composition false`, one process per node, needed to signal one node). **The rule-A soaks ran the default composed launch
+   (one `component_container`)**; there a crash of one node takes the container with it, so the per-node faults were never exercised under the rule in composed mode. The dock stack has no Nav2.
+7. **Load**: the host 1-minute load average is recorded every 10 s (`loadavg_series`, works; shown per row below). It rises to 14-19 at the stack starts; the per-row medians over the trials are 6.8-9.8 (rule rows incl. dock) and 7.5-9.8 (control rows).
+   In the soaks the median of the session medians is 4.5 (max 11.0) for the two parallel A soaks and 4.6 (max 11.4) for the dock soaks. `OHK_RUN_STAGGER_S` was exported but only spaces the instances of one `run all` call, which I did not use:
+   the two A soaks started 15 s apart (11:37:56 and 11:38:11; the queue's own start of the second was refused because a control run had not exited yet), the two dock soaks together (13:39:47). Fault trials of one instance ran
+   next to trials or recon of the other, never next to a soak; one 35 s dock_fix soak session that I stopped at once is in the soak file as invalid.
+
+## Rotation (corrected)
+`summarize_faults.py` first integrated |yaw rate| only up to the last ground-truth sample at or before standstill (samples are ~0.24 s apart), which under-reports. `rotation_deg` now takes the ground-truth yaw from `truth_track`,
+unwraps it, interpolates at the signal and at the standstill time and sums the absolute changes (unit tests). All rotation figures below, **including the M7 rows**, come from the corrected function; the M7 text further down was corrected as well.
+The rule/control ratio of the behavior_server rotation is 32/64, about 0.5.
+
+## Gap A: fault trials (seconds from the signal; hold 5 s; behavior_server: spin, controller_server: moving 0.2 m/s)
+Tables: `summarize_faults.py results/fullstack/faults_m8_2026-11-15_kitwip.jsonl --label=m8_faults` (rule) and `--label=m8_faults_control` (M7 watch set); M7 rows from `faults_m7_...`. All fault trials: non-composed Nav2, profile default.
+"Detected" below means: the loop's stand-in soft-stopped the robot; with the rule that is a stop of **stale motion** (the smoother replaying a setpoint nobody refreshes), see the second point under "Reading the table".
+
+| Fault | Series | Composition | Exposed | Stopped any time / within hold | Aggregator first fault (min/med/max s) | Zero at the gate (min/med/max s) | Distance to standstill (m) | Rotation after signal (deg, min/med/max) | Blamed |
+|---|---|---|---|---|---|---|---|---|---|
+| SIGKILL behavior_server | M8 rule | non-composed | 12 | 12 / 12 | 0.43 / 0.46 / 0.54 | 0.53 / 0.57 / 0.64 | 0.00 | 28.6 / 32.0 / 37.1 | command_chain |
+| SIGKILL behavior_server | control (M7 set) | non-composed | 10 | **0 / 0** | - | 1.26 / 1.29 / 1.34 | 0.01 | 61.9 / 64.0 / 66.0 | none |
+| SIGKILL behavior_server | M7 (BT, 5 exposed: 4 spins, 1 backup) | non-composed | 5 | 0 / 0 | - | 1.01 / 1.29 / 1.32 | 0.00-0.15 | spins 60.8-64.4, backup 0.0 | none |
+| SIGSTOP behavior_server 5 s | M8 rule | non-composed | 12 | 12 / 12 | 0.43 / 0.47 / 0.52 | 0.53 / 0.57 / 0.63 | 0.00 | 29.1 / 31.5 / 36.6 | command_chain; 11 of 12 commands resumed after the SIGCONT |
+| SIGSTOP behavior_server 5 s | control (M7 set) | non-composed | 10 | 10 / **0** | 17.97 / 18.45 / 19.26 | 1.27 / 1.28 / 1.30 | 0.01 | 62.6 / 63.7 / 64.3 | local_costmap, ~18 s after the signal (see below) |
+| SIGSTOP behavior_server 5 s | M7 (2 exposed) | non-composed | 2 | 2 / 0 | 8.4 | 1.23 / 1.29 / 1.36 | 0.00 | 58.8 and 66.3 | local_costmap |
+| SIGKILL controller_server | M8 rule | non-composed | 12 | 12 / 12 | 0.28 / 0.42 / 0.47 | 0.39 / 0.52 / 0.58 | 0.09 / 0.11 / 0.12 | 3.4 / 4.6 / 5.9 | command_chain + local_costmap (12 of 12 both) |
+| SIGKILL controller_server | control (M7 set) | non-composed | **9** | 9 / 9 | 0.17 / 0.50 / 0.59 | 0.27 / 0.61 / 0.70 | 0.12 / 0.14 / 0.21 | 3.8 / 5.8 / 6.5 | local_costmap in 9 of 9; one trial also drive_supervision, lidar, localization, odom |
+| SIGSTOP controller_server 5 s | M8 rule | non-composed | 10 | 10 / 10 | 0.33 / 0.43 / 0.49 | 0.43 / 0.54 / 0.60 | 0.09 / 0.11 / 0.13 | 3.6 / 5.2 / 5.8 | command_chain + local_costmap; 10 of 10 resumed |
+| SIGSTOP controller_server 5 s | control (M7 set) | non-composed | 10 | 10 / 10 | 0.41 / 0.58 / 0.64 | 0.51 / 0.68 / 0.75 | 0.11 / 0.14 / 0.15 | 4.6 / 6.4 / 9.6 | local_costmap |
+| SIGKILL / SIGSTOP controller_server | M7 (5 + 5) | non-composed | 10 | 10 / 10 | 0.4-0.64 | 0.60-0.74 | 0.13-0.15 | 5.5-8.5 | local_costmap |
+
+Fault-row host load (median / max of the 1-min average, per row, printed by the tool): rule 6.8-9.8 / 15.2-17.4 (rows incl. the dock rows), control 7.5-9.8 / 17.7-18.9.
+
+Reading the table (every statement is from the cited records):
+- **Behavior_server (spin).** With the rule the stop comes at 0.53-0.64 s instead of 1.26-1.34 s and the robot turns about 32 degrees after the signal instead of 64. Within the hold the loop stopped the robot in 24 of 24 trials; the control stopped 0 of 10 SIGKILLs
+  (the SIGSTOP control only through a different, late path, next points). The aggregator names `command_chain`; **not in every trial "and nothing else"**: rule SIGKILL rep 4 (`stack_20261115T103738_recovery_probe_chain_faults_007.log`, instance 1) has a second
+  stop at 7.89 s whose aggregator fault names `command_chain, drive_supervision, odom` and then also `lidar, localization` (stale in the same 0.35 s: a stall of the watcher or its inputs, not a rule decision; host load 9-11 in that trial). The
+  floor is not zero: the rule waits `in_max_age_s` (0.35 s) after the last input, the component's roster `max_age_sec` is 0.15 s and the stand-in has its 0.15 s; the aggregator's first fault is 0.43-0.54 s after the signal and the zero at the gate follows about 0.1 s later.
+  A tighter `in_max_age_s` would false-trip the controller (5 Hz, longest period 0.201 s), because the rule cannot tell which commander wrote the last message.
+- **What the rule does and does not do.** It flags a short pulse, not a dead commander for good: in all 12 SIGKILL trials (and all 12 SIGSTOP trials) the stand-in is back in RUN 1.6-1.7 s after the signal (`standin_run_from_signal_s` 1.605-1.736 s over the 24)
+  while behavior_server is still dead or frozen, because once the smoother's output has gone to zero the stage looks idle again. The robot is stopped; the dead commander is not held down by this rule. Nav2's own lifecycle manager is what then shuts the stack down (next point).
+- **What the late `local_costmap` stop is** (M7: "cause not determined"). In all 44 behavior_server trials' stack logs (24 rule + 20 control; SIGKILL and SIGSTOP) Nav2's `lifecycle_manager_navigation` logs "CRITICAL FAILURE: SERVER behavior_server IS DOWN after not receiving a
+  heartbeat for 4000 ms. Shutting down related nodes." 3.07-4.07 s after the signal (grep over `m8/{1,2}/stack_*` of the trials) and starts deactivating the managed nodes (for rep 1 of the control, `m8/1/stack_20261115T111034_recovery_probe_faults_002.log`: `collision_monitor`
+  at +3.62 s, `velocity_smoother` +3.73 s, `controller_server` and its local costmap +17.88 s). In all 22 SIGSTOP trials (12 rule, 10 control) the lifecycle manager deactivates `controller_server` 17.38-18.68 s after the signal, after the frozen behavior_server finishes
+  deactivating, and the second stand-in soft stop follows 18.07-18.94 s after the signal in the 12 rule trials (aggregator first fault 17.97-19.26 s in the control). In the SIGKILL trials the "IS DOWN" line is also present but no `controller_server` deactivation
+  appears. This is the Nav2 stack shutting itself down 13+ s after the robot has stopped; it does not explain M7's 8.4 s timing, which has a different workload, and I do not claim it does.
+- **Controller_server.** The local costmap (hosted in that process) already stopped both faults at 0.6-0.7 s in M7 and in the control. The rule adds an earlier, second reason (`command_chain` is named in 22 of 22 trials) and
+  moves the median stop from 0.61 to 0.52 s (kill) and 0.68 to 0.54 s (stop), the distance from 0.14 to 0.11 m. A small gain, because another watch already covered this fault.
+- Not tried with this rule: a SIGKILL of the smoother itself, a backup fault, a commander that bypasses the smoother (docking_server, the reactive coverage planner), and any fault in composed mode.
+
+## Gap B: dock detector (dock_drive in BACK, 10 + 10 exposed; dock stack, no Nav2, composition not applicable)
+| Fault | Series | Stopped any time / within hold | Aggregator first fault (s) | Zero at the gate (s, min/med/max) | Reversed after the signal (m) | Rotation (deg) | Blamed |
+|---|---|---|---|---|---|---|---|
+| SIGKILL dock_detector | M8 rule | 10 / 10 | 1.42 / 1.59 / 2.00 | 1.52 / 1.70 / 2.11 | 0.09 / 0.10 / 0.12 | 0.1 / 0.2 / 0.4 | dock_fix |
+| SIGSTOP dock_detector 5 s | M8 rule | 10 / 10 | 1.40 / 1.49 / 1.99 | 1.50 / 1.59 / 2.10 | 0.09 / 0.10 / 0.13 | 0.1 / 0.2 / 1.0 | dock_fix; 10 of 10 resumed |
+| SIGKILL dock_detector | M7 (5) | 0 / 0 | - | 2.61 / 2.68 / 3.00 | 0.16 / 0.16 / 0.18 | 0.1 / 0.3 / 0.7 | none |
+| SIGSTOP dock_detector 5 s | M7 (5) | 0 / 0 | - | 2.65 / 2.77 / 2.99 | 0.16 / 0.17 / 0.18 | 0.3 / 0.3 / 0.4 | none |
+
+The first fault at 1.40-2.00 s is the bound (1.85 s) minus the age of the last fix at the signal (0 to 0.6 s) plus the aggregator step. dock_drive's own timeout (3.0 s) is what ended the M7 trials. So the rule removes about a
+third to a half of the blind reverse (median 0.10 m instead of 0.16-0.17 m) and turns "never detected" into a named fault, but it cannot act faster than the detector's own irregularity allows: the fix gaps inside reversing episodes
+are 0.60 s (p50) with 1.2 s gaps in 3.8% and a 2.4 s gap once (M8_RECON section 2).
+
+## Soaks with the rules enabled (`summarize.py --by-task results/fullstack/soak_m8_*_2026-11-15_kitwip.jsonl`)
+| Task | Composition | Profile | Sim h | Active h | Work done | Distance | Soft stops | Heartbeat gaps > 0.2 s |
+|---|---|---|---|---|---|---|---|---|
+| recovery_chain (wall; rule A) | composed | default | 2.0 | 2.0 | 155 goals succeeded, 79 aborted, 4 cut; BT started 217 spins, 165 waits, 93 backups | 0.73 km | **0** | 0 |
+| nav_amcl_chain (mix; rule A) | composed | default | 2.0 | 2.0 | 347 NavigateToPose succeeded, 86 cancelled mid-drive, 43 early, 44 unplannable, 44 direct probes; 126 spins / 82 backups / 86 waits started | 0.97 km | **0** | 0 |
+| dock_fix (rule B) | no Nav2 | default | 1.0 | 1.0 | 95 docked, 6 timeouts, 2 cut | 0.07 km | 7 (all `drive_supervision`, all 0.22-0.25 s after a harness `set_pose`) | 7 |
+| dock_fix (rule B) | no Nav2 | shm_hc60 | 1.0 | 1.0 | 107 docked, 4 timeouts, 2 cut | 0.08 km | 21 (19 `drive_supervision` after a `set_pose`, **2 `dock_fix`**) | 21 |
+
+Rule A: 0 soft stops in 4.0 sim hours of a controller, spin, backup and wait mix (all 4.0 h active: goal loops and recovery scenarios) in composed Nav2, i.e. fewer than 0.75 per hour at 95% (3/T); the M7 default nav_amcl soak had 1 unexplained stop in
+2.0 h, the recovery soak 0. The stand-in's counter delta equals the recorder's count. The soaks never exercised a node fault.
+
+Rule B false trips (`m8_stops.py results/fullstack/soak_m8_dock_fix_2026-11-15_kitwip.jsonl`): **2 stops of `dock_fix` in 216 attempts (0.9%; exact 95% interval 0.11-3.3%), both in shm_hc60 (2 of 113; interval 0.2-6.3%), 0 of 103 in the default profile
+(interval 0-3.5%); the replay of the recon traces predicted 3 of 89 (3.4%).** Details: shm_hc60 session 1 at 13:41:10.99 and session 2 at 14:26:13.64, 13.6 s and 13.3 s into attempts of 16.4 s and 14.8 s (the end of the approach), robot at 0.06 m/s,
+command fresh; both attempts then succeeded. The watcher's warning ("newest dock fix ... 1.86s old > 1.85s") is logged at the FIRST failing 50 Hz check, so it always reads about 1.86 s and says nothing about how far over the bound the
+fix age got: the aggregator episodes lasted 1.3 s and 0.7 s (`non_emitting_episode` records), i.e. the fixes were silent for about 2.4-3 s, the end-of-approach dropout seen in the recon, three or more missing fits, not a near miss.
+**A third `dock_fix` not-ok did not cause a stop and is not in the stop count:** `m8/2/stack_20261115T133948_dock_fix_soak_002.log`, watcher warning at epoch 1794749727.30 (14:35:27), no aggregator episode recorded (the heartbeat was withheld for less
+than the 0.15 s roster limit). So the rule was not-ok three times in 216 attempts, the same 3 as the recon replay predicts per 89. **No threshold was changed after these stops.**
+The 26 `drive_supervision` stops after a harness teleport are the M7 pattern but not purely a `set_pose` artefact: each followed a `set_pose` by 0.22-0.25 s and was blamed only on `drive_supervision`, but the shm_hc60 ones cluster: in shm_hc60 session 1, 7 of
+its 14 stops fall in minutes 24.0-27.7 at host load 7.6-11.3 (session median 4.3), while the default instance running at the same time had none in that window; the profile order also flipped against M7 (M7 default 11 / shm_hc60 6, here 7 / 19). I describe this as
+load- and profile-sensitive and not explained.
+
+## Item D: reactive planner command period, one instance running
+One instance running (the other container idle; the unrelated LLM/tunnel containers of the host were running), task `coverage_reactive` with the shipped watch config, 4 sessions of 700 sim s (two on 2026-11-15, two on
+2026-11-16; all valid, RTF 0.9998; host load median 2.2 of 12, max 9.9 at a stack start). Traces: `results/fullstack/m8_recon/trace_reactive_{a,b}.jsonl`; sessions: `soak_m8_coverage_reactive_2026-11-15_kitwip.jsonl`;
+table: `m8_analysis.py reactive results/fullstack/m8_recon/trace_reactive_?.jsonl`. `/cmd_vel` has several writers and the message info carries no publisher id, so a message counts as the planner's when no `/cmd_vel_smoothed` message came
+in the 50 ms before it (the collision monitor republishes within a few ms).
+
+| Planner command period (consecutive planner messages < 1.5 s apart) | n | min | p50 | p99 | max | share of periods > 0.30 s |
+|---|---|---|---|---|---|---|
+| all | 3597 (12.9 min of planner activity; the sessions' active time is 0.58 h including Nav2 transits) | 0.198 s | 0.200 s | 0.401 s | 0.601 s | **7.2%** (6.8% and 7.6% in the two trace files) |
+
+Headline: **a missed 5 Hz tick (a 0.4 s period) in about 7% of the periods, which also occurs at low host load.** (p95 sits on the boundary between 0.2 and 0.4 s and is not a stable figure; the first M7 and this table differ
+there for that reason.) In the first trace file all 122 periods of about 0.4 s have no `/cmd_vel` and no `/cmd_vel_smoothed` message inside them, so they are not an artefact of the attribution. There is no loaded comparison made with this method, so
+I cannot say that load makes it worse or better. With the shipped `cmd_max_age_s` 0.15 s the same sessions have 296 soft stops in 0.58 active hours (511 per active hour, 295 blaming only `drive_supervision`, 1 also `odom`); the M7 proposal 0.30 s is
+exceeded by about 7% of the periods. Not tuned, as instructed; nothing in the loop was changed for the reactive planner.
+
+## What could NOT be closed from the watcher side, and why
+- **A, the last 0.5-0.6 s.** The rule must wait one controller period plus a margin (0.35 s) because both commanders share one input topic and the controller is the slow one (5 Hz); then the aggregator (0.15 s) and the stand-in (0.15 s). The residual is
+  about 29-37 degrees of spin, or about 0.1 m of driving at 0.2 m/s for the controller. Closing the rest needs the commander to say it is alive (a heartbeat or a state topic), i.e. a change upstream.
+- **A is limited to what goes through the smoother** and flags stale motion, not a dead commander. A dead `docking_server` or reactive planner is seen only by `drive_supervision` (it writes `/cmd_vel` directly, 20 Hz / 5 Hz commands).
+- **B keeps a 1.5-2.1 s blind reverse** and a false-trip cost of about 1% of attempts (2 of 216, interval 0.1-3.3%). The detector's fits are irregular at the end of the approach (silences of 2.4-3 s); a bound that covers
+  every observed age (2.5 s) would be nearly as long as dock_drive's own 3.0 s, so it would buy almost nothing. B must not be used where something else reverses on the same stream.
+- **C stays open on purpose**: with `executor:=nav2` the planner only sends goals; the controller drives and supervision of motion is intact. Whether the coverage job is alive is a task-level question (planner topics, meter progress), not a stop condition.
+- **Not tested**: composed-mode faults, a faulted smoother, **backups (never faulted; all 44 behavior trials were spins)**, the `/cmd_vel_nav` rate during direct spin actions (traced only for BT spins and backups), real hardware, any commander other than the ones named.
+
+## Limits
+- Single host, at most 2 instances, one sim world per task; the fault trials are 9-12 exposed per cell, so a cell with 12 of 12 bounds the miss rate at about 25% (95%), not at zero.
+- The behavior_server trials are all spins from rest at the nominal rate, triggered 0.2 s into the spin; in real BT recoveries a spin can be cut short by "Collision Ahead" within 0.3 s (as in the first attempt), when no fault is possible.
+- The bounds come from one 469 s chain trace (5 spin and 2 backup stops) and 89 dock episodes; the 1.5 factor is a margin, not a tail estimate (and the soaks happened on the same sim world as the recon).
+- Rule B false trips depend on the detector's end-of-approach behaviour, which differs between worlds and robots.
+
 # M7 (2026-11-14 and 15): AMCL, coverage, docking and behaviour-tree recoveries on the real simulation stack
 
 Raw data: `results/fullstack/soak_m7_<task>_2026-11-14_kitwip.jsonl` (soak sessions), `faults_m7_2026-11-14_kitwip.jsonl` (fault trials),
@@ -120,10 +286,10 @@ count as exposed (triggered on motion). "Detected within hold" = stand-in soft s
 | SIGSTOP coverage_planner 5 s, nav2 executor | transit | 5 | **0 / 0** | 6.0-6.2 (one 11.0) | robot still moving at the end in 5/5 (1.6-2.0 m) | none |
 | SIGKILL coverage_planner, reactive executor, proposal config | reactive pass (>= 0.30 m/s) | 5 | 5 / 5 | 0.42 / 0.51 / 0.55 | 0.18-0.22 | drive_supervision |
 | SIGSTOP coverage_planner 5 s, same | reactive pass | 5 | 5 / 5 | 0.37 / 0.44 / 0.54 | 0.16-0.22 | drive_supervision; 5/5 resumed |
-| SIGKILL behavior_server | spin (4) or backup (1) | 5 | **0 / 0** | 1.01 / 1.29 / 1.32 | 0.00-0.15 | none; spin trials rotated 59.5-64.0 degrees after the signal |
-| SIGSTOP behavior_server 5 s | spin | **2** exposed of 4 valid (the other 2 hit the tail of a spin: 0.71 and 0.32 rad/s at the signal, rotation 3.9 and 0.0 degrees) | 2 / **0** | 1.23 / 1.29 / 1.36 | 0.00 | both exposed trials rotated 57.3 and 62.2 degrees undetected; a soft stop blaming local_costmap followed 3.4-3.6 s AFTER the SIGCONT in all 4 valid trials (8.4-8.6 s after the signal), cause not determined |
+| SIGKILL behavior_server | spin (4) or backup (1) | 5 | **0 / 0** | 1.01 / 1.29 / 1.32 | 0.00-0.15 | none; the 4 spin trials rotated 60.8-64.4 degrees after the signal (corrected, see M8 "Rotation"), the backup 0.0 |
+| SIGSTOP behavior_server 5 s | spin | **2** exposed of 4 valid (the other 2 hit the tail of a spin: 0.71 and 0.32 rad/s at the signal, rotation 5.4 and 0.7 degrees after correction) | 2 / **0** | 1.23 / 1.29 / 1.36 | 0.00 | both exposed trials rotated 58.8 and 66.3 degrees undetected; a soft stop blaming local_costmap followed 3.4-3.6 s AFTER the SIGCONT in all 4 valid trials (8.4-8.6 s after the signal; M8 found Nav2's lifecycle manager shutting the stack down in its own logs, with different timing), cause not determined |
 
-Rotation is the trapezoid integral of the ground-truth yaw rate from the signal to standstill (samples about every 0.25 s); SIGSTOP rep 1 of the same
+Rotation is the change of the ground-truth yaw from the signal to standstill, interpolated between the samples (about every 0.25 s); **corrected in M8**: M7 integrated the yaw rate only up to the last sample before standstill and under-reported (the values here and in the table are the corrected ones); SIGSTOP rep 1 of the same
 series did not arm (local_costmap missing) and is invalid.
 Excluded old valid trial (series `m7_faults`, SIGSTOP behavior_server rep 1, trigger dwell 2 s): the robot kept driving on controller commands for
 4.47 s and 0.57 m, then stopped at 4.85 s through `drive_supervision` + `local_costmap` (soft stop 4.85 s). It was not in a spin; it shows the

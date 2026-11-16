@@ -8,7 +8,8 @@ cmd_vel hop, driven by the NavigateToPose goal loop in workload.py. Runs INSIDE 
 One session = start the stack, wait until it is armed and localized, run the goal loop for --duration-sim seconds of SIM time at
 the given real-time factor, tear everything down. One JSON line per session is appended (flushed, fsynced) to
 <results>/sessions.jsonl; events go to <results>/run.log; <results>/progress.json is rewritten every few seconds; the stack's own
-output is in <results>/stack_<session>.log (last session only is kept per index modulo 3).
+output is in <results>/stack_<run start>_<task>_<soak|faults>_<n>.log, one file per session or trial and per run (M8: not overwritten
+by later sessions or runs; the run start is local time YYYYmmddTHHMMSS).
 
 Time bases (every number says which): *_sim_* = Gazebo /clock; *_wall_* = host monotonic clock. Soft-stop and gap timestamps are
 wall clock (time.monotonic offset to local ISO time) with the sim time at the same moment. The stand-in runs on the steady (wall)
@@ -628,6 +629,8 @@ def worker_main(spec_path):
         work = jobs.DockJob(node, **wkw)
     elif kind == "recovery":
         work = jobs.RecoveryJob(node, tally=tally, **wkw)
+    elif kind == "recovery_probe":
+        work = jobs.RecoveryProbeJob(node, **wkw)
     else:
         raise SystemExit(f"unknown workload kind {kind!r}")
     # Nav2 recovery actions (behavior_server): intervals in which any of them has an active goal (accepted/executing/canceling)
@@ -951,6 +954,24 @@ def finish_recorder(proc, path=None):
 
 # --------------------------------------------------------------------------- parent
 
+def config_sha256(task):
+    """M8: sha256 (first 16 hex) of the watch and roster files the task selects, recorded in every session and trial."""
+    import hashlib
+    out = {}
+    for key in ("watch", "roster"):
+        name = tk.TASKS[task][key]
+        out[name] = hashlib.sha256(open(os.path.join(tk.CONFIG, name), "rb").read()).hexdigest()[:16]
+    return out
+
+
+RUN_TAG = time.strftime("%Y%m%dT%H%M%S")   # one per run.py process: stack logs of different runs in one results directory do not collide
+
+
+def stack_log_name(args, mode, k):
+    """M8: one stack log per session or trial and per run, kept (earlier versions wrote stack_<k % 3>.log and overwrote old ones)."""
+    return f"stack_{RUN_TAG}_{args.task}_{mode}_{k:03d}.log"
+
+
 def session_record(args, k, profile, log, windows):
     prof_file = s.PROFILES[profile]
     rec = {"session": k, "profile": profile, "profile_file": prof_file, "profile_sha256": s.profile_sha256(profile),
@@ -962,7 +983,7 @@ def session_record(args, k, profile, log, windows):
                                  if args.health_clock == "wall" else
                                  "health nodes on SIM time (/clock subscribed in each); ages are sim seconds; a frozen /clock freezes "
                                  "the aggregator's staleness check"),
-           "task": args.task, "composition": args.composition,
+           "task": args.task, "composition": args.composition, "config_sha256": config_sha256(args.task),
            "watcher_config": (f"config/{tk.TASKS[args.task]['watch']} + config/{tk.TASKS[args.task]['roster']} (static roster)"
                               if args.health_sources == "watcher" else None),
            "domain_id": os.environ.get("ROS_DOMAIN_ID"), "instance": os.environ.get("OHK_INSTANCE"),
@@ -978,7 +999,8 @@ def session_record(args, k, profile, log, windows):
         if os.path.exists(p):
             os.unlink(p)
     stack = worker = None
-    stack_log = open(os.path.join(RES, f"stack_{k % 3}.log"), "w")
+    stack_log = open(os.path.join(RES, stack_log_name(args, "soak", k)), "w")
+    rec["stack_log"] = os.path.basename(stack_log.name)
     prog = {"session": k, "profile": profile, "phase": "cleanup"}
     off = time.time() - time.monotonic()
 
@@ -1124,6 +1146,7 @@ def trial_record(args, k, fault, rep, log, windows):
            "kit_commit": os.environ.get("OHK_KIT_COMMIT"), "aggregator_commit": os.environ.get("OHK_AGG_COMMIT"),
            "start": dt.datetime.now().astimezone().isoformat(timespec="seconds"), "valid": False,
            "soft_stop_timeout_s": args.soft_stop, "workload": "plain", "task": args.task, "composition": args.composition,
+           "config_sha256": config_sha256(args.task),
            "timing_note": "times *_s are seconds from the signal on the host monotonic clock (= sim seconds at RTF 1.0); sim_* fields are "
                           "Gazebo /clock; ground truth is gz /odom (physics), not the ROS bridge"}
     reasons = []
@@ -1131,7 +1154,8 @@ def trial_record(args, k, fault, rep, log, windows):
     if os.path.exists(res_path):
         os.unlink(res_path)
     stack = worker = None
-    stack_log = open(os.path.join(RES, f"stack_{k % 3}.log"), "w")
+    stack_log = open(os.path.join(RES, stack_log_name(args, "faults", k)), "w")
+    rec["stack_log"] = os.path.basename(stack_log.name)
     try:
         kill_leftovers(log)
         s.clean_shm(log)

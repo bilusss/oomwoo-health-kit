@@ -17,6 +17,7 @@ Watchers of ``tf`` pairs have no writer guard: /tf has many writers by design, a
 """
 
 import math
+import threading
 import time
 
 import rclpy
@@ -27,9 +28,13 @@ from rosidl_runtime_py.utilities import get_message
 
 from oomwoo_health_kit.ros_heartbeat import RosHeartbeat
 from oomwoo_health_kit.topic_watch import (
-    EmitLimiter, MotionConsistency, TfTracker, TtlCache, WatchSpec,
+    CommandChainGuard, EmitLimiter, MotionConsistency, ReverseFixGuard, TfTracker, TtlCache, WatchSpec,
     parse_watches, publishers_ok, queued_too_long, stamp_level, strip_frame,
 )
+
+
+GRAPH_POLL_S = 0.5      # how often the stage topics' publishers are re-read (own thread)
+GRAPH_MAX_AGE_S = 5.0   # an older graph result counts as a problem
 
 
 def _qos_profile(q: dict) -> QoSProfile:
@@ -120,6 +125,12 @@ class TopicHeartbeat(Node):
         if spec.is_motion:
             self._watch_motion(spec, hb, limiter, qos, pubs)
             return
+        if spec.is_chain:
+            self._watch_chain(spec, hb, limiter, qos)
+            return
+        if spec.is_reverse_fix:
+            self._watch_reverse_fix(spec, hb, limiter, qos)
+            return
 
         if spec.is_tf:
             tracker = TfTracker()
@@ -193,6 +204,128 @@ class TopicHeartbeat(Node):
 
         self._subs.append(self.create_subscription(odom_cls, m["odom_topic"], on_odom, qos))
         self._subs.append(self.create_subscription(cmd_cls, m["cmd_topic"], on_cmd, cmd_qos))
+
+    def _graph_problems(self, topics, expected_type: str, need_publisher: bool) -> str:
+        """'' when every topic has publishers and at least one has the expected type; else a description (M8: a remap or a different message
+        type, e.g. TwistStamped, must not silently turn a rule off). A topic without publishers is a problem only with need_publisher."""
+        out = []
+        for t in topics:
+            infos = self.get_publishers_info_by_topic(self.resolve_topic_name(t))
+            if not infos:
+                if need_publisher:
+                    out.append(f"{t}: no publisher")
+            elif not any(i.topic_type == expected_type for i in infos):
+                out.append(f"{t}: publisher type {sorted({i.topic_type for i in infos})} is not {expected_type}")
+        return "; ".join(out)
+
+    @staticmethod
+    def _twist(msg):
+        """The Twist inside a Twist or TwistStamped message."""
+        return msg.twist if hasattr(msg, "twist") else msg
+
+    def _tick_beat(self, spec, hb, limiter, core, notes, graph=None):
+        """Shared by the M8 rules: evaluate the core and beat when it is healthy. The rules have no timer: they are evaluated at the
+        messages of their own topics and at every message of the tick topic (odometry, 50 Hz), so a silent odometry stops them too."""
+        # The graph query runs in its own thread: a query that blocks while the graph changes (a process starting, discovery) must not stall the
+        # executor that also runs the other watches. Result older than GRAPH_MAX_AGE_S (thread stalled or dead) is itself a problem.
+        state = {"t": None, "problem": "graph check has not run yet"}
+
+        def poll() -> None:
+            while True:
+                try:
+                    problem = graph() if graph is not None else ""
+                except Exception as e:  # keep the poller alive; a failing query is a problem, not a silent pass
+                    problem = f"graph query failed: {type(e).__name__}: {e}"
+                state["t"], state["problem"] = time.monotonic(), problem
+                time.sleep(GRAPH_POLL_S)
+        if graph is not None:
+            threading.Thread(target=poll, daemon=True).start()
+
+        def maybe_beat(now: float) -> None:
+            if graph is not None:
+                age = None if state["t"] is None else time.monotonic() - state["t"]
+                problem = state["problem"] if age is not None and age <= GRAPH_MAX_AGE_S else (
+                    state["problem"] if age is None else f"graph check stalled for {age:.1f}s")
+                core.set_graph(not problem, problem)
+            ok, detail = core.ok(now)
+            if ok and limiter.allow(now):
+                hb.beat("ok", "; ".join(x for x in notes.values() if x))
+            elif not ok:
+                self._warn(spec.component_id, f"{spec.component_id}: no heartbeat, {detail}")
+        return maybe_beat
+
+    def _watch_chain(self, spec, hb, limiter, qos) -> None:
+        """M8 rule A (CommandChainGuard): input and output topic of a command stage that re-emits its held setpoint (Nav2 velocity
+        smoother). Any writer on the input counts (controller_server and 5 behavior_server publishers write /cmd_vel_nav). A stale
+        INPUT message gives no credit; every OUTPUT message updates the held setpoint (it is what the MCU would hold)."""
+        c = spec.chain
+        core = CommandChainGuard(c["in_max_age_s"], c["stop_grace_s"], c["motion_linear"], c["motion_angular"], c["motion_grace_s"])
+        twist = get_message(c["msg_type"])
+        odom_cls = get_message("nav_msgs/msg/Odometry")
+        rel = QoSProfile(history=HistoryPolicy.KEEP_LAST, depth=10, reliability=ReliabilityPolicy.RELIABLE,
+                         durability=DurabilityPolicy.VOLATILE)
+        notes = {"tick": "", "in": ""}
+        maybe_beat = self._tick_beat(spec, hb, limiter, core, notes,
+                                     graph=lambda: self._graph_problems((c["in_topic"], c["out_topic"]), c["msg_type"], True))
+
+        def on_in(msg, info) -> None:
+            now = self._now()
+            fresh, notes["in"] = self._fresh(spec, info, None, now)
+            t = self._twist(msg)
+            if fresh:
+                core.on_in(now, math.hypot(t.linear.x, t.linear.y, t.linear.z), math.hypot(t.angular.x, t.angular.y, t.angular.z))
+
+        def on_out(msg, info) -> None:
+            now = self._now()
+            t = self._twist(msg)
+            core.on_out(now, math.hypot(t.linear.x, t.linear.y, t.linear.z), math.hypot(t.angular.x, t.angular.y, t.angular.z))
+            maybe_beat(now)
+
+        def on_tick(msg, info) -> None:
+            now = self._now()
+            fresh, notes["tick"] = self._fresh(spec, info, _stamp_sec(msg.header.stamp), now)
+            if fresh:
+                v = msg.twist.twist
+                core.on_odom(now, math.hypot(v.linear.x, v.linear.y), v.angular.z)
+                maybe_beat(now)
+
+        self._subs.append(self.create_subscription(twist, c["in_topic"], on_in, rel))
+        self._subs.append(self.create_subscription(twist, c["out_topic"], on_out, rel))
+        self._subs.append(self.create_subscription(odom_cls, c["tick_topic"], on_tick, qos))
+
+    def _watch_reverse_fix(self, spec, hb, limiter, qos) -> None:
+        """M8 rule B (ReverseFixGuard): held setpoint on the command topic (any writer) and the fix topic of the sensor node the
+        reversing controller steers on. A stale fix message (queued too long) gives no credit."""
+        c = spec.reverse_fix
+        core = ReverseFixGuard(c["fix_max_age_s"], c["reverse_threshold"], c["from_reverse_start"])
+        twist, odom_cls, fix_cls = get_message(c["cmd_type"]), get_message("nav_msgs/msg/Odometry"), get_message(c["fix_type"])
+        rel = QoSProfile(history=HistoryPolicy.KEEP_LAST, depth=10, reliability=ReliabilityPolicy.RELIABLE,
+                         durability=DurabilityPolicy.VOLATILE)
+        notes = {"tick": "", "fix": ""}
+        maybe_beat = self._tick_beat(spec, hb, limiter, core, notes,
+                                     graph=lambda: self._graph_problems((c["cmd_topic"],), c["cmd_type"], False))
+
+        def on_cmd(msg, info) -> None:
+            now = self._now()
+            core.on_cmd(now, self._twist(msg).linear.x)       # the held setpoint, also from a message that waited in the queue
+            maybe_beat(now)
+
+        def on_fix(msg, info) -> None:
+            now = self._now()
+            header = getattr(msg, "header", None)
+            fresh, notes["fix"] = self._fresh(spec, info, _stamp_sec(header.stamp) if header is not None else None, now)
+            if fresh:
+                core.on_fix(now)
+
+        def on_tick(msg, info) -> None:
+            now = self._now()
+            fresh, notes["tick"] = self._fresh(spec, info, _stamp_sec(msg.header.stamp), now)
+            if fresh:
+                maybe_beat(now)
+
+        self._subs.append(self.create_subscription(twist, c["cmd_topic"], on_cmd, rel))
+        self._subs.append(self.create_subscription(fix_cls, c["fix_topic"], on_fix, rel))
+        self._subs.append(self.create_subscription(odom_cls, c["tick_topic"], on_tick, qos))
 
 
 def main(args=None) -> None:

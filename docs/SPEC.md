@@ -232,3 +232,24 @@ Bench-only extension of M6c; the cores (`topic_watch`, `job_logic`, `mcu_standin
 action tally, planner-log parser; host tests in `test/test_fullstack_tasks.py`), `jobs.py` (coverage / dock / recovery workloads), `stack.launch.py`
 (`localization` slam|amcl|none, `world`, `job`, `composition`), configs `nav_watch_amcl`, `nav_rosters_amcl`, `nav_watch_dock`, `nav_rosters_dock`, and the proposal
 variant `nav_watch_amcl_reactive.yaml`. Facts, results and limits: `docs/M7_RECON.md`, `docs/FINDINGS.md` (M7).
+
+## M8 (as built, 2026-11-15): two watcher-side rules for faults hidden behind a still-fresh output
+Question: how much of the three M7 gaps (a dead commander behind Nav2's velocity smoother, a dead dock detector while `dock_drive` reverses, a dead nav2-executor
+coverage planner) can be closed by the watcher alone, without changing any upstream node. Two ROS-free cores in `oomwoo_health_kit/topic_watch.py`, each with a thin
+rclpy adapter in `topic_heartbeat_node.py` and an opt-in YAML watch type; no existing config selects them, so every M6/M7 configuration behaves as before.
+- `CommandChainGuard` / watch type `command_chain` (`in_topic`, `out_topic`, `tick_topic`, `in_max_age_s`, `stop_grace_s`): healthy unless the stage output (Nav2:
+  `/cmd_vel_smoothed`) is non-zero while no non-zero input (`/cmd_vel_nav`, any writer) is newer than `in_max_age_s`; a zero input gives `stop_grace_s` for the stage to
+  decelerate (repeated zeros do not extend it). Non-finite values, a backwards clock, and a non-zero output with no input ever seen are not healthy.
+- `ReverseFixGuard` / watch type `reverse_fix` (`cmd_topic`, `fix_topic`, `fix_type`, `tick_topic`, `fix_max_age_s`, `reverse_threshold`, `from_reverse_start`): while the
+  held command on `cmd_topic` has linear x <= -`reverse_threshold`, the newest fix (or the start of the reversing episode with `from_reverse_start`) must be at most
+  `fix_max_age_s` old. Not reversing: healthy. Reversing is inferred from the command, not from `/dock_drive/state` (published on change only, so a watcher that starts
+  mid-state or a restarted `dock_drive` would not know it).
+- `reverse_fix` precondition: `dock_drive` is the only writer on the watched command stream that can reverse; any other reverse (Nav2 BackUp, teleop) trips it after `fix_max_age_s`. Only the dock stack config selects it.
+- Added after the M8 measurements, so that neither rule can switch off silently: a message type option (`msg_type` / `cmd_type`: Twist or TwistStamped), a graph check (watched command topics must have a publisher of that type; `command_chain` also requires a publisher on both stage topics; mismatch is not-ok with the reason in the log), and in `command_chain` odometry motion for more than `motion_grace_s` with the stage output never seen is not-ok.
+- Both watches have no timer: they are evaluated at the messages of their own topics and at every odometry message (`tick_topic`, queue-age guard as for the other watches),
+  so a silent odometry stops them as well. Roster entries are critical with `max_age_sec` 0.15 like `drive_supervision`.
+- Configs: `nav_watch_amcl_chain.yaml` + `nav_rosters_amcl_chain.yaml`, `nav_watch_dock_fix.yaml` + `nav_rosters_dock_fix.yaml`; bench tasks `nav_amcl_chain`, `recovery_chain`,
+  `dock_fix`. The bounds are derived from recon traces (`docs/M8_RECON.md`) by a formula written down before the soaks, and were not changed afterwards.
+- Tests: host unit tests for both cores and the parser (`test/test_topic_watch.py`), config/task tests, `test/test_fullstack_m8_analysis.py`; launch tests `test/launch/test_u1..u8`
+  (fault and no-fault case for each rule, a control showing the M7 watch set does not see the dead commander, and type-mismatch / silent-stage cases). Results and limits: `docs/FINDINGS.md` (M8).
+

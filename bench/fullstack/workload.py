@@ -185,8 +185,11 @@ class Workload:
             rec["note"] = f"{type(e).__name__}: {e}"
         return self._finish(rec, t0w, t0s, d0)
 
-    def recovery_probe(self, idx, should_stop):
-        """spin, back up, wait via the behavior_server action servers; one record like a goal."""
+    PROBE_SPEC = {"spin_rad": 1.57, "backup_m": 0.3, "backup_mps": 0.1, "wait_s": 3, "steps": ("spin", "backup", "wait")}
+
+    def recovery_probe(self, idx, should_stop, spec=None):
+        """spin, back up, wait via the behavior_server action servers; one record like a goal. `spec` (M8): other amounts / steps."""
+        spec = {**self.PROBE_SPEC, **(spec or {})}
         from builtin_interfaces.msg import Duration
         from geometry_msgs.msg import Point
         from nav2_msgs.action import BackUp, Spin, Wait
@@ -196,14 +199,16 @@ class Workload:
         t0w, t0s, d0 = time.monotonic(), self.sim_now(), self.odo.distance()
         try:
             for name, cls, goal in (("spin", Spin, Spin.Goal()), ("backup", BackUp, BackUp.Goal()), ("wait", Wait, Wait.Goal())):
+                if name not in spec["steps"]:
+                    continue
                 if name == "spin":
-                    goal.target_yaw = 1.57
+                    goal.target_yaw = spec["spin_rad"]
                 elif name == "backup":
-                    goal.target = Point(x=0.3)
-                    goal.speed = 0.1
+                    goal.target = Point(x=spec["backup_m"])
+                    goal.speed = spec["backup_mps"]
                     goal.time_allowance = Duration(sec=15)
                 else:
-                    goal.time = Duration(sec=3)
+                    goal.time = Duration(sec=spec["wait_s"])
                 cl = ActionClient(self.node, cls, name)
                 if should_stop() or not cl.wait_for_server(timeout_sec=5.0):
                     rec["steps"].append(f"{name}: no server/stop")

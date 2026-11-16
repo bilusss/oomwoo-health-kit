@@ -28,9 +28,10 @@ Full numbers, method and limits are in [docs/FINDINGS.md](docs/FINDINGS.md).
 
 - `oomwoo_health_kit/mcu_standin.py` - ROS-free core: UNARMED / RUN / SOFT_STOP / CPU_RESET
 - `oomwoo_health_kit/heartbeat.py` - `WorkHeartbeat` payload builder
+- `oomwoo_health_kit/topic_watch.py` - ROS-free watcher cores, incl. the opt-in M8 rules `CommandChainGuard` and `ReverseFixGuard`
 - `oomwoo_health_kit/*_node.py`, `ros_heartbeat.py`, `launch/` - ROS 2 adapters and demo launch
 - `test/` - unit tests and `test/launch/` fault-injection scenarios a-j
-- `bench/fullstack/` - full-stack sim sessions and fault trials (M6, M7: AMCL, coverage, docking, BT recoveries), see its README
+- `bench/fullstack/` - full-stack sim sessions and fault trials (M6, M7: AMCL, coverage, docking, BT recoveries; M8: command-chain and dock-fix rules), see its README
 - `bench/`, `results/` - load, sim-clock and stopping-distance measurements and raw data
 - `docs/SPEC.md` - design and milestones
 

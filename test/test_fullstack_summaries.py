@@ -75,8 +75,8 @@ def trial(fault="sigstop_behavior", when="recovery", yaw=0.96, speed=0.0, soft=N
     return {"task": task, "fault": fault, "rep": 1, "profile": "default", "label": label, "valid": True, "hold_s": 5.0,
             "pre_signal": {"when": when, "yaw_rate": yaw, "speed_mps": speed}, "standin_soft_stop_s": soft, "detected": soft is not None,
             "gated_first_zero_s": 1.2, "standstill_s": standstill, "distance_to_standstill_m": 0.0, "robot_end_state": "stopped",
-            "truth_track": track or [[-0.3, 0, 0, 0, 1.0, 0], [-0.05, 0, 0, 0, 1.0, 0], [0.2, 0, 0, 0, 1.0, 0], [0.7, 0, 0, 0, 1.0, 0],
-                                     [1.1, 0, 0, 0, 0.0, 0]]}
+            "truth_track": track or [[-0.3, 0, 0, 0, 1.0, -0.3], [-0.05, 0, 0, 0, 1.0, -0.05], [0.2, 0, 0, 0, 1.0, 0.2], [0.7, 0, 0, 0, 1.0, 0.7],
+                                     [1.1, 0, 0, 0, 0.0, 0.9], [1.4, 0, 0, 0, 0.0, 0.9]]}
 
 
 def test_exposure_and_hold_detection():
@@ -85,10 +85,20 @@ def test_exposure_and_hold_detection():
     assert sf.detected_within_hold(trial(soft=0.4)) and not sf.detected_within_hold(trial(soft=8.4)) and not sf.detected_within_hold(trial())
 
 
-def test_rotation_integrates_yaw_rate_from_the_signal_to_standstill():
-    # 1.0 rad/s from t=0 to t=0.7, then ramp to 0 at 1.1: 0.7 + 0.2 = 0.9 rad -> about 51.6 deg (samples at 0.7 and 1.1 are the end points)
-    assert abs(sf.rotation_deg(trial(standstill=1.1)) - 51.6) < 0.5
+def test_rotation_is_the_ground_truth_yaw_change_from_the_signal_to_standstill():
+    # yaw 0.0 at the signal (t=0, interpolated between -0.05 and 0.2), 0.9 rad at standstill t=1.1: 51.6 degrees
+    assert abs(sf.rotation_deg(trial(standstill=1.1)) - 51.6) < 0.2
+    # standstill between two samples: interpolated (0.7 -> 1.1 goes 0.7 -> 0.9 rad; at 0.9 the yaw is 0.8 rad)
+    assert abs(sf.rotation_deg(trial(standstill=0.9)) - 45.8) < 0.2
+    # the old function stopped at the last sample before standstill (0.7 rad = 40 deg) and under-reported
+    assert sf.rotation_deg(trial(standstill=0.9)) > 40.2
     assert sf.rotation_deg({"standstill_s": None, "truth_track": []}) is None
+
+
+def test_rotation_unwraps_yaw_across_pi():
+    tr = [[-0.3, 0, 0, 0, 1.0, 3.0], [-0.05, 0, 0, 0, 1.0, 3.05], [0.2, 0, 0, 0, 1.0, -3.03], [0.7, 0, 0, 0, 1.0, -2.5], [1.1, 0, 0, 0, 0.0, -2.4]]
+    # 3.05 -> 3.253 (= -3.03 + 2 pi) at 0.2 ... at t=0 yaw 3.0 + ... total from signal to 1.1: 3.8832 - ... check against the unwrapped difference
+    assert abs(sf.rotation_deg(trial(track=tr, standstill=1.1)) - ((-2.4 + 2 * 3.141592653589793) - (3.05 + (3.253185307 - 3.05) * 0.05 / 0.25)) * 180 / 3.141592653589793) < 0.2
 
 
 def test_table_counts_only_exposed_and_latest_label():

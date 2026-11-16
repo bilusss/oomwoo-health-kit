@@ -1,0 +1,958 @@
+[INFO] [launch]: All log files can be found below /tmp/.ros/log/2026-11-15-10-49-41-648321-3cb80da612e5-21335
+[INFO] [launch]: Default logging verbosity is set to INFO
+/opt/ros/jazzy/lib/python3.12/site-packages/launch/conditions/launch_configuration_equals.py:53: UserWarning: The 'LaunchConfigurationEquals' and 'LaunchConfigurationNotEquals' Conditions are  deprecated. Use the 'EqualsSubstitution' and 'NotEqualsSubstitution' substitutions instead! E.g.:
+  IfCondition(
+  	EqualsSubstitution(LaunchConfiguration('some_launch_arg'), "some_equality_check")
+  )
+  warnings.warn(
+URDF  file name : /ros_ws/install/oomwoo_one/share/oomwoo_one/urdf/robot.urdf.xacro
+World file name : /ros_ws/install/oomwoo_gazebo/share/oomwoo_gazebo/worlds/living_room.world
+[INFO] [gazebo-1]: process started with pid [21368]
+[INFO] [parameter_bridge-2]: process started with pid [21369]
+[INFO] [robot_state_publisher-3]: process started with pid [21370]
+[INFO] [create-4]: process started with pid [21371]
+[INFO] [map_server-5]: process started with pid [21372]
+[INFO] [amcl-6]: process started with pid [21374]
+[INFO] [lifecycle_manager-7]: process started with pid [21375]
+[INFO] [controller_server-8]: process started with pid [21376]
+[INFO] [smoother_server-9]: process started with pid [21377]
+[INFO] [planner_server-10]: process started with pid [21378]
+[INFO] [route_server-11]: process started with pid [21379]
+[INFO] [behavior_server-12]: process started with pid [21380]
+[INFO] [bt_navigator-13]: process started with pid [21381]
+[INFO] [waypoint_follower-14]: process started with pid [21382]
+[INFO] [velocity_smoother-15]: process started with pid [21383]
+[INFO] [collision_monitor-16]: process started with pid [21384]
+[INFO] [opennav_docking-17]: process started with pid [21385]
+[INFO] [lifecycle_manager-18]: process started with pid [21386]
+[INFO] [initialpose_pub-19]: process started with pid [21387]
+[INFO] [health_monitor_node-20]: process started with pid [21388]
+[INFO] [mcu_standin_node-21]: process started with pid [21389]
+[INFO] [job_roster-22]: process started with pid [21392]
+[INFO] [topic_heartbeat-23]: process started with pid [21393]
+[controller_server-8] [INFO] [1794736182.359497383] [controller_server]: 
+[controller_server-8] 	controller_server lifecycle node launched. 
+[controller_server-8] 	Waiting on external lifecycle transitions to activate
+[controller_server-8] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[controller_server-8] [INFO] [1794736182.393950803] [controller_server]: Creating controller server
+[planner_server-10] [INFO] [1794736182.434982627] [planner_server]: 
+[planner_server-10] 	planner_server lifecycle node launched. 
+[planner_server-10] 	Waiting on external lifecycle transitions to activate
+[planner_server-10] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[planner_server-10] [INFO] [1794736182.447886063] [planner_server]: Creating
+[collision_monitor-16] [INFO] [1794736182.450895220] [collision_monitor]: 
+[collision_monitor-16] 	collision_monitor lifecycle node launched. 
+[collision_monitor-16] 	Waiting on external lifecycle transitions to activate
+[collision_monitor-16] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[gazebo-1] [1;32m[Msg] [0m[1;32mGazebo Sim Server v[0m[1;32m8.15.0[0m[1;32m[0m
+[create-4] [INFO] [1794736182.477222054] [ros_gz_sim]: Requesting list of world names.
+[bt_navigator-13] [INFO] [1794736182.480180999] [bt_navigator]: 
+[bt_navigator-13] 	bt_navigator lifecycle node launched. 
+[bt_navigator-13] 	Waiting on external lifecycle transitions to activate
+[bt_navigator-13] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[opennav_docking-17] [INFO] [1794736182.484018567] [docking_server]: 
+[opennav_docking-17] 	docking_server lifecycle node launched. 
+[opennav_docking-17] 	Waiting on external lifecycle transitions to activate
+[opennav_docking-17] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[opennav_docking-17] [INFO] [1794736182.484110817] [docking_server]: Creating docking_server
+[waypoint_follower-14] [INFO] [1794736182.490179120] [waypoint_follower]: 
+[waypoint_follower-14] 	waypoint_follower lifecycle node launched. 
+[waypoint_follower-14] 	Waiting on external lifecycle transitions to activate
+[waypoint_follower-14] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[bt_navigator-13] [INFO] [1794736182.494587089] [bt_navigator]: Creating
+[waypoint_follower-14] [INFO] [1794736182.496800763] [waypoint_follower]: Creating
+[amcl-6] [INFO] [1794736182.501054132] [amcl]: 
+[amcl-6] 	amcl lifecycle node launched. 
+[amcl-6] 	Waiting on external lifecycle transitions to activate
+[amcl-6] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[controller_server-8] [INFO] [1794736182.501403643] [local_costmap.local_costmap]: 
+[controller_server-8] 	local_costmap lifecycle node launched. 
+[controller_server-8] 	Waiting on external lifecycle transitions to activate
+[controller_server-8] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[amcl-6] [INFO] [1794736182.503224306] [amcl]: Creating
+[controller_server-8] [INFO] [1794736182.507638445] [local_costmap.local_costmap]: Creating Costmap
+[gazebo-1] [1;32m[Msg] [0m[1;32mLoading SDF world file[[0m[1;32m/ros_ws/install/oomwoo_gazebo/share/oomwoo_gazebo/worlds/living_room.world[0m[1;32m].[0m
+[robot_state_publisher-3] [INFO] [1794736182.509406139] [robot_state_publisher]: Robot initialized
+[behavior_server-12] [INFO] [1794736182.510141971] [behavior_server]: 
+[behavior_server-12] 	behavior_server lifecycle node launched. 
+[behavior_server-12] 	Waiting on external lifecycle transitions to activate
+[behavior_server-12] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[smoother_server-9] [INFO] [1794736182.522024165] [smoother_server]: 
+[smoother_server-9] 	smoother_server lifecycle node launched. 
+[smoother_server-9] 	Waiting on external lifecycle transitions to activate
+[smoother_server-9] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[smoother_server-9] [INFO] [1794736182.540885593] [smoother_server]: Creating smoother server
+[route_server-11] [INFO] [1794736182.557203897] [route_server]: 
+[route_server-11] 	route_server lifecycle node launched. 
+[route_server-11] 	Waiting on external lifecycle transitions to activate
+[route_server-11] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[velocity_smoother-15] [INFO] [1794736182.561386155] [velocity_smoother]: 
+[velocity_smoother-15] 	velocity_smoother lifecycle node launched. 
+[velocity_smoother-15] 	Waiting on external lifecycle transitions to activate
+[velocity_smoother-15] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[lifecycle_manager-18] [INFO] [1794736182.562638408] [lifecycle_manager_navigation]: Creating
+[lifecycle_manager-7] [INFO] [1794736182.563516840] [lifecycle_manager_localization]: Creating
+[map_server-5] [INFO] [1794736182.563615450] [map_server]: 
+[map_server-5] 	map_server lifecycle node launched. 
+[map_server-5] 	Waiting on external lifecycle transitions to activate
+[map_server-5] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[map_server-5] [INFO] [1794736182.563788450] [map_server]: Creating
+[lifecycle_manager-7] [INFO] [1794736182.574205112] [lifecycle_manager_localization]: [34m[1mCreating and initializing lifecycle service clients[0m[0m
+[planner_server-10] [INFO] [1794736182.574838843] [global_costmap.global_costmap]: 
+[planner_server-10] 	global_costmap lifecycle node launched. 
+[planner_server-10] 	Waiting on external lifecycle transitions to activate
+[planner_server-10] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[lifecycle_manager-18] [INFO] [1794736182.577552468] [lifecycle_manager_navigation]: [34m[1mCreating and initializing lifecycle service clients[0m[0m
+[planner_server-10] [INFO] [1794736182.578128380] [global_costmap.global_costmap]: Creating Costmap
+[lifecycle_manager-7] [INFO] [1794736182.589910044] [lifecycle_manager_localization]: [34m[1mStarting managed nodes bringup...[0m[0m
+[lifecycle_manager-7] [INFO] [1794736182.589949644] [lifecycle_manager_localization]: [34m[1mConfiguring map_server[0m[0m
+[map_server-5] [INFO] [1794736182.590277334] [map_server]: Configuring
+[map_server-5] [INFO] [1794736182.590323735] [map_io]: Loading yaml file: /ros_ws/install/oomwoo_sim_support/share/oomwoo_sim_support/maps/living_room.yaml
+[map_server-5] [INFO] [1794736182.590539975] [map_io]: resolution: 0.05
+[map_server-5] [INFO] [1794736182.590707425] [map_io]: origin[0]: -2.499
+[map_server-5] [INFO] [1794736182.590713315] [map_io]: origin[1]: -2.456
+[map_server-5] [INFO] [1794736182.590716685] [map_io]: origin[2]: 0
+[map_server-5] [INFO] [1794736182.590727175] [map_io]: free_thresh: 0.196
+[map_server-5] [INFO] [1794736182.590730825] [map_io]: occupied_thresh: 0.65
+[map_server-5] [INFO] [1794736182.590735745] [map_io]: mode: trinary
+[map_server-5] [INFO] [1794736182.590750555] [map_io]: negate: 0
+[map_server-5] [INFO] [1794736182.591298037] [map_io]: Loading image_file: /ros_ws/install/oomwoo_sim_support/share/oomwoo_sim_support/maps/living_room.pgm
+[map_server-5] [INFO] [1794736182.591964548] [map_io]: Read map /ros_ws/install/oomwoo_sim_support/share/oomwoo_sim_support/maps/living_room.pgm: 100 X 98 map @ 0.05 m/cell
+[lifecycle_manager-7] [INFO] [1794736182.603044990] [lifecycle_manager_localization]: [34m[1mConfiguring amcl[0m[0m
+[amcl-6] [INFO] [1794736182.603261501] [amcl]: Configuring
+[amcl-6] [INFO] [1794736182.603335581] [amcl]: initTransforms
+[amcl-6] [INFO] [1794736182.614324443] [amcl]: initPubSub
+[amcl-6] [INFO] [1794736182.625420386] [amcl]: Subscribed to map topic.
+[amcl-6] [WARN] [1794736182.729812639] [amcl.rclcpp]: failed to send response to /amcl/change_state (timeout): client will not receive response, at ./src/rmw_response.cpp:153, at ./src/rcl/service.c:400
+[job_roster-22] [INFO] [1794736182.799226941] [job_roster]: roster 'nav' (task_id nav) posted
+[topic_heartbeat-23] [INFO] [1794736182.884876696] [topic_heartbeat]: watching lidar<-/scan, odom<-/odom, localization<-/tf, drive_supervision<-/odom, local_costmap<-/local_costmap/published_footprint, global_costmap<-/global_costmap/published_footprint, command_chain<-/odom
+[lifecycle_manager-18] [INFO] [1794736182.981418003] [lifecycle_manager_navigation]: [34m[1mStarting managed nodes bringup...[0m[0m
+[lifecycle_manager-18] [INFO] [1794736182.981446943] [lifecycle_manager_navigation]: [34m[1mConfiguring controller_server[0m[0m
+[controller_server-8] [INFO] [1794736182.981644924] [controller_server]: Configuring controller interface
+[controller_server-8] [INFO] [1794736182.981661744] [controller_server]: getting progress checker plugins..
+[controller_server-8] [INFO] [1794736182.981952294] [controller_server]: getting goal checker plugins..
+[controller_server-8] [INFO] [1794736182.982193465] [controller_server]: Controller frequency set to 5.0000Hz
+[controller_server-8] [INFO] [1794736182.982222715] [local_costmap.local_costmap]: Configuring
+[controller_server-8] [INFO] [1794736182.989348680] [local_costmap.local_costmap]: Using plugin "obstacle_layer"
+[controller_server-8] [INFO] [1794736182.992448836] [local_costmap.local_costmap]: Subscribed to Topics: scan
+[controller_server-8] [INFO] [1794736182.995449872] [local_costmap.local_costmap]: Initialized plugin "obstacle_layer"
+[controller_server-8] [INFO] [1794736182.995469552] [local_costmap.local_costmap]: Using plugin "inflation_layer"
+[controller_server-8] [INFO] [1794736182.995788773] [local_costmap.local_costmap]: Initialized plugin "inflation_layer"
+[controller_server-8] [INFO] [1794736183.021691926] [controller_server]: Created progress_checker : progress_checker of type nav2_controller::SimpleProgressChecker
+[controller_server-8] [INFO] [1794736183.021894326] [controller_server]: Controller Server has progress_checker  progress checkers available.
+[controller_server-8] [INFO] [1794736183.022463917] [controller_server]: Created goal checker : goal_checker of type nav2_controller::SimpleGoalChecker
+[controller_server-8] [INFO] [1794736183.022660777] [controller_server]: Controller Server has goal_checker  goal checkers available.
+[controller_server-8] [INFO] [1794736183.023717790] [controller_server]: Created controller : FollowPath of type nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController
+[controller_server-8] [INFO] [1794736183.028729950] [controller_server]: Controller Server has FollowPath  controllers available.
+[lifecycle_manager-18] [INFO] [1794736183.036702316] [lifecycle_manager_navigation]: [34m[1mConfiguring smoother_server[0m[0m
+[smoother_server-9] [INFO] [1794736183.036917846] [smoother_server]: Configuring smoother server
+[smoother_server-9] [INFO] [1794736183.049440342] [smoother_server]: Created smoother : simple_smoother of type nav2_smoother::SimpleSmoother
+[smoother_server-9] [INFO] [1794736183.049794923] [smoother_server]: Smoother Server has simple_smoother  smoothers available.
+[lifecycle_manager-18] [INFO] [1794736183.055256174] [lifecycle_manager_navigation]: [34m[1mConfiguring planner_server[0m[0m
+[planner_server-10] [INFO] [1794736183.055449274] [planner_server]: Configuring
+[planner_server-10] [INFO] [1794736183.055472224] [global_costmap.global_costmap]: Configuring
+[planner_server-10] [INFO] [1794736183.062845689] [global_costmap.global_costmap]: Using plugin "static_layer"
+[planner_server-10] [INFO] [1794736183.065584095] [global_costmap.global_costmap]: Subscribing to the map topic (/map) with transient local durability
+[planner_server-10] [INFO] [1794736183.067188218] [global_costmap.global_costmap]: Initialized plugin "static_layer"
+[planner_server-10] [INFO] [1794736183.067202478] [global_costmap.global_costmap]: Using plugin "obstacle_layer"
+[planner_server-10] [INFO] [1794736183.067906899] [global_costmap.global_costmap]: Subscribed to Topics: scan
+[planner_server-10] [INFO] [1794736183.070533185] [global_costmap.global_costmap]: Initialized plugin "obstacle_layer"
+[planner_server-10] [INFO] [1794736183.070547725] [global_costmap.global_costmap]: Using plugin "inflation_layer"
+[planner_server-10] [INFO] [1794736183.071044746] [global_costmap.global_costmap]: Initialized plugin "inflation_layer"
+[planner_server-10] [INFO] [1794736183.089316303] [planner_server]: Created global planner plugin GridBased of type nav2_navfn_planner::NavfnPlanner
+[planner_server-10] [INFO] [1794736183.089341743] [planner_server]: Configuring plugin GridBased of type NavfnPlanner
+[planner_server-10] [INFO] [1794736183.089645954] [planner_server]: Planner Server has GridBased  planners available.
+[lifecycle_manager-18] [INFO] [1794736183.099377333] [lifecycle_manager_navigation]: [34m[1mConfiguring route_server[0m[0m
+[route_server-11] [INFO] [1794736183.099544724] [route_server]: Configuring
+[route_server-11] [INFO] [1794736183.121804329] [route_server]: Created GraphFileLoader GeoJsonGraphFileLoader of type nav2_route::GeoJsonGraphFileLoader
+[route_server-11] [INFO] [1794736183.121827179] [route_server]: Configuring geojson graph file loader
+[route_server-11] [INFO] [1794736183.121833539] [route_server]: No graph file provided to load yet.
+[route_server-11] [INFO] [1794736183.124284454] [route_server]: Created edge cost function plugin DistanceScorer of type nav2_route::DistanceScorer
+[route_server-11] [INFO] [1794736183.124300034] [route_server]: Configuring distance scorer.
+[route_server-11] [INFO] [1794736183.124457934] [route_server]: Created edge cost function plugin DynamicEdgesScorer of type nav2_route::DynamicEdgesScorer
+[route_server-11] [INFO] [1794736183.124469314] [route_server]: Configuring adjust edges scorer.
+[route_server-11] [INFO] [1794736183.127408641] [route_server]: Created route operation AdjustSpeedLimit of type nav2_route::AdjustSpeedLimit
+[route_server-11] [INFO] [1794736183.127422431] [route_server]: Configuring Adjust speed limit operation.
+[route_server-11] [INFO] [1794736183.128129032] [route_server]: Created route operation ReroutingService of type nav2_route::ReroutingService
+[route_server-11] [INFO] [1794736183.128139812] [route_server]: Configuring Rerouting service operation.
+[lifecycle_manager-18] [INFO] [1794736183.130687977] [lifecycle_manager_navigation]: [34m[1mConfiguring behavior_server[0m[0m
+[behavior_server-12] [INFO] [1794736183.130918758] [behavior_server]: Configuring
+[behavior_server-12] [INFO] [1794736183.134812736] [behavior_server]: Creating behavior plugin spin of type nav2_behaviors::Spin
+[behavior_server-12] [INFO] [1794736183.135759838] [behavior_server]: Creating behavior plugin backup of type nav2_behaviors::BackUp
+[behavior_server-12] [INFO] [1794736183.136702560] [behavior_server]: Creating behavior plugin drive_on_heading of type nav2_behaviors::DriveOnHeading
+[behavior_server-12] [INFO] [1794736183.137556941] [behavior_server]: Creating behavior plugin wait of type nav2_behaviors::Wait
+[behavior_server-12] [INFO] [1794736183.138221503] [behavior_server]: Creating behavior plugin assisted_teleop of type nav2_behaviors::AssistedTeleop
+[behavior_server-12] [INFO] [1794736183.145244797] [behavior_server]: Configuring spin
+[behavior_server-12] [INFO] [1794736183.150232527] [behavior_server]: Configuring backup
+[behavior_server-12] [INFO] [1794736183.153491054] [behavior_server]: Configuring drive_on_heading
+[behavior_server-12] [INFO] [1794736183.157174471] [behavior_server]: Configuring wait
+[behavior_server-12] [INFO] [1794736183.160903699] [behavior_server]: Configuring assisted_teleop
+[lifecycle_manager-18] [INFO] [1794736183.165985529] [lifecycle_manager_navigation]: [34m[1mConfiguring velocity_smoother[0m[0m
+[velocity_smoother-15] [INFO] [1794736183.166140269] [velocity_smoother]: Configuring velocity smoother
+[lifecycle_manager-18] [INFO] [1794736183.169488816] [lifecycle_manager_navigation]: [34m[1mConfiguring collision_monitor[0m[0m
+[collision_monitor-16] [INFO] [1794736183.169622346] [collision_monitor]: Configuring
+[collision_monitor-16] [INFO] [1794736183.174164875] [collision_monitor]: [scan]: Creating Scan
+[collision_monitor-16] [INFO] [1794736183.175756349] [collision_monitor]: [PolygonStop]: Creating Polygon
+[collision_monitor-16] [INFO] [1794736183.175771899] [collision_monitor]: [PolygonStop]: Creating Circle
+[collision_monitor-16] [INFO] [1794736183.177518892] [collision_monitor]: [PolygonSlow]: Creating Polygon
+[collision_monitor-16] [INFO] [1794736183.178636465] [collision_monitor]: [FootprintApproach]: Creating Polygon
+[collision_monitor-16] [INFO] [1794736183.178780285] [collision_monitor]: [FootprintApproach]: Polygon points are not defined. Using dynamic subscription instead.
+[collision_monitor-16] [INFO] [1794736183.179045225] [collision_monitor]: [FootprintApproach]: Making footprint subscriber on /local_costmap/published_footprint topic
+[lifecycle_manager-18] [INFO] [1794736183.187687353] [lifecycle_manager_navigation]: [34m[1mConfiguring bt_navigator[0m[0m
+[bt_navigator-13] [INFO] [1794736183.187952814] [bt_navigator]: Configuring
+[bt_navigator-13] [INFO] [1794736183.193455675] [bt_navigator]: Creating navigator id navigate_to_pose of type nav2_bt_navigator::NavigateToPoseNavigator
+[bt_navigator-13] [WARN] [1794736183.196638871] [bt_navigator]: Error_code parameters were not set. Using default values of: follow_path_error_code compute_path_error_code
+[bt_navigator-13] Make sure these match your BT and there are not other sources of error codes youreported to your application
+[gazebo-1] [1;32m[Msg] [0m[1;32mServing entity system service on [[0m[1;32m/[0m[1;32mentity/system/add[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;36m[Dbg] [Physics.cc:1004] [0m[1;36mLoaded [[0m[1;36mgz::physics::dartsim::Plugin[0m[1;36m] from library [[0m[1;36m/opt/ros/jazzy/opt/gz_physics_vendor/lib/gz-physics-7/engine-plugins/libgz-physics-dartsim-plugin.so[0m[1;36m][0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SystemManager.cc:80] [0m[1;36mLoaded system [[0m[1;36mgz::sim::systems::Physics[0m[1;36m] for entity [[0m[1;36m1[0m[1;36m][0m[1;36m[0m
+[bt_navigator-13] [INFO] [1794736183.239979860] [bt_navigator]: Creating navigator id navigate_through_poses of type nav2_bt_navigator::NavigateThroughPosesNavigator
+[gazebo-1] [1;32m[Msg] [0m[1;32mCreate[0m[1;32m service on [[0m[1;32m/world/default/create_multiple[0m[1;32m] (async)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mCreate[0m[1;32m service on [[0m[1;32m/world/default/create_multiple/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mRemove[0m[1;32m service on [[0m[1;32m/world/default/remove[0m[1;32m] (async)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mRemove[0m[1;32m service on [[0m[1;32m/world/default/remove/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mPose[0m[1;32m service on [[0m[1;32m/world/default/set_pose[0m[1;32m] (async)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mPose[0m[1;32m service on [[0m[1;32m/world/default/set_pose/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mPose[0m[1;32m service on [[0m[1;32m/world/default/set_pose_vector[0m[1;32m] (async)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mPose[0m[1;32m service on [[0m[1;32m/world/default/set_pose_vector/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mLight configuration[0m[1;32m service on [[0m[1;32m/world/default/light_config[0m[1;32m] (async)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mLight configuration[0m[1;32m service on [[0m[1;32m/world/default/light_config/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mPhysics[0m[1;32m service on [[0m[1;32m/world/default/set_physics[0m[1;32m] (async)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mPhysics[0m[1;32m service on [[0m[1;32m/world/default/set_physics/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mSphericalCoordinates[0m[1;32m service on [[0m[1;32m/world/default/set_spherical_coordinates[0m[1;32m] (async)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mSphericalCoordinates[0m[1;32m service on [[0m[1;32m/world/default/set_spherical_coordinates/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mEnable collision[0m[1;32m service on [[0m[1;32m/world/default/enable_collision[0m[1;32m] (async)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mEnable collision[0m[1;32m service on [[0m[1;32m/world/default/enable_collision/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mDisable collision[0m[1;32m service on [[0m[1;32m/world/default/disable_collision[0m[1;32m] (async)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mDisable collision[0m[1;32m service on [[0m[1;32m/world/default/disable_collision/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mMaterial[0m[1;32m service on [[0m[1;32m/world/default/visual_config[0m[1;32m] (async)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mMaterial[0m[1;32m service on [[0m[1;32m/world/default/visual_config/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mMaterial[0m[1;32m service on [[0m[1;32m/world/default/wheel_slip[0m[1;32m] (async)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mMaterial[0m[1;32m service on [[0m[1;32m/world/default/wheel_slip/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gazebo-1] [1;36m[Dbg] [SystemManager.cc:80] [0m[1;36mLoaded system [[0m[1;36mgz::sim::systems::UserCommands[0m[1;36m] for entity [[0m[1;36m1[0m[1;36m][0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SystemManager.cc:80] [0m[1;36mLoaded system [[0m[1;36mgz::sim::systems::SceneBroadcaster[0m[1;36m] for entity [[0m[1;36m1[0m[1;36m][0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [Sensors.cc:697] [0m[1;36mConfiguring Sensors system[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [Sensors.cc:557] [0m[1;36mSensorsPrivate::Run[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SystemManager.cc:80] [0m[1;36mLoaded system [[0m[1;36mgz::sim::systems::Sensors[0m[1;36m] for entity [[0m[1;36m1[0m[1;36m][0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [Sensors.cc:532] [0m[1;36mSensorsPrivate::RenderThread started[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [Sensors.cc:337] [0m[1;36mWaiting for init[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SystemManager.cc:80] [0m[1;36mLoaded system [[0m[1;36mgz::sim::systems::Imu[0m[1;36m] for entity [[0m[1;36m1[0m[1;36m][0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SystemManager.cc:80] [0m[1;36mLoaded system [[0m[1;36mgz::sim::systems::Contact[0m[1;36m] for entity [[0m[1;36m1[0m[1;36m][0m[1;36m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mLoaded level [[0m[1;32mdefault[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;33m[Wrn] [Conversions.cc:735] [0m[1;33m<gui><camera> can't be converted yet[0m[1;33m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mServing world controls on [[0m[1;32m/world/default[0m[1;32m/control], [[0m[1;32m/world/default[0m[1;32m/control/state] and [[0m[1;32m/world/default[0m[1;32m/playback/control][0m[1;32m[0m
+[gazebo-1] [1;33m[Wrn] [Conversions.cc:735] [0m[1;33m<gui><camera> can't be converted yet[0m[1;33m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mServing GUI information on [[0m[1;32m/world/default[0m[1;32m/[0m[1;32mgui/info[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mWorld [[0m[1;32mdefault[0m[1;32m] initialized with [[0m[1;32mdefault_physics[0m[1;32m] physics profile.[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mServing world SDF generation service on [[0m[1;32m/world/default[0m[1;32m/[0m[1;32mgenerate_world_sdf[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mServing world names on [[0m[1;32m/gazebo/worlds[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mResource path add service on [[0m[1;32m/gazebo/resource_paths/add[0m[1;32m].[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mResource path get service on [[0m[1;32m/gazebo/resource_paths/get[0m[1;32m].[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mResource path resolve service on [[0m[1;32m/gazebo/resource_paths/resolve[0m[1;32m].[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mResource paths published on [[0m[1;32m/gazebo/resource_paths[0m[1;32m].[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mServer control service on [[0m[1;32m/server_control[0m[1;32m].[0m[1;32m[0m
+[lifecycle_manager-18] [INFO] [1794736183.254794769] [lifecycle_manager_navigation]: [34m[1mConfiguring waypoint_follower[0m[0m
+[waypoint_follower-14] [INFO] [1794736183.254940980] [waypoint_follower]: Configuring
+[waypoint_follower-14] [INFO] [1794736183.269331459] [waypoint_follower]: Created waypoint_task_executor : wait_at_waypoint of type nav2_waypoint_follower::WaitAtWaypoint
+[lifecycle_manager-18] [INFO] [1794736183.269764060] [lifecycle_manager_navigation]: [34m[1mConfiguring docking_server[0m[0m
+[opennav_docking-17] [INFO] [1794736183.269916760] [docking_server]: Configuring docking_server
+[opennav_docking-17] [INFO] [1794736183.269946421] [docking_server]: Controller frequency set to 50.0000Hz
+[opennav_docking-17] [INFO] [1794736183.287774087] [docking_server]: Created charging dock plugin nova_carter_dock of type opennav_docking::SimpleChargingDock
+[opennav_docking-17] [INFO] [1794736183.291104653] [docking_server]: Loading docks from parameter file.
+[opennav_docking-17] [INFO] [1794736183.291969295] [docking_server]: Docking Server has 1 dock types and 3 dock instances available.
+[lifecycle_manager-18] [INFO] [1794736183.292919117] [lifecycle_manager_navigation]: [34m[1mActivating controller_server[0m[0m
+[controller_server-8] [INFO] [1794736183.293017207] [controller_server]: Activating
+[controller_server-8] [INFO] [1794736183.293042487] [local_costmap.local_costmap]: Activating
+[controller_server-8] [INFO] [1794736183.293049957] [local_costmap.local_costmap]: Checking transform
+[controller_server-8] [INFO] [1794736183.293078158] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[parameter_bridge-2] [INFO] [1794736183.389007322] [ros_gz_bridge]: Creating GZ->ROS Bridge: [clock (gz.msgs.Clock) -> clock (rosgraph_msgs/msg/Clock)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1794736183.418927183] [ros_gz_bridge]: Creating GZ->ROS Bridge: [joint_states (gz.msgs.Model) -> joint_states (sensor_msgs/msg/JointState)] (Lazy 0)
+[create-4] [INFO] [1794736183.420783337] [ros_gz_sim]: Waiting messages on topic [robot_description].
+[parameter_bridge-2] [INFO] [1794736183.422828131] [ros_gz_bridge]: Creating GZ->ROS Bridge: [imu (gz.msgs.IMU) -> imu (sensor_msgs/msg/Imu)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1794736183.424471935] [ros_gz_bridge]: Creating GZ->ROS Bridge: [odom (gz.msgs.Odometry) -> odom (nav_msgs/msg/Odometry)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1794736183.426460899] [ros_gz_bridge]: Creating GZ->ROS Bridge: [odom_wheel (gz.msgs.Odometry) -> odom_wheel (nav_msgs/msg/Odometry)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1794736183.427429161] [ros_gz_bridge]: Creating GZ->ROS Bridge: [odom_truth (gz.msgs.Odometry) -> odom_truth (nav_msgs/msg/Odometry)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1794736183.428121362] [ros_gz_bridge]: Creating GZ->ROS Bridge: [tf (gz.msgs.Pose_V) -> tf (tf2_msgs/msg/TFMessage)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1794736183.430023916] [ros_gz_bridge]: Creating ROS->GZ Bridge: [cmd_vel (geometry_msgs/msg/Twist) -> cmd_vel (gz.msgs.Twist)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1794736183.431130778] [ros_gz_bridge]: Creating GZ->ROS Bridge: [scan (gz.msgs.LaserScan) -> scan (sensor_msgs/msg/LaserScan)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1794736183.431956590] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/world/default/model/oomwoo_one/link/base_footprint/sensor/bumper_left/contact (gz.msgs.Contacts) -> bumper_left/contact (ros_gz_interfaces/msg/Contacts)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1794736183.434002444] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/world/default/model/oomwoo_one/link/base_footprint/sensor/bumper_right/contact (gz.msgs.Contacts) -> bumper_right/contact (ros_gz_interfaces/msg/Contacts)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1794736183.434897886] [ros_gz_bridge]: Creating GZ->ROS Bridge: [range_left (gz.msgs.LaserScan) -> range_left (sensor_msgs/msg/LaserScan)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1794736183.435946248] [ros_gz_bridge]: Creating GZ->ROS Bridge: [range_right (gz.msgs.LaserScan) -> range_right (sensor_msgs/msg/LaserScan)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1794736183.437035120] [ros_gz_bridge]: Creating GZ->ROS Bridge: [tof_front/points (gz.msgs.PointCloudPacked) -> tof_front/points (sensor_msgs/msg/PointCloud2)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1794736183.437969892] [ros_gz_bridge]: Creating GZ->ROS Bridge: [camera/image (gz.msgs.Image) -> camera/image (sensor_msgs/msg/Image)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1794736183.438965534] [ros_gz_bridge]: Creating GZ->ROS Bridge: [camera/camera_info (gz.msgs.CameraInfo) -> camera/camera_info (sensor_msgs/msg/CameraInfo)] (Lazy 0)
+[create-4] [INFO] [1794736183.505226109] [ros_gz_sim]: Entity creation successful.
+[INFO] [create-4]: process has finished cleanly [pid 21371]
+[controller_server-8] [INFO] [1794736183.793137324] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[controller_server-8] [INFO] [1794736184.293095249] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[gazebo-1] [1;32m[Msg] [0m[1;32mFound no publishers on /stats, adding root stats topic[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mFound no publishers on /clock, adding root clock topic[0m[1;32m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:627] [0m[1;36mCreating PostUpdate worker threads: [0m[1;36m5[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:638] [0m[1;36mCreating postupdate worker thread ([0m[1;36m0[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:638] [0m[1;36mCreating postupdate worker thread ([0m[1;36m1[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:638] [0m[1;36mCreating postupdate worker thread ([0m[1;36m2[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:638] [0m[1;36mCreating postupdate worker thread ([0m[1;36m3[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;33mWarning [Utils.cc:132][0m [/sdf/model[@name="oomwoo_one"]/link[@name="base_footprint"]/sensor[@name="laser_scan_sensor"]/gz_frame_id:<urdf-string>:L0]: XML Element[gz_frame_id], child of element[sensor], not defined in SDF. Copying[gz_frame_id] as children of [sensor].
+[gazebo-1] [1;32m[Msg] [0m[1;32mDiffDrive subscribing to twist messages on [[0m[1;32mcmd_vel[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;36m[Dbg] [SystemManager.cc:80] [0m[1;36mLoaded system [[0m[1;36mgz::sim::systems::DiffDrive[0m[1;36m] for entity [[0m[1;36m157[0m[1;36m][0m[1;36m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mOdometryPublisher publishing odometry on [[0m[1;32m/odom[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mOdometryPublisher publishing odometry with covariance on [[0m[1;32m/model/oomwoo_one/odometry_with_covariance[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mOdometryPublisher publishing Pose_V (TF) on [[0m[1;32m/tf[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;36m[Dbg] [SystemManager.cc:80] [0m[1;36mLoaded system [[0m[1;36mgz::sim::systems::OdometryPublisher[0m[1;36m] for entity [[0m[1;36m157[0m[1;36m][0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SystemManager.cc:80] [0m[1;36mLoaded system [[0m[1;36mgz::sim::systems::JointStatePublisher[0m[1;36m] for entity [[0m[1;36m157[0m[1;36m][0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SystemManager.cc:80] [0m[1;36mLoaded system [[0m[1;36mgz::sim::systems::Contact[0m[1;36m] for entity [[0m[1;36m157[0m[1;36m][0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [UserCommands.cc:1093] [0m[1;36mCreated entity [[0m[1;36m157[0m[1;36m] named [[0m[1;36moomwoo_one[0m[1;36m][0m[1;36m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mContact system publishing on [0m[1;32mworld/default/model/oomwoo_one/link/base_footprint/sensor/bumper_left/contact[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mContact system publishing on [0m[1;32mworld/default/model/oomwoo_one/link/base_footprint/sensor/bumper_right/contact[0m[1;32m[0m
+[gazebo-1] [1;36m[Dbg] [SDFFeatures.cc:333] [0m[1;36mMesh construction from an SDF has not been implemented yet for [0m[1;36mdartsim. Use AttachMeshShapeFeature to use mesh shapes.[0m
+[gazebo-1] [1;36m[Dbg] [SDFFeatures.cc:865] [0m[1;36mThe geometry element of collision [[0m[1;36mcollision[0m[1;36m] [0m[1;36mcouldn't be created[0m
+[gazebo-1] [1;36m[Dbg] [SDFFeatures.cc:333] [0m[1;36mMesh construction from an SDF has not been implemented yet for [0m[1;36mdartsim. Use AttachMeshShapeFeature to use mesh shapes.[0m
+[gazebo-1] [1;36m[Dbg] [SDFFeatures.cc:865] [0m[1;36mThe geometry element of collision [[0m[1;36mcollision_0[0m[1;36m] [0m[1;36mcouldn't be created[0m
+[gazebo-1] [1;36m[Dbg] [SDFFeatures.cc:333] [0m[1;36mMesh construction from an SDF has not been implemented yet for [0m[1;36mdartsim. Use AttachMeshShapeFeature to use mesh shapes.[0m
+[gazebo-1] [1;36m[Dbg] [SDFFeatures.cc:865] [0m[1;36mThe geometry element of collision [[0m[1;36mcollision[0m[1;36m] [0m[1;36mcouldn't be created[0m
+[gazebo-1] [1;36m[Dbg] [SDFFeatures.cc:333] [0m[1;36mMesh construction from an SDF has not been implemented yet for [0m[1;36mdartsim. Use AttachMeshShapeFeature to use mesh shapes.[0m
+[gazebo-1] [1;36m[Dbg] [SDFFeatures.cc:865] [0m[1;36mThe geometry element of collision [[0m[1;36mcollision[0m[1;36m] [0m[1;36mcouldn't be created[0m
+[gazebo-1] [1;36m[Dbg] [SDFFeatures.cc:333] [0m[1;36mMesh construction from an SDF has not been implemented yet for [0m[1;36mdartsim. Use AttachMeshShapeFeature to use mesh shapes.[0m
+[gazebo-1] [1;36m[Dbg] [SDFFeatures.cc:865] [0m[1;36mThe geometry element of collision [[0m[1;36mcollision[0m[1;36m] [0m[1;36mcouldn't be created[0m
+[gazebo-1] [1;36m[Dbg] [SDFFeatures.cc:333] [0m[1;36mMesh construction from an SDF has not been implemented yet for [0m[1;36mdartsim. Use AttachMeshShapeFeature to use mesh shapes.[0m
+[gazebo-1] [1;36m[Dbg] [SDFFeatures.cc:865] [0m[1;36mThe geometry element of collision [[0m[1;36mcollision[0m[1;36m] [0m[1;36mcouldn't be created[0m
+[gazebo-1] [1;36m[Dbg] [SDFFeatures.cc:333] [0m[1;36mMesh construction from an SDF has not been implemented yet for [0m[1;36mdartsim. Use AttachMeshShapeFeature to use mesh shapes.[0m
+[gazebo-1] [1;36m[Dbg] [SDFFeatures.cc:865] [0m[1;36mThe geometry element of collision [[0m[1;36mcollision[0m[1;36m] [0m[1;36mcouldn't be created[0m
+[gazebo-1] [1;36m[Dbg] [SDFFeatures.cc:333] [0m[1;36mMesh construction from an SDF has not been implemented yet for [0m[1;36mdartsim. Use AttachMeshShapeFeature to use mesh shapes.[0m
+[gazebo-1] [1;36m[Dbg] [SDFFeatures.cc:865] [0m[1;36mThe geometry element of collision [[0m[1;36mcollision[0m[1;36m] [0m[1;36mcouldn't be created[0m
+[gazebo-1] [1;36m[Dbg] [SDFFeatures.cc:333] [0m[1;36mMesh construction from an SDF has not been implemented yet for [0m[1;36mdartsim. Use AttachMeshShapeFeature to use mesh shapes.[0m
+[gazebo-1] [1;36m[Dbg] [SDFFeatures.cc:865] [0m[1;36mThe geometry element of collision [[0m[1;36mcollision[0m[1;36m] [0m[1;36mcouldn't be created[0m
+[gazebo-1] [1;33m[Wrn] [OBJLoader.cc:91] [0m[1;33mBoth `d` and `Tr` parameters defined for "Chair". Use the value of `d` for dissolve (line 8 in .mtl.)[0m
+[gazebo-1] [1;33m[0m
+[gazebo-1] [1;36m[Dbg] [Sensors.cc:953] [0m[1;36mInitialization needed[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [Sensors.cc:349] [0m[1;36mInitializing render context[0m[1;36m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mLoading plugin [[0m[1;32mgz-rendering-ogre2[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mServing scene information on [[0m[1;32m/world/default[0m[1;32m/[0m[1;32mscene/info[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mServing graph information on [[0m[1;32m/world/default[0m[1;32m/[0m[1;32mscene/graph[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mServing full state on [[0m[1;32m/world/default[0m[1;32m/[0m[1;32mstate[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mServing full state (async) on [[0m[1;32m/world/default[0m[1;32m/[0m[1;32mstate_async[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mPublishing scene information on [[0m[1;32m/world/default/scene/info[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mPublishing entity deletions on [[0m[1;32m/world/default/scene/deletion[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mPublishing state changes on [[0m[1;32m/world/default/state[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mPublishing pose messages on [[0m[1;32m/world/default[0m[1;32m/[0m[1;32mpose/info[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mPublishing dynamic pose messages on [[0m[1;32m/world/default[0m[1;32m/[0m[1;32mdynamic_pose/info[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:654] [0m[1;36mExiting postupdate worker thread ([0m[1;36m0[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:654] [0m[1;36mExiting postupdate worker thread ([0m[1;36m2[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36mExiting postupdate worker thread ([0m[1;36m3[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36mExiting postupdate worker thread ([0m[1;36m1[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:627] [0m[1;36mCreating PostUpdate worker threads: [0m[1;36m9[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:638] [0m[1;36mCreating postupdate worker thread ([0m[1;36m0[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:638] [0m[1;36mCreating postupdate worker thread ([0m[1;36m1[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:638] [0m[1;36mCreating postupdate worker thread ([0m[1;36m2[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:638] [0m[1;36mCreating postupdate worker thread ([0m[1;36m3[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:638] [0m[1;36mCreating postupdate worker thread ([0m[1;36m4[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:638] [0m[1;36mCreating postupdate worker thread ([0m[1;36m5[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:638] [0m[1;36mCreating postupdate worker thread ([0m[1;36m6[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:638] [0m[1;36mCreating postupdate worker thread ([0m[1;36m7[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [RenderUtil.cc:2646] [0m[1;36mCreate scene [[0m[1;36mscene[0m[1;36m][0m[1;36m[0m
+[controller_server-8] [INFO] [1794736184.793127881] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[gazebo-1] [1;36m[Dbg] [Sensors.cc:391] [0m[1;36mRendering Thread initialized[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [Sensors.cc:953] [0m[1;36mInitialization needed[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [Lidar.cc:139] [0m[1;36mLaser scans for [[0m[1;36moomwoo_one::base_footprint::laser_scan_sensor[0m[1;36m] advertised on [[0m[1;36mscan[0m[1;36m][0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [GpuLidarSensor.cc:164] [0m[1;36mLidar points for [[0m[1;36moomwoo_one::base_footprint::laser_scan_sensor[0m[1;36m] advertised on [[0m[1;36mscan/points[0m[1;36m][0m[1;36m[0m
+[topic_heartbeat-23] [WARN] [1794736185.219692582] [topic_heartbeat]: drive_supervision: no heartbeat, robot moving or not yet settled with a zero or unknown setpoint
+[controller_server-8] [INFO] [1794736185.293206871] [local_costmap.local_costmap]: start
+[controller_server-8] [INFO] [1794736185.494166326] [controller_server]: Activating controller: FollowPath of type regulated_pure_pursuit_controller::RegulatedPurePursuitController
+[controller_server-8] [INFO] [1794736185.494198516] [controller_server]: Creating bond (controller_server) to lifecycle manager.
+[lifecycle_manager-18] [INFO] [1794736186.498834495] [lifecycle_manager_navigation]: Server controller_server connected with bond.
+[lifecycle_manager-18] [INFO] [1794736186.498869345] [lifecycle_manager_navigation]: [34m[1mActivating smoother_server[0m[0m
+[smoother_server-9] [INFO] [1794736186.499093676] [smoother_server]: Activating
+[smoother_server-9] [INFO] [1794736186.499116936] [smoother_server]: Creating bond (smoother_server) to lifecycle manager.
+[amcl-6] [INFO] [1794736186.698177275] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736186.698227615] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[initialpose_pub-19] [WARN] [1794736186.716730572] [initialpose_pub]: AMCL not localized after 1.0s; re-seeding /initialpose (1)
+[amcl-6] [INFO] [1794736187.198177406] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736187.198204826] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[lifecycle_manager-18] [INFO] [1794736187.503117055] [lifecycle_manager_navigation]: Server smoother_server connected with bond.
+[lifecycle_manager-18] [INFO] [1794736187.503141625] [lifecycle_manager_navigation]: [34m[1mActivating planner_server[0m[0m
+[planner_server-10] [INFO] [1794736187.503336766] [planner_server]: Activating
+[planner_server-10] [INFO] [1794736187.503363306] [global_costmap.global_costmap]: Activating
+[planner_server-10] [INFO] [1794736187.503371326] [global_costmap.global_costmap]: Checking transform
+[planner_server-10] [INFO] [1794736187.503398676] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736187.698206115] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736187.698240755] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736188.003458454] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736188.198137911] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736188.198172991] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736188.503445108] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736188.698063175] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736188.698095485] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736189.003449751] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736189.198197947] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736189.198230767] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736189.503446411] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736189.698149706] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736189.698183766] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736190.003446590] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736190.198066683] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736190.198103383] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736190.503448064] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736190.704884861] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736190.704916511] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736191.003443489] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736191.204750343] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736191.204784073] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[initialpose_pub-19] [WARN] [1794736191.205123024] [initialpose_pub]: AMCL not localized after 5.5s; re-seeding /initialpose (10)
+[planner_server-10] [INFO] [1794736191.503445729] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736191.704681023] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736191.704709793] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736192.003445409] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736192.204709561] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736192.205133772] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736192.503444114] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736192.704666717] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736192.704702867] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736193.003444449] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736193.204711890] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736193.204738900] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736193.503445460] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736193.704751541] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736193.704784501] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736194.003444671] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736194.204885890] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736194.204911840] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736194.503447057] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736194.704850997] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736194.704882617] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736195.003443974] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736195.204742481] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736195.204777861] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736195.503443575] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736195.704838703] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736195.704870473] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736196.003444867] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736196.205216383] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736196.205249503] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[initialpose_pub-19] [WARN] [1794736196.205301313] [initialpose_pub]: AMCL not localized after 10.5s; re-seeding /initialpose (20)
+[planner_server-10] [INFO] [1794736196.503443594] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736196.704702589] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736196.704728909] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736197.003444971] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736197.204816685] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736197.204843935] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736197.503443934] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736197.704799397] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736197.704828937] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736198.003445446] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736198.204779218] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736198.204812538] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736198.503446784] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736198.704712996] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736198.704741166] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736199.003445663] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736199.204732182] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736199.204763562] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736199.503443066] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736199.704667806] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736199.705105817] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736200.003444210] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736200.204704858] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736200.204737428] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736200.503442959] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736200.704789157] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736200.704825487] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736201.003448458] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736201.204860974] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736201.204891264] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[initialpose_pub-19] [WARN] [1794736201.205250285] [initialpose_pub]: AMCL not localized after 15.5s; re-seeding /initialpose (30)
+[planner_server-10] [INFO] [1794736201.503448833] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736201.704842349] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736201.704874619] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736202.003448107] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736202.223229326] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736202.223261636] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736202.503449177] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736202.822018990] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736202.822052070] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736203.003445587] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736203.322032527] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736203.322069537] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736203.503415233] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736203.822065003] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736203.822121663] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736204.003447808] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736204.322080715] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736204.322113116] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736204.503447459] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736204.822133207] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736204.822508047] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736205.003446581] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736205.322113235] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736205.322151275] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736205.503445867] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736205.822525672] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736205.822554162] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736206.003444194] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736206.322067325] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736206.322102975] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[initialpose_pub-19] [WARN] [1794736206.322563446] [initialpose_pub]: AMCL not localized after 20.5s; re-seeding /initialpose (40)
+[planner_server-10] [INFO] [1794736206.503446226] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736206.822024498] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736206.822057898] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736207.003447328] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736207.322120607] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736207.322156287] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736207.503446136] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736207.822155455] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736207.822184505] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736208.003444074] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736208.322042660] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736208.322177960] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736208.503445157] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736208.822177963] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736208.822211083] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736209.003443581] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736209.322027534] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736209.322070854] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736209.503446230] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736209.822117693] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736209.822152913] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736210.003446669] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736210.322080129] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736210.322111479] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736210.503444843] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736210.822205324] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736210.822239404] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736211.003444368] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736211.322015825] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736211.322050405] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[initialpose_pub-19] [WARN] [1794736211.322498546] [initialpose_pub]: AMCL not localized after 25.5s; re-seeding /initialpose (50)
+[planner_server-10] [INFO] [1794736211.503444848] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736211.822101705] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736211.822138305] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736212.003445168] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736212.322376893] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736212.322408463] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736212.503446564] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736212.822261658] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736212.822295528] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736213.003445579] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736213.322391831] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736213.322420721] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736213.503447581] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736213.822216353] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736213.822242423] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736214.003446192] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736214.322093441] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736214.322126971] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736214.503445589] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736214.822041068] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736214.822068838] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736215.003445346] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736215.322287792] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736215.322698153] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736215.503445808] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736215.822398705] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736215.822431525] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736216.003444641] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736216.322094534] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736216.322130444] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[initialpose_pub-19] [WARN] [1794736216.322612605] [initialpose_pub]: AMCL not localized after 30.5s; re-seeding /initialpose (60)
+[planner_server-10] [INFO] [1794736216.503444219] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736216.822426133] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736216.822458153] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736217.003445227] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736217.322414468] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736217.322442468] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736217.503444511] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736217.822359862] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736217.822406032] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736218.003446395] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736218.322355703] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736218.322384603] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736218.503444634] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736218.822066542] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736218.822099162] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736219.003444804] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736219.322118619] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736219.322150459] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736219.503445569] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736219.822218184] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736219.822503915] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736220.003444584] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736220.322691107] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736220.322723507] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736220.503445475] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736220.822402428] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736220.822432708] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736221.003446686] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736221.322162175] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736221.322192325] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[initialpose_pub-19] [WARN] [1794736221.323011657] [initialpose_pub]: AMCL not localized after 35.5s; re-seeding /initialpose (70)
+[planner_server-10] [INFO] [1794736221.503444443] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736221.822028742] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736221.822057222] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736222.003445349] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736222.322078296] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736222.322137056] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736222.503445741] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736222.822050788] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736222.822083038] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736223.003445443] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736223.322413638] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736223.322444858] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736223.503444221] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736223.822080885] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736223.822127725] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736224.003446169] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736224.322166750] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736224.322200760] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736224.503444433] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736224.822132564] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736224.822298034] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736225.003411596] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736225.322137575] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736225.322173365] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736225.503445995] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736225.822092454] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736225.822125024] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736226.003445325] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[initialpose_pub-19] [WARN] [1794736226.322553111] [initialpose_pub]: AMCL not localized after 40.5s; re-seeding /initialpose (80)
+[amcl-6] [INFO] [1794736226.322570021] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736226.322593511] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736226.503444960] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736226.822527466] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736226.822558246] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736227.003444285] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736227.322236368] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736227.322266988] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736227.503450166] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736227.822349499] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736227.822381289] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736228.003445776] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736228.322024376] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736228.322057556] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736228.503444993] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736228.822076983] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736228.822107013] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736229.003446249] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736229.322109367] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736229.322141797] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736229.503446351] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736229.822181489] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736229.822218739] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736230.003445174] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736230.322117759] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736230.322144529] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736230.503445392] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736230.822063386] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736230.822092846] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736231.003443759] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736231.322187082] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736231.322218882] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[initialpose_pub-19] [WARN] [1794736231.322502952] [initialpose_pub]: AMCL not localized after 45.5s; re-seeding /initialpose (90)
+[planner_server-10] [INFO] [1794736231.503439383] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736231.822321946] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736231.822351036] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736232.003444476] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736232.322143576] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736232.322181387] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736232.503444866] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736232.822238706] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736232.822270576] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736233.003445016] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736233.322250703] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736233.322280083] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736233.503444451] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736233.822297228] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736233.822325228] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736234.003446086] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736234.322049060] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736234.322079660] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736234.503444557] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736234.822080821] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736234.822113801] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736235.003445278] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736235.322171330] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736235.322203300] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736235.503444295] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736235.822021076] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736235.822205076] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736236.003445192] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736236.322116351] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736236.322158611] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[initialpose_pub-19] [WARN] [1794736236.322557381] [initialpose_pub]: AMCL not localized after 50.5s; re-seeding /initialpose (100)
+[planner_server-10] [INFO] [1794736236.503444894] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736236.822181783] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736236.822214753] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736237.003444277] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736237.322122663] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736237.322159813] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736237.503444296] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736237.822068962] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736237.822102332] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736238.003445454] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736238.322371908] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736238.322402958] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736238.503444829] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736238.822053462] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736238.822089462] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736239.003444973] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736239.322069133] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736239.322100704] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736239.503444723] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736239.822137914] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736239.822174584] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736240.003444233] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736240.322341632] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736240.322370962] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736240.503446819] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736240.822576048] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736240.822607418] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736241.003445375] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736241.322073910] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736241.322104590] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[initialpose_pub-19] [WARN] [1794736241.322512351] [initialpose_pub]: AMCL not localized after 55.5s; re-seeding /initialpose (110)
+[planner_server-10] [INFO] [1794736241.503443627] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736241.822211232] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736241.822245352] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736242.003446949] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736242.322063181] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736242.322091962] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736242.503446236] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736242.822009349] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736242.822041739] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736243.003404204] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736243.322080644] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736243.322106764] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736243.503448987] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736243.822028007] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736243.822061417] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736244.003445651] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736244.322124078] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736244.322177938] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736244.503444801] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736244.822217748] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736244.822308668] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736245.003445980] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[amcl-6] [INFO] [1794736245.322250455] [amcl]: initialPoseReceived
+[amcl-6] [WARN] [1794736245.322280275] [amcl]: Received initial pose request, but AMCL is not yet in the active state
+[planner_server-10] [INFO] [1794736245.503446365] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[initialpose_pub-19] [ERROR] [1794736245.822560911] [initialpose_pub]: AMCL not localized after 60.0s (no /amcl_pose) — releasing navigation anyway; check that amcl is up and receiving /scan
+[INFO] [initialpose_pub-19]: process has finished cleanly [pid 21387]
+[planner_server-10] [INFO] [1794736246.003445000] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[planner_server-10] [INFO] [1794736246.503444091] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[planner_server-10] [INFO] [1794736247.003445652] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[planner_server-10] [INFO] [1794736247.503444850] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[planner_server-10] [INFO] [1794736248.003445567] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist
+[planner_server-10] [ERROR] [1794736248.003479357] [global_costmap.global_costmap]: Failed to activate global_costmap because transform from base_link to map did not become available before timeout
+[lifecycle_manager-18] [ERROR] [1794736248.003994527] [lifecycle_manager_navigation]: Failed to change state for node: planner_server
+[lifecycle_manager-18] [ERROR] [1794736248.004068518] [lifecycle_manager_navigation]: Failed to bring up all requested nodes. Aborting bringup.
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[velocity_smoother-15] [INFO] [1794736429.440015307] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[velocity_smoother-15] [INFO] [1794736429.440104777] [velocity_smoother]: Running Nav2 LifecycleNode rcl preshutdown (velocity_smoother)
+[waypoint_follower-14] [INFO] [1794736429.440016047] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[waypoint_follower-14] [INFO] [1794736429.440111317] [waypoint_follower]: Running Nav2 LifecycleNode rcl preshutdown (waypoint_follower)
+[behavior_server-12] [INFO] [1794736429.440020387] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[lifecycle_manager-18] [INFO] [1794736429.440010247] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[lifecycle_manager-18] [INFO] [1794736429.440095767] [lifecycle_manager_navigation]: Running Nav2 LifecycleManager rcl preshutdown (lifecycle_manager_navigation)
+[lifecycle_manager-7] [INFO] [1794736429.440040547] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[lifecycle_manager-7] [INFO] [1794736429.440095537] [lifecycle_manager_localization]: Running Nav2 LifecycleManager rcl preshutdown (lifecycle_manager_localization)
+[INFO] [topic_heartbeat-23]: sending signal 'SIGINT' to process[topic_heartbeat-23]
+[INFO] [job_roster-22]: sending signal 'SIGINT' to process[job_roster-22]
+[INFO] [mcu_standin_node-21]: sending signal 'SIGINT' to process[mcu_standin_node-21]
+[INFO] [health_monitor_node-20]: sending signal 'SIGINT' to process[health_monitor_node-20]
+[INFO] [lifecycle_manager-18]: sending signal 'SIGINT' to process[lifecycle_manager-18]
+[INFO] [opennav_docking-17]: sending signal 'SIGINT' to process[opennav_docking-17]
+[INFO] [collision_monitor-16]: sending signal 'SIGINT' to process[collision_monitor-16]
+[INFO] [velocity_smoother-15]: sending signal 'SIGINT' to process[velocity_smoother-15]
+[INFO] [waypoint_follower-14]: sending signal 'SIGINT' to process[waypoint_follower-14]
+[INFO] [bt_navigator-13]: sending signal 'SIGINT' to process[bt_navigator-13]
+[INFO] [behavior_server-12]: sending signal 'SIGINT' to process[behavior_server-12]
+[INFO] [route_server-11]: sending signal 'SIGINT' to process[route_server-11]
+[ERROR] [velocity_smoother-15]: process has died [pid 21383, exit code -2, cmd '/opt/ros/jazzy/lib/nav2_velocity_smoother/velocity_smoother --ros-args --log-level info --ros-args -r __node:=velocity_smoother -p use_sim_time:=True --params-file /tmp/launch_params_f0a_mpq2 -r /tf:=tf -r /tf_static:=tf_static -r cmd_vel:=cmd_vel_nav'].
+[INFO] [planner_server-10]: sending signal 'SIGINT' to process[planner_server-10]
+[INFO] [smoother_server-9]: sending signal 'SIGINT' to process[smoother_server-9]
+[INFO] [controller_server-8]: sending signal 'SIGINT' to process[controller_server-8]
+[INFO] [lifecycle_manager-7]: sending signal 'SIGINT' to process[lifecycle_manager-7]
+[INFO] [amcl-6]: sending signal 'SIGINT' to process[amcl-6]
+[INFO] [map_server-5]: sending signal 'SIGINT' to process[map_server-5]
+[INFO] [robot_state_publisher-3]: sending signal 'SIGINT' to process[robot_state_publisher-3]
+[INFO] [parameter_bridge-2]: sending signal 'SIGINT' to process[parameter_bridge-2]
+[INFO] [gazebo-1]: sending signal 'SIGINT' to process[gazebo-1]
+[ERROR] [amcl-6]: process has died [pid 21374, exit code -2, cmd '/opt/ros/jazzy/lib/nav2_amcl/amcl --ros-args --log-level info --ros-args -r __node:=amcl -p use_sim_time:=True --params-file /tmp/launch_params_z8y21jw9 -r /tf:=tf -r /tf_static:=tf_static'].
+[bt_navigator-13] [INFO] [1794736429.440049647] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[bt_navigator-13] [INFO] [1794736429.440104637] [bt_navigator]: Running Nav2 LifecycleNode rcl preshutdown (bt_navigator)
+[bt_navigator-13] [INFO] [1794736429.440154877] [bt_navigator]: Cleaning up
+[ERROR] [map_server-5]: process has died [pid 21372, exit code -2, cmd '/opt/ros/jazzy/lib/nav2_map_server/map_server --ros-args --log-level info --ros-args -r __node:=map_server -p use_sim_time:=True --params-file /tmp/launch_params_z8y21jw9 --params-file /tmp/launch_params_viomv1i7 -r /tf:=tf -r /tf_static:=tf_static'].
+[velocity_smoother-15] [INFO] [1794736429.440152477] [velocity_smoother]: Cleaning up
+[velocity_smoother-15] [INFO] [1794736429.440171777] [velocity_smoother]: Destroying bond (velocity_smoother) to lifecycle manager.
+[waypoint_follower-14] [INFO] [1794736429.440155307] [waypoint_follower]: Cleaning up
+[behavior_server-12] [INFO] [1794736429.440335247] [behavior_server]: Running Nav2 LifecycleNode rcl preshutdown (behavior_server)
+[behavior_server-12] [INFO] [1794736429.440368427] [behavior_server]: Cleaning up
+[parameter_bridge-2] [INFO] [1794736429.440132807] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[amcl-6] [INFO] [1794736429.440136047] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[amcl-6] [INFO] [1794736429.440191557] [amcl]: Running Nav2 LifecycleNode rcl preshutdown (amcl)
+[amcl-6] [INFO] [1794736429.440225647] [amcl]: Cleaning up
+[gazebo-1] [1;36m[Dbg] [SignalHandler.cc:142] [0m[1;36mReceived signal[[0m[1;36m2[0m[1;36m].[0m
+[gazebo-1] [1;36m[Dbg] [ServerPrivate.cc:122] [0m[1;36mServer received signal[[0m[1;36m2[0m[1;36m][0m
+[gazebo-1] [1;36m[Dbg] [Sensors.cc:565] [0m[1;36mSensorsPrivate::Stop[0m[1;36m[0m
+[robot_state_publisher-3] [INFO] [1794736429.440279497] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[controller_server-8] [INFO] [1794736429.440298737] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[controller_server-8] [INFO] [1794736429.440348497] [controller_server]: Running Nav2 LifecycleNode rcl preshutdown (controller_server)
+[controller_server-8] [INFO] [1794736429.440385977] [controller_server]: Deactivating
+[controller_server-8] [INFO] [1794736429.440398857] [controller_server]: Deactivating controller: FollowPath of type regulated_pure_pursuit_controller::RegulatedPurePursuitController
+[controller_server-8] [INFO] [1794736429.440413077] [local_costmap.local_costmap]: Deactivating
+[planner_server-10] [INFO] [1794736429.440303717] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[planner_server-10] [INFO] [1794736429.440354837] [planner_server]: Running Nav2 LifecycleNode rcl preshutdown (planner_server)
+[planner_server-10] [INFO] [1794736429.440388977] [planner_server]: Cleaning up
+[route_server-11] [INFO] [1794736429.440302067] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[route_server-11] [INFO] [1794736429.440364097] [route_server]: Running Nav2 LifecycleNode rcl preshutdown (route_server)
+[route_server-11] [INFO] [1794736429.440400707] [route_server]: Cleaning up
+[collision_monitor-16] [INFO] [1794736429.440376207] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[collision_monitor-16] [INFO] [1794736429.440438097] [collision_monitor]: Running Nav2 LifecycleNode rcl preshutdown (collision_monitor)
+[collision_monitor-16] [INFO] [1794736429.440473067] [collision_monitor]: Cleaning up
+[collision_monitor-16] [INFO] [1794736429.440489697] [collision_monitor]: [PolygonStop]: Destroying Circle
+[collision_monitor-16] [INFO] [1794736429.440495607] [collision_monitor]: [PolygonStop]: Destroying Polygon
+[collision_monitor-16] [INFO] [1794736429.440502487] [collision_monitor]: [PolygonSlow]: Destroying Polygon
+[collision_monitor-16] [INFO] [1794736429.440509567] [collision_monitor]: [FootprintApproach]: Destroying Polygon
+[collision_monitor-16] [INFO] [1794736429.440517667] [collision_monitor]: [scan]: Destroying Scan
+[smoother_server-9] [INFO] [1794736429.440415897] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[smoother_server-9] [INFO] [1794736429.440461017] [smoother_server]: Running Nav2 LifecycleNode rcl preshutdown (smoother_server)
+[smoother_server-9] [INFO] [1794736429.440495677] [smoother_server]: Deactivating
+[smoother_server-9] [INFO] [1794736429.440510247] [smoother_server]: Destroying bond (smoother_server) to lifecycle manager.
+[map_server-5] [INFO] [1794736429.440644667] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[map_server-5] [INFO] [1794736429.440710447] [map_server]: Running Nav2 LifecycleNode rcl preshutdown (map_server)
+[map_server-5] [INFO] [1794736429.440746057] [map_server]: Cleaning up
+[map_server-5] [INFO] [1794736429.440766407] [map_server]: Destroying bond (map_server) to lifecycle manager.
+[opennav_docking-17] [INFO] [1794736429.440007557] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[opennav_docking-17] [INFO] [1794736429.441084747] [docking_server]: Running Nav2 LifecycleNode rcl preshutdown (docking_server)
+[opennav_docking-17] [INFO] [1794736429.441117907] [docking_server]: Cleaning up docking_server
+[behavior_server-12] [INFO] [1794736429.448130178] [behavior_server]: Destroying bond (behavior_server) to lifecycle manager.
+[smoother_server-9] [INFO] [1794736429.450702229] [smoother_server]: Cleaning up
+[collision_monitor-16] [INFO] [1794736429.452175170] [collision_monitor]: Destroying bond (collision_monitor) to lifecycle manager.
+[topic_heartbeat-23] Traceback (most recent call last):
+[topic_heartbeat-23]   File "/ws/install/oomwoo_health_kit/lib/oomwoo_health_kit/topic_heartbeat", line 33, in <module>
+[topic_heartbeat-23]     sys.exit(load_entry_point('oomwoo-health-kit==0.0.1', 'console_scripts', 'topic_heartbeat')())
+[topic_heartbeat-23]              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[topic_heartbeat-23]   File "/ws/install/oomwoo_health_kit/lib/python3.12/site-packages/oomwoo_health_kit/topic_heartbeat_node.py", line 290, in main
+[topic_heartbeat-23]     node.destroy_node()
+[topic_heartbeat-23]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py", line 1956, in destroy_node
+[topic_heartbeat-23]     self.destroy_publisher(self._publishers[0])
+[topic_heartbeat-23]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py", line 1836, in destroy_publisher
+[topic_heartbeat-23]     publisher.destroy()
+[topic_heartbeat-23]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/publisher.py", line 105, in destroy
+[topic_heartbeat-23]     self.__publisher.destroy_when_not_in_use()
+[topic_heartbeat-23] KeyboardInterrupt
+[amcl-6] [INFO] [1794736429.455085820] [amcl]: Destroying bond (amcl) to lifecycle manager.
+[job_roster-22] Traceback (most recent call last):
+[job_roster-22]   File "/ws/install/oomwoo_health_kit/lib/oomwoo_health_kit/job_roster", line 33, in <module>
+[job_roster-22]     sys.exit(load_entry_point('oomwoo-health-kit==0.0.1', 'console_scripts', 'job_roster')())
+[job_roster-22]              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[job_roster-22]   File "/ws/install/oomwoo_health_kit/lib/python3.12/site-packages/oomwoo_health_kit/job_roster_node.py", line 131, in main
+[job_roster-22]     node.destroy_node()
+[job_roster-22]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py", line 1962, in destroy_node
+[job_roster-22]     self.destroy_service(self._services[0])
+[job_roster-22]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py", line 1886, in destroy_service
+[job_roster-22]     service.destroy()
+[job_roster-22]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/service.py", line 123, in destroy
+[job_roster-22]     self.__service.destroy_when_not_in_use()
+[job_roster-22] KeyboardInterrupt
+[map_server-5] [INFO] [1794736429.456839570] [map_server]: Destroying
+[health_monitor_node-20] Traceback (most recent call last):
+[health_monitor_node-20]   File "/ws/install/oomwoo_health_monitor/lib/oomwoo_health_monitor/health_monitor_node", line 33, in <module>
+[health_monitor_node-20]     sys.exit(load_entry_point('oomwoo-health-monitor==0.1.0', 'console_scripts', 'health_monitor_node')())
+[health_monitor_node-20]              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[health_monitor_node-20]   File "/ws/install/oomwoo_health_monitor/lib/python3.12/site-packages/oomwoo_health_monitor/health_monitor_node.py", line 137, in main
+[health_monitor_node-20]     node.destroy_node()
+[health_monitor_node-20]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py", line 1958, in destroy_node
+[health_monitor_node-20]     self.destroy_subscription(self._subscriptions[0])
+[health_monitor_node-20]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py", line 1854, in destroy_subscription
+[health_monitor_node-20]     subscription.destroy()
+[health_monitor_node-20]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/subscription.py", line 101, in destroy
+[health_monitor_node-20]     self.handle.destroy_when_not_in_use()
+[health_monitor_node-20] KeyboardInterrupt
+[mcu_standin_node-21] Traceback (most recent call last):
+[mcu_standin_node-21]   File "/ws/install/oomwoo_health_kit/lib/oomwoo_health_kit/mcu_standin_node", line 33, in <module>
+[mcu_standin_node-21]     sys.exit(load_entry_point('oomwoo-health-kit==0.0.1', 'console_scripts', 'mcu_standin_node')())
+[mcu_standin_node-21]              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[mcu_standin_node-21]   File "/ws/install/oomwoo_health_kit/lib/python3.12/site-packages/oomwoo_health_kit/mcu_standin_node.py", line 121, in main
+[mcu_standin_node-21]     node.destroy_node()
+[mcu_standin_node-21]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py", line 1958, in destroy_node
+[mcu_standin_node-21]     self.destroy_subscription(self._subscriptions[0])
+[mcu_standin_node-21]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py", line 1854, in destroy_subscription
+[mcu_standin_node-21]     subscription.destroy()
+[mcu_standin_node-21]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/subscription.py", line 101, in destroy
+[mcu_standin_node-21]     self.handle.destroy_when_not_in_use()
+[mcu_standin_node-21] KeyboardInterrupt
+[velocity_smoother-15] [INFO] [1794736429.462915092] [velocity_smoother]: Destroying
+[collision_monitor-16] [INFO] [1794736429.464492092] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[behavior_server-12] [INFO] [1794736429.474733394] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[waypoint_follower-14] [INFO] [1794736429.475251194] [waypoint_follower]: Destroying bond (waypoint_follower) to lifecycle manager.
+[waypoint_follower-14] [INFO] [1794736429.478558235] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[gazebo-1] [1;36m[Dbg] [Sensors.cc:551] [0m[1;36mSensorsPrivate::RenderThread stopped[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [gz.cc:434] [0m[1;36mShutting down gz-sim-server[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:654] [0m[1;36mExiting postupdate worker thread ([0m[1;36m1[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:654] [0m[1;36mExiting postupdate worker thread ([0m[1;36m2[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36mExiting postupdate worker thread ([0m[1;36m7[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:654] [0m[1;36mExiting postupdate worker thread ([0m[1;36m5[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:654] [0m[1;36mExiting postupdate worker thread ([0m[1;36m6[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:654] [Dbg] [SimulationRunner.cc:654] [0m[1;36mExiting postupdate worker thread ([0m[1;36m3[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:654] [0m[1;36mExiting postupdate worker thread ([0m[1;36m4[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:654] [0m[1;36mExiting postupdate worker thread ([0m[1;36m0[0m[1;36m)[0m[1;36m[0m
+[smoother_server-9] [INFO] [1794736429.486050877] [smoother_server]: Destroying bond (smoother_server) to lifecycle manager.
+[collision_monitor-16] [INFO] [1794736429.488609507] [collision_monitor]: Destroying
+[amcl-6] [INFO] [1794736429.489228698] [amcl]: Destroying
+[smoother_server-9] [INFO] [1794736429.492405488] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[controller_server-8] [INFO] [1794736429.493459408] [controller_server]: Destroying bond (controller_server) to lifecycle manager.
+[robot_state_publisher-3] [INFO] [1794736429.494091139] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[parameter_bridge-2] [INFO] [1794736429.495832169] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[planner_server-10] [INFO] [1794736429.500481510] [global_costmap.global_costmap]: Cleaning up
+[controller_server-8] [INFO] [1794736429.503642201] [controller_server]: Cleaning up
+[controller_server-8] [INFO] [1794736429.503688861] [controller_server]: Cleaning up controller: FollowPath of type regulated_pure_pursuit_controller::RegulatedPurePursuitController
+[controller_server-8] [INFO] [1794736429.503782141] [local_costmap.local_costmap]: Cleaning up
+[route_server-11] [INFO] [1794736429.504290051] [route_server]: Destroying bond (route_server) to lifecycle manager.
+[smoother_server-9] [INFO] [1794736429.505882731] [smoother_server]: Destroying
+[route_server-11] [INFO] [1794736429.507642452] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[planner_server-10] [INFO] [1794736429.521094774] [planner_server]: Cleaning up plugin GridBased of type NavfnPlanner
+[planner_server-10] [INFO] [1794736429.521130724] [planner_server]: Destroying plugin GridBased of type NavfnPlanner
+[route_server-11] [INFO] [1794736429.524666855] [route_server]: Destroying
+[ERROR] [health_monitor_node-20]: process has died [pid 21388, exit code -2, cmd '/ws/install/oomwoo_health_monitor/lib/oomwoo_health_monitor/health_monitor_node --ros-args -r __node:=health_monitor --params-file /tmp/launch_params_eq_nfl6c'].
+[behavior_server-12] [INFO] [1794736429.544220189] [behavior_server]: Destroying
+[lifecycle_manager-18] [INFO] [1794736429.546991420] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[ERROR] [mcu_standin_node-21]: process has died [pid 21389, exit code -2, cmd '/ws/install/oomwoo_health_kit/lib/oomwoo_health_kit/mcu_standin_node --ros-args -r __node:=mcu_standin --params-file /tmp/launch_params_iq84d6ne -r cmd_vel_in:=cmd_vel -r cmd_vel:=cmd_vel_gated'].
+[lifecycle_manager-18] [INFO] [1794736429.549181950] [lifecycle_manager_navigation]: Destroying lifecycle_manager_navigation
+[planner_server-10] [INFO] [1794736429.551503971] [planner_server]: Destroying bond (planner_server) to lifecycle manager.
+[controller_server-8] [INFO] [1794736429.553268091] [controller_server]: Destroying bond (controller_server) to lifecycle manager.
+[planner_server-10] [INFO] [1794736429.554309882] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[planner_server-10] [INFO] [1794736429.555312892] [global_costmap.global_costmap]: Destroying
+[controller_server-8] [INFO] [1794736429.556757382] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[ERROR] [topic_heartbeat-23]: process has died [pid 21393, exit code -2, cmd '/ws/install/oomwoo_health_kit/lib/oomwoo_health_kit/topic_heartbeat --ros-args -r __node:=topic_heartbeat --params-file /tmp/launch_params_ilinf051'].
+[INFO] [parameter_bridge-2]: process has finished cleanly [pid 21369]
+[controller_server-8] [INFO] [1794736429.565274424] [local_costmap.local_costmap]: Destroying
+[planner_server-10] [INFO] [1794736429.569755625] [planner_server]: Destroying
+[controller_server-8] [INFO] [1794736429.577312437] [controller_server]: Destroying
+[gazebo-1] [1;36m[Dbg] [Sensors.cc:565] [0m[1;36mSensorsPrivate::Stop[0m[1;36m[0m
+[INFO] [robot_state_publisher-3]: process has finished cleanly [pid 21370]
+[ERROR] [gazebo-1]: process has died [pid 21368, exit code -2, cmd 'ruby /opt/ros/jazzy/opt/gz_tools_vendor/bin/gz sim -s -r --headless-rendering -v 4 /ros_ws/install/oomwoo_gazebo/share/oomwoo_gazebo/worlds/living_room.world --force-version 8'].
+[INFO] [launch]: process[gazebo-1] was required: shutting down launched system
+[INFO] [collision_monitor-16]: process has finished cleanly [pid 21384]
+[INFO] [smoother_server-9]: process has finished cleanly [pid 21377]
+[INFO] [route_server-11]: process has finished cleanly [pid 21379]
+[INFO] [behavior_server-12]: process has finished cleanly [pid 21380]
+[INFO] [lifecycle_manager-18]: process has finished cleanly [pid 21386]
+[INFO] [planner_server-10]: process has finished cleanly [pid 21378]
+[INFO] [controller_server-8]: process has finished cleanly [pid 21376]
+[opennav_docking-17] [INFO] [1794736431.495679171] [docking_server]: Destroying bond (docking_server) to lifecycle manager.
+[opennav_docking-17] [INFO] [1794736431.506585743] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[waypoint_follower-14] [INFO] [1794736431.519198336] [waypoint_follower]: Destroying
+[ERROR] [job_roster-22]: process has died [pid 21392, exit code -2, cmd '/ws/install/oomwoo_health_kit/lib/oomwoo_health_kit/job_roster --ros-args -r __node:=job_roster --params-file /tmp/launch_params_axsojfvx'].
+[opennav_docking-17] [INFO] [1794736431.538248580] [docking_server]: Destroying
+[bt_navigator-13] [INFO] [1794736431.559739605] [bt_navigator]: Completed Cleaning up
+[bt_navigator-13] [INFO] [1794736431.559772675] [bt_navigator]: Destroying bond (bt_navigator) to lifecycle manager.
+[bt_navigator-13] [INFO] [1794736431.562839225] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[bt_navigator-13] [INFO] [1794736431.613727366] [bt_navigator]: Destroying
+[INFO] [waypoint_follower-14]: process has finished cleanly [pid 21382]
+[INFO] [opennav_docking-17]: process has finished cleanly [pid 21385]
+[INFO] [bt_navigator-13]: process has finished cleanly [pid 21381]
+[ERROR] [lifecycle_manager-7]: process[lifecycle_manager-7] failed to terminate '5' seconds after receiving 'SIGINT', escalating to 'SIGTERM'
+[INFO] [lifecycle_manager-7]: sending signal 'SIGTERM' to process[lifecycle_manager-7]
+[ERROR] [lifecycle_manager-7]: process[lifecycle_manager-7] failed to terminate '10.0' seconds after receiving 'SIGTERM', escalating to 'SIGKILL'
+[INFO] [lifecycle_manager-7]: sending signal 'SIGKILL' to process[lifecycle_manager-7]
+[ERROR] [lifecycle_manager-7]: process has died [pid 21375, exit code -9, cmd '/opt/ros/jazzy/lib/nav2_lifecycle_manager/lifecycle_manager --ros-args --log-level info --ros-args -r __node:=lifecycle_manager_localization -p use_sim_time:=True --params-file /tmp/launch_params_3cr4ezjr --params-file /tmp/launch_params_3vpxrv6a'].

@@ -1,0 +1,921 @@
+[INFO] [launch]: All log files can be found below /tmp/.ros/log/2026-11-15-11-34-18-428612-3cb80da612e5-42386
+[INFO] [launch]: Default logging verbosity is set to INFO
+/opt/ros/jazzy/lib/python3.12/site-packages/launch/conditions/launch_configuration_equals.py:53: UserWarning: The 'LaunchConfigurationEquals' and 'LaunchConfigurationNotEquals' Conditions are  deprecated. Use the 'EqualsSubstitution' and 'NotEqualsSubstitution' substitutions instead! E.g.:
+  IfCondition(
+  	EqualsSubstitution(LaunchConfiguration('some_launch_arg'), "some_equality_check")
+  )
+  warnings.warn(
+URDF  file name : /ros_ws/install/oomwoo_one/share/oomwoo_one/urdf/robot.urdf.xacro
+World file name : /ros_ws/install/oomwoo_gazebo/share/oomwoo_gazebo/worlds/living_room.world
+[INFO] [gazebo-1]: process started with pid [42419]
+[INFO] [parameter_bridge-2]: process started with pid [42420]
+[INFO] [robot_state_publisher-3]: process started with pid [42421]
+[INFO] [create-4]: process started with pid [42422]
+[INFO] [map_server-5]: process started with pid [42424]
+[INFO] [amcl-6]: process started with pid [42425]
+[INFO] [lifecycle_manager-7]: process started with pid [42426]
+[INFO] [controller_server-8]: process started with pid [42427]
+[INFO] [smoother_server-9]: process started with pid [42428]
+[INFO] [planner_server-10]: process started with pid [42429]
+[INFO] [route_server-11]: process started with pid [42430]
+[INFO] [behavior_server-12]: process started with pid [42431]
+[INFO] [bt_navigator-13]: process started with pid [42432]
+[INFO] [waypoint_follower-14]: process started with pid [42433]
+[INFO] [velocity_smoother-15]: process started with pid [42434]
+[INFO] [collision_monitor-16]: process started with pid [42436]
+[INFO] [opennav_docking-17]: process started with pid [42438]
+[INFO] [lifecycle_manager-18]: process started with pid [42439]
+[INFO] [initialpose_pub-19]: process started with pid [42440]
+[INFO] [health_monitor_node-20]: process started with pid [42441]
+[INFO] [mcu_standin_node-21]: process started with pid [42442]
+[INFO] [job_roster-22]: process started with pid [42443]
+[INFO] [topic_heartbeat-23]: process started with pid [42444]
+[amcl-6] [INFO] [1794738859.126139503] [amcl]: 
+[amcl-6] 	amcl lifecycle node launched. 
+[amcl-6] 	Waiting on external lifecycle transitions to activate
+[amcl-6] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[amcl-6] [INFO] [1794738859.129237613] [amcl]: Creating
+[robot_state_publisher-3] [INFO] [1794738859.140188096] [robot_state_publisher]: Robot initialized
+[lifecycle_manager-7] [INFO] [1794738859.141632761] [lifecycle_manager_localization]: Creating
+[controller_server-8] [INFO] [1794738859.146476305] [controller_server]: 
+[controller_server-8] 	controller_server lifecycle node launched. 
+[controller_server-8] 	Waiting on external lifecycle transitions to activate
+[controller_server-8] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[lifecycle_manager-7] [INFO] [1794738859.148256599] [lifecycle_manager_localization]: [34m[1mCreating and initializing lifecycle service clients[0m[0m
+[controller_server-8] [INFO] [1794738859.175610048] [controller_server]: Creating controller server
+[create-4] [INFO] [1794738859.177447252] [ros_gz_sim]: Requesting list of world names.
+[velocity_smoother-15] [INFO] [1794738859.188212026] [velocity_smoother]: 
+[velocity_smoother-15] 	velocity_smoother lifecycle node launched. 
+[velocity_smoother-15] 	Waiting on external lifecycle transitions to activate
+[velocity_smoother-15] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[opennav_docking-17] [INFO] [1794738859.194447455] [docking_server]: 
+[lifecycle_manager-18] [INFO] [1794738859.196652728] [lifecycle_manager_navigation]: Creating
+[opennav_docking-17] 	docking_server lifecycle node launched. 
+[opennav_docking-17] 	Waiting on external lifecycle transitions to activate
+[opennav_docking-17] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[opennav_docking-17] [INFO] [1794738859.197227926] [docking_server]: Creating docking_server
+[lifecycle_manager-18] [INFO] [1794738859.205237039] [lifecycle_manager_navigation]: [34m[1mCreating and initializing lifecycle service clients[0m[0m
+[collision_monitor-16] [INFO] [1794738859.214427149] [collision_monitor]: 
+[collision_monitor-16] 	collision_monitor lifecycle node launched. 
+[collision_monitor-16] 	Waiting on external lifecycle transitions to activate
+[collision_monitor-16] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[controller_server-8] [INFO] [1794738859.220494418] [local_costmap.local_costmap]: 
+[controller_server-8] 	local_costmap lifecycle node launched. 
+[controller_server-8] 	Waiting on external lifecycle transitions to activate
+[controller_server-8] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[controller_server-8] [INFO] [1794738859.222166003] [local_costmap.local_costmap]: Creating Costmap
+[waypoint_follower-14] [INFO] [1794738859.227376075] [waypoint_follower]: 
+[waypoint_follower-14] 	waypoint_follower lifecycle node launched. 
+[waypoint_follower-14] 	Waiting on external lifecycle transitions to activate
+[waypoint_follower-14] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[planner_server-10] [INFO] [1794738859.234243753] [planner_server]: 
+[planner_server-10] 	planner_server lifecycle node launched. 
+[planner_server-10] 	Waiting on external lifecycle transitions to activate
+[planner_server-10] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[waypoint_follower-14] [INFO] [1794738859.238587908] [waypoint_follower]: Creating
+[planner_server-10] [INFO] [1794738859.248123196] [planner_server]: Creating
+[gazebo-1] [1;32m[Msg] [0m[1;32mGazebo Sim Server v[0m[1;32m8.15.0[0m[1;32m[0m
+[bt_navigator-13] [INFO] [1794738859.276714431] [bt_navigator]: 
+[bt_navigator-13] 	bt_navigator lifecycle node launched. 
+[bt_navigator-13] 	Waiting on external lifecycle transitions to activate
+[bt_navigator-13] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[behavior_server-12] [INFO] [1794738859.292776908] [behavior_server]: 
+[behavior_server-12] 	behavior_server lifecycle node launched. 
+[behavior_server-12] 	Waiting on external lifecycle transitions to activate
+[behavior_server-12] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[bt_navigator-13] [INFO] [1794738859.294769431] [bt_navigator]: Creating
+[smoother_server-9] [INFO] [1794738859.308668744] [smoother_server]: 
+[smoother_server-9] 	smoother_server lifecycle node launched. 
+[smoother_server-9] 	Waiting on external lifecycle transitions to activate
+[smoother_server-9] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[gazebo-1] [1;32m[Msg] [0m[1;32mLoading SDF world file[[0m[1;32m/ros_ws/install/oomwoo_gazebo/share/oomwoo_gazebo/worlds/living_room.world[0m[1;32m].[0m
+[map_server-5] [INFO] [1794738859.311328476] [map_server]: 
+[map_server-5] 	map_server lifecycle node launched. 
+[map_server-5] 	Waiting on external lifecycle transitions to activate
+[map_server-5] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[map_server-5] [INFO] [1794738859.311429175] [map_server]: Creating
+[smoother_server-9] [INFO] [1794738859.315935110] [smoother_server]: Creating smoother server
+[planner_server-10] [INFO] [1794738859.341809234] [global_costmap.global_costmap]: 
+[planner_server-10] 	global_costmap lifecycle node launched. 
+[planner_server-10] 	Waiting on external lifecycle transitions to activate
+[planner_server-10] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[planner_server-10] [INFO] [1794738859.344190146] [global_costmap.global_costmap]: Creating Costmap
+[route_server-11] [INFO] [1794738859.371793694] [route_server]: 
+[route_server-11] 	route_server lifecycle node launched. 
+[route_server-11] 	Waiting on external lifecycle transitions to activate
+[route_server-11] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[lifecycle_manager-7] [INFO] [1794738859.451385959] [lifecycle_manager_localization]: [34m[1mStarting managed nodes bringup...[0m[0m
+[lifecycle_manager-7] [INFO] [1794738859.451530968] [lifecycle_manager_localization]: [34m[1mConfiguring map_server[0m[0m
+[map_server-5] [INFO] [1794738859.451971897] [map_server]: Configuring
+[map_server-5] [INFO] [1794738859.452022087] [map_io]: Loading yaml file: /ros_ws/install/oomwoo_sim_support/share/oomwoo_sim_support/maps/living_room.yaml
+[map_server-5] [INFO] [1794738859.452316536] [map_io]: resolution: 0.05
+[map_server-5] [INFO] [1794738859.452329476] [map_io]: origin[0]: -2.499
+[map_server-5] [INFO] [1794738859.452334016] [map_io]: origin[1]: -2.456
+[map_server-5] [INFO] [1794738859.452337306] [map_io]: origin[2]: 0
+[map_server-5] [INFO] [1794738859.452340766] [map_io]: free_thresh: 0.196
+[map_server-5] [INFO] [1794738859.452344096] [map_io]: occupied_thresh: 0.65
+[map_server-5] [INFO] [1794738859.452349006] [map_io]: mode: trinary
+[map_server-5] [INFO] [1794738859.452352766] [map_io]: negate: 0
+[map_server-5] [INFO] [1794738859.452671845] [map_io]: Loading image_file: /ros_ws/install/oomwoo_sim_support/share/oomwoo_sim_support/maps/living_room.pgm
+[map_server-5] [INFO] [1794738859.453050453] [map_io]: Read map /ros_ws/install/oomwoo_sim_support/share/oomwoo_sim_support/maps/living_room.pgm: 100 X 98 map @ 0.05 m/cell
+[lifecycle_manager-7] [INFO] [1794738859.470839624] [lifecycle_manager_localization]: [34m[1mConfiguring amcl[0m[0m
+[amcl-6] [INFO] [1794738859.472292249] [amcl]: Configuring
+[amcl-6] [INFO] [1794738859.472358879] [amcl]: initTransforms
+[amcl-6] [INFO] [1794738859.498680681] [amcl]: initPubSub
+[amcl-6] [INFO] [1794738859.520429139] [amcl]: Subscribed to map topic.
+[lifecycle_manager-18] [INFO] [1794738859.529220719] [lifecycle_manager_navigation]: [34m[1mStarting managed nodes bringup...[0m[0m
+[lifecycle_manager-18] [INFO] [1794738859.529257279] [lifecycle_manager_navigation]: [34m[1mConfiguring controller_server[0m[0m
+[controller_server-8] [INFO] [1794738859.529994637] [controller_server]: Configuring controller interface
+[controller_server-8] [INFO] [1794738859.530011827] [controller_server]: getting progress checker plugins..
+[controller_server-8] [INFO] [1794738859.530351916] [controller_server]: getting goal checker plugins..
+[controller_server-8] [INFO] [1794738859.532076890] [controller_server]: Controller frequency set to 5.0000Hz
+[controller_server-8] [INFO] [1794738859.532115849] [local_costmap.local_costmap]: Configuring
+[lifecycle_manager-7] [INFO] [1794738859.537175883] [lifecycle_manager_localization]: [34m[1mActivating map_server[0m[0m
+[map_server-5] [INFO] [1794738859.537877550] [map_server]: Activating
+[map_server-5] [INFO] [1794738859.538320329] [map_server]: Creating bond (map_server) to lifecycle manager.
+[amcl-6] [INFO] [1794738859.539235156] [amcl]: Received a 100 X 98 map @ 0.050 m/pix
+[controller_server-8] [INFO] [1794738859.563902484] [local_costmap.local_costmap]: Using plugin "obstacle_layer"
+[controller_server-8] [INFO] [1794738859.574697898] [local_costmap.local_costmap]: Subscribed to Topics: scan
+[controller_server-8] [INFO] [1794738859.594376922] [local_costmap.local_costmap]: Initialized plugin "obstacle_layer"
+[controller_server-8] [INFO] [1794738859.594404042] [local_costmap.local_costmap]: Using plugin "inflation_layer"
+[controller_server-8] [INFO] [1794738859.599273185] [local_costmap.local_costmap]: Initialized plugin "inflation_layer"
+[controller_server-8] [INFO] [1794738859.634894837] [controller_server]: Created progress_checker : progress_checker of type nav2_controller::SimpleProgressChecker
+[controller_server-8] [INFO] [1794738859.635518325] [controller_server]: Controller Server has progress_checker  progress checkers available.
+[controller_server-8] [INFO] [1794738859.635962913] [controller_server]: Created goal checker : goal_checker of type nav2_controller::SimpleGoalChecker
+[controller_server-8] [INFO] [1794738859.636426682] [controller_server]: Controller Server has goal_checker  goal checkers available.
+[controller_server-8] [INFO] [1794738859.637468178] [controller_server]: Created controller : FollowPath of type nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController
+[controller_server-8] [INFO] [1794738859.647792694] [controller_server]: Controller Server has FollowPath  controllers available.
+[job_roster-22] [INFO] [1794738859.670026700] [job_roster]: roster 'nav' (task_id nav) posted
+[lifecycle_manager-18] [INFO] [1794738859.694443718] [lifecycle_manager_navigation]: [34m[1mConfiguring smoother_server[0m[0m
+[smoother_server-9] [INFO] [1794738859.695280955] [smoother_server]: Configuring smoother server
+[topic_heartbeat-23] [INFO] [1794738859.695656724] [topic_heartbeat]: watching lidar<-/scan, odom<-/odom, localization<-/tf, drive_supervision<-/odom, local_costmap<-/local_costmap/published_footprint, global_costmap<-/global_costmap/published_footprint
+[smoother_server-9] [INFO] [1794738859.711677321] [smoother_server]: Created smoother : simple_smoother of type nav2_smoother::SimpleSmoother
+[smoother_server-9] [INFO] [1794738859.712729607] [smoother_server]: Smoother Server has simple_smoother  smoothers available.
+[lifecycle_manager-18] [INFO] [1794738859.718391319] [lifecycle_manager_navigation]: [34m[1mConfiguring planner_server[0m[0m
+[planner_server-10] [INFO] [1794738859.718541218] [planner_server]: Configuring
+[planner_server-10] [INFO] [1794738859.718563778] [global_costmap.global_costmap]: Configuring
+[planner_server-10] [INFO] [1794738859.726684181] [global_costmap.global_costmap]: Using plugin "static_layer"
+[planner_server-10] [INFO] [1794738859.729533001] [global_costmap.global_costmap]: Subscribing to the map topic (/map) with transient local durability
+[planner_server-10] [INFO] [1794738859.731099806] [global_costmap.global_costmap]: Initialized plugin "static_layer"
+[planner_server-10] [INFO] [1794738859.731117556] [global_costmap.global_costmap]: Using plugin "obstacle_layer"
+[planner_server-10] [INFO] [1794738859.731690524] [global_costmap.global_costmap]: Subscribed to Topics: scan
+[planner_server-10] [INFO] [1794738859.734888203] [global_costmap.global_costmap]: Initialized plugin "obstacle_layer"
+[planner_server-10] [INFO] [1794738859.734905963] [global_costmap.global_costmap]: Using plugin "inflation_layer"
+[planner_server-10] [INFO] [1794738859.735500161] [global_costmap.global_costmap]: Initialized plugin "inflation_layer"
+[planner_server-10] [INFO] [1794738859.756263192] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 100 X 98 at 0.050000 m/pix
+[planner_server-10] [INFO] [1794738859.756770201] [planner_server]: Created global planner plugin GridBased of type nav2_navfn_planner::NavfnPlanner
+[planner_server-10] [INFO] [1794738859.756791571] [planner_server]: Configuring plugin GridBased of type NavfnPlanner
+[planner_server-10] [INFO] [1794738859.757263819] [planner_server]: Planner Server has GridBased  planners available.
+[lifecycle_manager-18] [INFO] [1794738859.766917807] [lifecycle_manager_navigation]: [34m[1mConfiguring route_server[0m[0m
+[route_server-11] [INFO] [1794738859.767153806] [route_server]: Configuring
+[route_server-11] [INFO] [1794738859.802005600] [route_server]: Created GraphFileLoader GeoJsonGraphFileLoader of type nav2_route::GeoJsonGraphFileLoader
+[route_server-11] [INFO] [1794738859.802033680] [route_server]: Configuring geojson graph file loader
+[route_server-11] [INFO] [1794738859.802040480] [route_server]: No graph file provided to load yet.
+[route_server-11] [INFO] [1794738859.804339312] [route_server]: Created edge cost function plugin DistanceScorer of type nav2_route::DistanceScorer
+[route_server-11] [INFO] [1794738859.804356962] [route_server]: Configuring distance scorer.
+[route_server-11] [INFO] [1794738859.804509691] [route_server]: Created edge cost function plugin DynamicEdgesScorer of type nav2_route::DynamicEdgesScorer
+[route_server-11] [INFO] [1794738859.804519871] [route_server]: Configuring adjust edges scorer.
+[route_server-11] [INFO] [1794738859.808230769] [route_server]: Created route operation AdjustSpeedLimit of type nav2_route::AdjustSpeedLimit
+[route_server-11] [INFO] [1794738859.808247709] [route_server]: Configuring Adjust speed limit operation.
+[route_server-11] [INFO] [1794738859.809062866] [route_server]: Created route operation ReroutingService of type nav2_route::ReroutingService
+[route_server-11] [INFO] [1794738859.809077236] [route_server]: Configuring Rerouting service operation.
+[lifecycle_manager-18] [INFO] [1794738859.811522868] [lifecycle_manager_navigation]: [34m[1mConfiguring behavior_server[0m[0m
+[behavior_server-12] [INFO] [1794738859.811714267] [behavior_server]: Configuring
+[behavior_server-12] [INFO] [1794738859.816644431] [behavior_server]: Creating behavior plugin spin of type nav2_behaviors::Spin
+[behavior_server-12] [INFO] [1794738859.817627278] [behavior_server]: Creating behavior plugin backup of type nav2_behaviors::BackUp
+[behavior_server-12] [INFO] [1794738859.818455895] [behavior_server]: Creating behavior plugin drive_on_heading of type nav2_behaviors::DriveOnHeading
+[behavior_server-12] [INFO] [1794738859.819281722] [behavior_server]: Creating behavior plugin wait of type nav2_behaviors::Wait
+[behavior_server-12] [INFO] [1794738859.820060340] [behavior_server]: Creating behavior plugin assisted_teleop of type nav2_behaviors::AssistedTeleop
+[behavior_server-12] [INFO] [1794738859.828392452] [behavior_server]: Configuring spin
+[behavior_server-12] [INFO] [1794738859.833776424] [behavior_server]: Configuring backup
+[behavior_server-12] [INFO] [1794738859.837592361] [behavior_server]: Configuring drive_on_heading
+[behavior_server-12] [INFO] [1794738859.841745747] [behavior_server]: Configuring wait
+[behavior_server-12] [INFO] [1794738859.846533701] [behavior_server]: Configuring assisted_teleop
+[lifecycle_manager-18] [INFO] [1794738859.852549471] [lifecycle_manager_navigation]: [34m[1mConfiguring velocity_smoother[0m[0m
+[velocity_smoother-15] [INFO] [1794738859.852701101] [velocity_smoother]: Configuring velocity smoother
+[lifecycle_manager-18] [INFO] [1794738859.856699047] [lifecycle_manager_navigation]: [34m[1mConfiguring collision_monitor[0m[0m
+[collision_monitor-16] [INFO] [1794738859.856965797] [collision_monitor]: Configuring
+[collision_monitor-16] [INFO] [1794738859.860935823] [collision_monitor]: [scan]: Creating Scan
+[collision_monitor-16] [INFO] [1794738859.864586731] [collision_monitor]: [PolygonStop]: Creating Polygon
+[collision_monitor-16] [INFO] [1794738859.864608781] [collision_monitor]: [PolygonStop]: Creating Circle
+[collision_monitor-16] [INFO] [1794738859.866852814] [collision_monitor]: [PolygonSlow]: Creating Polygon
+[collision_monitor-16] [INFO] [1794738859.867734451] [collision_monitor]: [FootprintApproach]: Creating Polygon
+[collision_monitor-16] [INFO] [1794738859.867782531] [collision_monitor]: [FootprintApproach]: Polygon points are not defined. Using dynamic subscription instead.
+[collision_monitor-16] [INFO] [1794738859.868009020] [collision_monitor]: [FootprintApproach]: Making footprint subscriber on /local_costmap/published_footprint topic
+[lifecycle_manager-18] [INFO] [1794738859.878668924] [lifecycle_manager_navigation]: [34m[1mConfiguring bt_navigator[0m[0m
+[bt_navigator-13] [INFO] [1794738859.878955203] [bt_navigator]: Configuring
+[bt_navigator-13] [INFO] [1794738859.884795394] [bt_navigator]: Creating navigator id navigate_to_pose of type nav2_bt_navigator::NavigateToPoseNavigator
+[bt_navigator-13] [WARN] [1794738859.888694501] [bt_navigator]: Error_code parameters were not set. Using default values of: follow_path_error_code compute_path_error_code
+[bt_navigator-13] Make sure these match your BT and there are not other sources of error codes youreported to your application
+[bt_navigator-13] [INFO] [1794738859.938095806] [bt_navigator]: Creating navigator id navigate_through_poses of type nav2_bt_navigator::NavigateThroughPosesNavigator
+[lifecycle_manager-18] [INFO] [1794738859.957462461] [lifecycle_manager_navigation]: [34m[1mConfiguring waypoint_follower[0m[0m
+[waypoint_follower-14] [INFO] [1794738859.957607751] [waypoint_follower]: Configuring
+[waypoint_follower-14] [INFO] [1794738859.975620901] [waypoint_follower]: Created waypoint_task_executor : wait_at_waypoint of type nav2_waypoint_follower::WaitAtWaypoint
+[lifecycle_manager-18] [INFO] [1794738859.976310169] [lifecycle_manager_navigation]: [34m[1mConfiguring docking_server[0m[0m
+[opennav_docking-17] [INFO] [1794738859.976472318] [docking_server]: Configuring docking_server
+[opennav_docking-17] [INFO] [1794738859.976496598] [docking_server]: Controller frequency set to 50.0000Hz
+[opennav_docking-17] [INFO] [1794738859.996390172] [docking_server]: Created charging dock plugin nova_carter_dock of type opennav_docking::SimpleChargingDock
+[opennav_docking-17] [INFO] [1794738860.000012080] [docking_server]: Loading docks from parameter file.
+[opennav_docking-17] [INFO] [1794738860.000513788] [docking_server]: Docking Server has 1 dock types and 3 dock instances available.
+[lifecycle_manager-18] [INFO] [1794738860.002136123] [lifecycle_manager_navigation]: [34m[1mActivating controller_server[0m[0m
+[controller_server-8] [INFO] [1794738860.002267062] [controller_server]: Activating
+[controller_server-8] [INFO] [1794738860.002288432] [local_costmap.local_costmap]: Activating
+[controller_server-8] [INFO] [1794738860.002293612] [local_costmap.local_costmap]: Checking transform
+[controller_server-8] [INFO] [1794738860.002317722] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[gazebo-1] [1;32m[Msg] [0m[1;32mServing entity system service on [[0m[1;32m/[0m[1;32mentity/system/add[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;36m[Dbg] [Physics.cc:1004] [0m[1;36mLoaded [[0m[1;36mgz::physics::dartsim::Plugin[0m[1;36m] from library [[0m[1;36m/opt/ros/jazzy/opt/gz_physics_vendor/lib/gz-physics-7/engine-plugins/libgz-physics-dartsim-plugin.so[0m[1;36m][0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SystemManager.cc:80] [0m[1;36mLoaded system [[0m[1;36mgz::sim::systems::Physics[0m[1;36m] for entity [[0m[1;36m1[0m[1;36m][0m[1;36m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mCreate[0m[1;32m service on [[0m[1;32m/world/default/create_multiple[0m[1;32m] (async)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mCreate[0m[1;32m service on [[0m[1;32m/world/default/create_multiple/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mRemove[0m[1;32m service on [[0m[1;32m/world/default/remove[0m[1;32m] (async)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mRemove[0m[1;32m service on [[0m[1;32m/world/default/remove/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mPose[0m[1;32m service on [[0m[1;32m/world/default/set_pose[0m[1;32m] (async)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mPose[0m[1;32m service on [[0m[1;32m/world/default/set_pose/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mPose[0m[1;32m service on [[0m[1;32m/world/default/set_pose_vector[0m[1;32m] (async)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mPose[0m[1;32m service on [[0m[1;32m/world/default/set_pose_vector/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mLight configuration[0m[1;32m service on [[0m[1;32m/world/default/light_config[0m[1;32m] (async)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mLight configuration[0m[1;32m service on [[0m[1;32m/world/default/light_config/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mPhysics[0m[1;32m service on [[0m[1;32m/world/default/set_physics[0m[1;32m] (async)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mPhysics[0m[1;32m service on [[0m[1;32m/world/default/set_physics/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mSphericalCoordinates[0m[1;32m service on [[0m[1;32m/world/default/set_spherical_coordinates[0m[1;32m] (async)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mSphericalCoordinates[0m[1;32m service on [[0m[1;32m/world/default/set_spherical_coordinates/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mEnable collision[0m[1;32m service on [[0m[1;32m/world/default/enable_collision[0m[1;32m] (async)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mEnable collision[0m[1;32m service on [[0m[1;32m/world/default/enable_collision/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mDisable collision[0m[1;32m service on [[0m[1;32m/world/default/disable_collision[0m[1;32m] (async)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mDisable collision[0m[1;32m service on [[0m[1;32m/world/default/disable_collision/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mMaterial[0m[1;32m service on [[0m[1;32m/world/default/visual_config[0m[1;32m] (async)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mMaterial[0m[1;32m service on [[0m[1;32m/world/default/visual_config/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mMaterial[0m[1;32m service on [[0m[1;32m/world/default/wheel_slip[0m[1;32m] (async)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mMaterial[0m[1;32m service on [[0m[1;32m/world/default/wheel_slip/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gazebo-1] [1;36m[Dbg] [SystemManager.cc:80] [0m[1;36mLoaded system [[0m[1;36mgz::sim::systems::UserCommands[0m[1;36m] for entity [[0m[1;36m1[0m[1;36m][0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SystemManager.cc:80] [0m[1;36mLoaded system [[0m[1;36mgz::sim::systems::SceneBroadcaster[0m[1;36m] for entity [[0m[1;36m1[0m[1;36m][0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [Sensors.cc:697] [0m[1;36mConfiguring Sensors system[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [Sensors.cc:557] [0m[1;36mSensorsPrivate::Run[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SystemManager.cc:80] [0m[1;36mLoaded system [[0m[1;36mgz::sim::systems::Sensors[0m[1;36m] for entity [[0m[1;36m1[0m[1;36m][0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [Sensors.cc:532] [0m[1;36mSensorsPrivate::RenderThread started[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [Sensors.cc:337] [0m[1;36mWaiting for init[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SystemManager.cc:80] [0m[1;36mLoaded system [[0m[1;36mgz::sim::systems::Imu[0m[1;36m] for entity [[0m[1;36m1[0m[1;36m][0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SystemManager.cc:80] [0m[1;36mLoaded system [[0m[1;36mgz::sim::systems::Contact[0m[1;36m] for entity [[0m[1;36m1[0m[1;36m][0m[1;36m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mLoaded level [[0m[1;32mdefault[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;33m[Wrn] [Conversions.cc:735] [0m[1;33m<gui><camera> can't be converted yet[0m[1;33m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mServing world controls on [[0m[1;32m/world/default[0m[1;32m/control], [[0m[1;32m/world/default[0m[1;32m/control/state] and [[0m[1;32m/world/default[0m[1;32m/playback/control][0m[1;32m[0m
+[gazebo-1] [1;33m[Wrn] [Conversions.cc:735] [0m[1;33m<gui><camera> can't be converted yet[0m[1;33m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mServing GUI information on [[0m[1;32m/world/default[0m[1;32m/[0m[1;32mgui/info[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mWorld [[0m[1;32mdefault[0m[1;32m] initialized with [[0m[1;32mdefault_physics[0m[1;32m] physics profile.[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mServing world SDF generation service on [[0m[1;32m/world/default[0m[1;32m/[0m[1;32mgenerate_world_sdf[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mServing world names on [[0m[1;32m/gazebo/worlds[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mResource path add service on [[0m[1;32m/gazebo/resource_paths/add[0m[1;32m].[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mResource path get service on [[0m[1;32m/gazebo/resource_paths/get[0m[1;32m].[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mResource path resolve service on [[0m[1;32m/gazebo/resource_paths/resolve[0m[1;32m].[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mResource paths published on [[0m[1;32m/gazebo/resource_paths[0m[1;32m].[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mServer control service on [[0m[1;32m/server_control[0m[1;32m].[0m[1;32m[0m
+[create-4] [INFO] [1794738860.248231092] [ros_gz_sim]: Waiting messages on topic [robot_description].
+[create-4] [INFO] [1794738860.259339185] [ros_gz_sim]: Entity creation successful.
+[parameter_bridge-2] [INFO] [1794738860.316247505] [ros_gz_bridge]: Creating GZ->ROS Bridge: [clock (gz.msgs.Clock) -> clock (rosgraph_msgs/msg/Clock)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1794738860.318602938] [ros_gz_bridge]: Creating GZ->ROS Bridge: [joint_states (gz.msgs.Model) -> joint_states (sensor_msgs/msg/JointState)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1794738860.321038819] [ros_gz_bridge]: Creating GZ->ROS Bridge: [imu (gz.msgs.IMU) -> imu (sensor_msgs/msg/Imu)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1794738860.322845654] [ros_gz_bridge]: Creating GZ->ROS Bridge: [odom (gz.msgs.Odometry) -> odom (nav_msgs/msg/Odometry)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1794738860.324809847] [ros_gz_bridge]: Creating GZ->ROS Bridge: [odom_wheel (gz.msgs.Odometry) -> odom_wheel (nav_msgs/msg/Odometry)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1794738860.325728904] [ros_gz_bridge]: Creating GZ->ROS Bridge: [odom_truth (gz.msgs.Odometry) -> odom_truth (nav_msgs/msg/Odometry)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1794738860.326643781] [ros_gz_bridge]: Creating GZ->ROS Bridge: [tf (gz.msgs.Pose_V) -> tf (tf2_msgs/msg/TFMessage)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1794738860.328774764] [ros_gz_bridge]: Creating ROS->GZ Bridge: [cmd_vel (geometry_msgs/msg/Twist) -> cmd_vel (gz.msgs.Twist)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1794738860.329891050] [ros_gz_bridge]: Creating GZ->ROS Bridge: [scan (gz.msgs.LaserScan) -> scan (sensor_msgs/msg/LaserScan)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1794738860.330934627] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/world/default/model/oomwoo_one/link/base_footprint/sensor/bumper_left/contact (gz.msgs.Contacts) -> bumper_left/contact (ros_gz_interfaces/msg/Contacts)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1794738860.332978270] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/world/default/model/oomwoo_one/link/base_footprint/sensor/bumper_right/contact (gz.msgs.Contacts) -> bumper_right/contact (ros_gz_interfaces/msg/Contacts)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1794738860.333859167] [ros_gz_bridge]: Creating GZ->ROS Bridge: [range_left (gz.msgs.LaserScan) -> range_left (sensor_msgs/msg/LaserScan)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1794738860.334626214] [ros_gz_bridge]: Creating GZ->ROS Bridge: [range_right (gz.msgs.LaserScan) -> range_right (sensor_msgs/msg/LaserScan)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1794738860.335341752] [ros_gz_bridge]: Creating GZ->ROS Bridge: [tof_front/points (gz.msgs.PointCloudPacked) -> tof_front/points (sensor_msgs/msg/PointCloud2)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1794738860.336400528] [ros_gz_bridge]: Creating GZ->ROS Bridge: [camera/image (gz.msgs.Image) -> camera/image (sensor_msgs/msg/Image)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1794738860.337160606] [ros_gz_bridge]: Creating GZ->ROS Bridge: [camera/camera_info (gz.msgs.CameraInfo) -> camera/camera_info (sensor_msgs/msg/CameraInfo)] (Lazy 0)
+[INFO] [create-4]: process has finished cleanly [pid 42422]
+[controller_server-8] [INFO] [1794738860.502378735] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[lifecycle_manager-7] [INFO] [1794738860.552747697] [lifecycle_manager_localization]: Server map_server connected with bond.
+[lifecycle_manager-7] [INFO] [1794738860.552776237] [lifecycle_manager_localization]: [34m[1mActivating amcl[0m[0m
+[amcl-6] [INFO] [1794738860.553011156] [amcl]: Activating
+[amcl-6] [INFO] [1794738860.553034856] [amcl]: Creating bond (amcl) to lifecycle manager.
+[controller_server-8] [INFO] [1794738861.002371759] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[gazebo-1] [1;32m[Msg] [0m[1;32mFound no publishers on /stats, adding root stats topic[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mFound no publishers on /clock, adding root clock topic[0m[1;32m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:627] [0m[1;36mCreating PostUpdate worker threads: [0m[1;36m5[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:638] [0m[1;36mCreating postupdate worker thread ([0m[1;36m0[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:638] [0m[1;36mCreating postupdate worker thread ([0m[1;36m1[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:638] [0m[1;36mCreating postupdate worker thread ([0m[1;36m2[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:638] [0m[1;36mCreating postupdate worker thread ([0m[1;36m3[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;33mWarning [Utils.cc:132][0m [/sdf/model[@name="oomwoo_one"]/link[@name="base_footprint"]/sensor[@name="laser_scan_sensor"]/gz_frame_id:<urdf-string>:L0]: XML Element[gz_frame_id], child of element[sensor], not defined in SDF. Copying[gz_frame_id] as children of [sensor].
+[gazebo-1] [1;32m[Msg] [0m[1;32mDiffDrive subscribing to twist messages on [[0m[1;32mcmd_vel[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;36m[Dbg] [SystemManager.cc:80] [0m[1;36mLoaded system [[0m[1;36mgz::sim::systems::DiffDrive[0m[1;36m] for entity [[0m[1;36m157[0m[1;36m][0m[1;36m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mOdometryPublisher publishing odometry on [[0m[1;32m/odom[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mOdometryPublisher publishing odometry with covariance on [[0m[1;32m/model/oomwoo_one/odometry_with_covariance[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mOdometryPublisher publishing Pose_V (TF) on [[0m[1;32m/tf[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;36m[Dbg] [SystemManager.cc:80] [0m[1;36mLoaded system [[0m[1;36mgz::sim::systems::OdometryPublisher[0m[1;36m] for entity [[0m[1;36m157[0m[1;36m][0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SystemManager.cc:80] [0m[1;36mLoaded system [[0m[1;36mgz::sim::systems::JointStatePublisher[0m[1;36m] for entity [[0m[1;36m157[0m[1;36m][0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SystemManager.cc:80] [0m[1;36mLoaded system [[0m[1;36mgz::sim::systems::Contact[0m[1;36m] for entity [[0m[1;36m157[0m[1;36m][0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [UserCommands.cc:1093] [0m[1;36mCreated entity [[0m[1;36m157[0m[1;36m] named [[0m[1;36moomwoo_one[0m[1;36m][0m[1;36m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mContact system publishing on [0m[1;32mworld/default/model/oomwoo_one/link/base_footprint/sensor/bumper_left/contact[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mContact system publishing on [0m[1;32mworld/default/model/oomwoo_one/link/base_footprint/sensor/bumper_right/contact[0m[1;32m[0m
+[gazebo-1] [1;36m[Dbg] [SDFFeatures.cc:333] [0m[1;36mMesh construction from an SDF has not been implemented yet for [0m[1;36mdartsim. Use AttachMeshShapeFeature to use mesh shapes.[0m
+[gazebo-1] [1;36m[Dbg] [SDFFeatures.cc:865] [0m[1;36mThe geometry element of collision [[0m[1;36mcollision[0m[1;36m] [0m[1;36mcouldn't be created[0m
+[gazebo-1] [1;36m[Dbg] [SDFFeatures.cc:333] [0m[1;36mMesh construction from an SDF has not been implemented yet for [0m[1;36mdartsim. Use AttachMeshShapeFeature to use mesh shapes.[0m
+[gazebo-1] [1;36m[Dbg] [SDFFeatures.cc:865] [0m[1;36mThe geometry element of collision [[0m[1;36mcollision_0[0m[1;36m] [0m[1;36mcouldn't be created[0m
+[gazebo-1] [1;36m[Dbg] [SDFFeatures.cc:333] [0m[1;36mMesh construction from an SDF has not been implemented yet for [0m[1;36mdartsim. Use AttachMeshShapeFeature to use mesh shapes.[0m
+[gazebo-1] [1;36m[Dbg] [SDFFeatures.cc:865] [0m[1;36mThe geometry element of collision [[0m[1;36mcollision[0m[1;36m] [0m[1;36mcouldn't be created[0m
+[gazebo-1] [1;36m[Dbg] [SDFFeatures.cc:333] [0m[1;36mMesh construction from an SDF has not been implemented yet for [0m[1;36mdartsim. Use AttachMeshShapeFeature to use mesh shapes.[0m
+[gazebo-1] [1;36m[Dbg] [SDFFeatures.cc:865] [0m[1;36mThe geometry element of collision [[0m[1;36mcollision[0m[1;36m] [0m[1;36mcouldn't be created[0m
+[gazebo-1] [1;36m[Dbg] [SDFFeatures.cc:333] [0m[1;36mMesh construction from an SDF has not been implemented yet for [0m[1;36mdartsim. Use AttachMeshShapeFeature to use mesh shapes.[0m
+[gazebo-1] [1;36m[Dbg] [SDFFeatures.cc:865] [0m[1;36mThe geometry element of collision [[0m[1;36mcollision[0m[1;36m] [0m[1;36mcouldn't be created[0m
+[gazebo-1] [1;36m[Dbg] [SDFFeatures.cc:333] [0m[1;36mMesh construction from an SDF has not been implemented yet for [0m[1;36mdartsim. Use AttachMeshShapeFeature to use mesh shapes.[0m
+[gazebo-1] [1;36m[Dbg] [SDFFeatures.cc:865] [0m[1;36mThe geometry element of collision [[0m[1;36mcollision[0m[1;36m] [0m[1;36mcouldn't be created[0m
+[gazebo-1] [1;36m[Dbg] [SDFFeatures.cc:333] [0m[1;36mMesh construction from an SDF has not been implemented yet for [0m[1;36mdartsim. Use AttachMeshShapeFeature to use mesh shapes.[0m
+[gazebo-1] [1;36m[Dbg] [SDFFeatures.cc:865] [0m[1;36mThe geometry element of collision [[0m[1;36mcollision[0m[1;36m] [0m[1;36mcouldn't be created[0m
+[gazebo-1] [1;36m[Dbg] [SDFFeatures.cc:333] [0m[1;36mMesh construction from an SDF has not been implemented yet for [0m[1;36mdartsim. Use AttachMeshShapeFeature to use mesh shapes.[0m
+[gazebo-1] [1;36m[Dbg] [SDFFeatures.cc:865] [0m[1;36mThe geometry element of collision [[0m[1;36mcollision[0m[1;36m] [0m[1;36mcouldn't be created[0m
+[gazebo-1] [1;36m[Dbg] [SDFFeatures.cc:333] [0m[1;36mMesh construction from an SDF has not been implemented yet for [0m[1;36mdartsim. Use AttachMeshShapeFeature to use mesh shapes.[0m
+[gazebo-1] [1;36m[Dbg] [SDFFeatures.cc:865] [0m[1;36mThe geometry element of collision [[0m[1;36mcollision[0m[1;36m] [0m[1;36mcouldn't be created[0m
+[gazebo-1] [1;33m[Wrn] [OBJLoader.cc:91] [0m[1;33mBoth `d` and `Tr` parameters defined for "Chair". Use the value of `d` for dissolve (line 8 in .mtl.)[0m
+[gazebo-1] [1;33m[0m
+[gazebo-1] [1;36m[Dbg] [Sensors.cc:953] [0m[1;36mInitialization needed[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [Sensors.cc:349] [0m[1;36mInitializing render context[0m[1;36m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mLoading plugin [[0m[1;32mgz-rendering-ogre2[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mServing scene information on [[0m[1;32m/world/default[0m[1;32m/[0m[1;32mscene/info[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mServing graph information on [[0m[1;32m/world/default[0m[1;32m/[0m[1;32mscene/graph[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mServing full state on [[0m[1;32m/world/default[0m[1;32m/[0m[1;32mstate[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mServing full state (async) on [[0m[1;32m/world/default[0m[1;32m/[0m[1;32mstate_async[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mPublishing scene information on [[0m[1;32m/world/default/scene/info[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mPublishing entity deletions on [[0m[1;32m/world/default/scene/deletion[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mPublishing state changes on [[0m[1;32m/world/default/state[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mPublishing pose messages on [[0m[1;32m/world/default[0m[1;32m/[0m[1;32mpose/info[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mPublishing dynamic pose messages on [[0m[1;32m/world/default[0m[1;32m/[0m[1;32mdynamic_pose/info[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:654] [0m[1;36mExiting postupdate worker thread ([Dbg] [SimulationRunner.cc:654] [0m[1;36mExiting postupdate worker thread ([0m[1;36mExiting postupdate worker thread ([0m[1;36m3[0m[1;36m3[Dbg] [SimulationRunner.cc:654] [0m[1;36mExiting postupdate worker thread ([0m[1;36m0[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m1[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:654] [0m[1;36mExiting postupdate worker thread ([0m[1;36m2[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:627] [0m[1;36mCreating PostUpdate worker threads: [0m[1;36m9[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:638] [0m[1;36mCreating postupdate worker thread ([0m[1;36m0[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:638] [0m[1;36mCreating postupdate worker thread ([0m[1;36m1[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:638] [0m[1;36mCreating postupdate worker thread ([0m[1;36m2[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:638] [0m[1;36mCreating postupdate worker thread ([0m[1;36m3[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:638] [0m[1;36mCreating postupdate worker thread ([0m[1;36m4[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:638] [0m[1;36mCreating postupdate worker thread ([0m[1;36m5[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:638] [0m[1;36mCreating postupdate worker thread ([0m[1;36m6[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:638] [0m[1;36mCreating postupdate worker thread ([0m[1;36m7[0m[1;36m)[0m[1;36m[0m
+[controller_server-8] [INFO] [1794738861.502371862] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[gazebo-1] [1;36m[Dbg] [RenderUtil.cc:2646] [0m[1;36mCreate scene [[0m[1;36mscene[0m[1;36m][0m[1;36m[0m
+[lifecycle_manager-7] [INFO] [1794738861.557783468] [lifecycle_manager_localization]: Server amcl connected with bond.
+[lifecycle_manager-7] [INFO] [1794738861.557818938] [lifecycle_manager_localization]: [34m[1mManaged nodes are active[0m[0m
+[lifecycle_manager-7] [INFO] [1794738861.557825628] [lifecycle_manager_localization]: [34m[1mCreating bond timer...[0m[0m
+[gazebo-1] [1;36m[Dbg] [Sensors.cc:953] [0m[1;36mInitialization needed[0m[1;36m[0m
+[gazebo-1] [1;36mRendering Thread initialized[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [Lidar.cc:139] [0m[1;36mLaser scans for [[0m[1;36moomwoo_one::base_footprint::laser_scan_sensor[0m[1;36m] advertised on [[0m[1;36mscan[0m[1;36m][0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [GpuLidarSensor.cc:164] [0m[1;36mLidar points for [[0m[1;36moomwoo_one::base_footprint::laser_scan_sensor[0m[1;36m] advertised on [[0m[1;36mscan/points[0m[1;36m][0m[1;36m[0m
+[topic_heartbeat-23] [WARN] [1794738861.971965237] [topic_heartbeat]: drive_supervision: no heartbeat, robot moving or not yet settled with a zero or unknown setpoint
+[controller_server-8] [INFO] [1794738862.002431436] [local_costmap.local_costmap]: start
+[amcl-6] [INFO] [1794738862.156943221] [amcl]: createLaserObject
+[controller_server-8] [INFO] [1794738862.203278056] [controller_server]: Activating controller: FollowPath of type regulated_pure_pursuit_controller::RegulatedPurePursuitController
+[controller_server-8] [INFO] [1794738862.203312286] [controller_server]: Creating bond (controller_server) to lifecycle manager.
+[lifecycle_manager-18] [INFO] [1794738863.209000576] [lifecycle_manager_navigation]: Server controller_server connected with bond.
+[lifecycle_manager-18] [INFO] [1794738863.209029856] [lifecycle_manager_navigation]: [34m[1mActivating smoother_server[0m[0m
+[smoother_server-9] [INFO] [1794738863.209317165] [smoother_server]: Activating
+[smoother_server-9] [INFO] [1794738863.209345115] [smoother_server]: Creating bond (smoother_server) to lifecycle manager.
+[amcl-6] [INFO] [1794738863.450728770] [amcl]: initialPoseReceived
+[amcl-6] [INFO] [1794738863.450766770] [amcl]: Setting pose (1.500000): -2.000 -0.500 0.000
+[initialpose_pub-19] [WARN] [1794738863.469137199] [initialpose_pub]: AMCL not localized after 1.0s; re-seeding /initialpose (1)
+[initialpose_pub-19] [INFO] [1794738863.950876664] [initialpose_pub]: AMCL localized after 1.5s (1 backstop seed(s)) — releasing navigation
+[INFO] [initialpose_pub-19]: process has finished cleanly [pid 42440]
+[lifecycle_manager-18] [INFO] [1794738864.214571126] [lifecycle_manager_navigation]: Server smoother_server connected with bond.
+[lifecycle_manager-18] [INFO] [1794738864.214599756] [lifecycle_manager_navigation]: [34m[1mActivating planner_server[0m[0m
+[planner_server-10] [INFO] [1794738864.214787005] [planner_server]: Activating
+[planner_server-10] [INFO] [1794738864.214824875] [global_costmap.global_costmap]: Activating
+[planner_server-10] [INFO] [1794738864.214834355] [global_costmap.global_costmap]: Checking transform
+[planner_server-10] [INFO] [1794738864.214883825] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Lookup would require extrapolation into the past.  Requested time 2.260000 but the earliest data is at time 2.600000, when looking up transform from frame [base_link] to frame [map]
+[planner_server-10] [INFO] [1794738864.714971989] [global_costmap.global_costmap]: start
+[planner_server-10] [INFO] [1794738865.215913511] [planner_server]: Activating plugin GridBased of type NavfnPlanner
+[planner_server-10] [INFO] [1794738865.216980857] [planner_server]: Creating bond (planner_server) to lifecycle manager.
+[lifecycle_manager-18] [INFO] [1794738866.221875191] [lifecycle_manager_navigation]: Server planner_server connected with bond.
+[lifecycle_manager-18] [INFO] [1794738866.221901620] [lifecycle_manager_navigation]: [34m[1mActivating route_server[0m[0m
+[route_server-11] [INFO] [1794738866.222105870] [route_server]: Activating
+[route_server-11] [INFO] [1794738866.222239519] [route_server]: Creating bond (route_server) to lifecycle manager.
+[lifecycle_manager-18] [INFO] [1794738867.227094174] [lifecycle_manager_navigation]: Server route_server connected with bond.
+[lifecycle_manager-18] [INFO] [1794738867.227122584] [lifecycle_manager_navigation]: [34m[1mActivating behavior_server[0m[0m
+[behavior_server-12] [INFO] [1794738867.227374993] [behavior_server]: Activating
+[behavior_server-12] [INFO] [1794738867.227393853] [behavior_server]: Activating spin
+[behavior_server-12] [INFO] [1794738867.227402943] [behavior_server]: Activating backup
+[behavior_server-12] [INFO] [1794738867.227409913] [behavior_server]: Activating drive_on_heading
+[behavior_server-12] [INFO] [1794738867.227422613] [behavior_server]: Activating wait
+[behavior_server-12] [INFO] [1794738867.227428893] [behavior_server]: Activating assisted_teleop
+[behavior_server-12] [INFO] [1794738867.227439243] [behavior_server]: Creating bond (behavior_server) to lifecycle manager.
+[lifecycle_manager-18] [INFO] [1794738868.231487840] [lifecycle_manager_navigation]: Server behavior_server connected with bond.
+[lifecycle_manager-18] [INFO] [1794738868.231519060] [lifecycle_manager_navigation]: [34m[1mActivating velocity_smoother[0m[0m
+[velocity_smoother-15] [INFO] [1794738868.231735819] [velocity_smoother]: Activating
+[velocity_smoother-15] [INFO] [1794738868.231780879] [velocity_smoother]: Creating bond (velocity_smoother) to lifecycle manager.
+[lifecycle_manager-18] [INFO] [1794738869.236158436] [lifecycle_manager_navigation]: Server velocity_smoother connected with bond.
+[lifecycle_manager-18] [INFO] [1794738869.236184956] [lifecycle_manager_navigation]: [34m[1mActivating collision_monitor[0m[0m
+[collision_monitor-16] [INFO] [1794738869.236747384] [collision_monitor]: Activating
+[collision_monitor-16] [INFO] [1794738869.236771214] [collision_monitor]: Creating bond (collision_monitor) to lifecycle manager.
+[lifecycle_manager-18] [INFO] [1794738870.242068438] [lifecycle_manager_navigation]: Server collision_monitor connected with bond.
+[lifecycle_manager-18] [INFO] [1794738870.242094948] [lifecycle_manager_navigation]: [34m[1mActivating bt_navigator[0m[0m
+[bt_navigator-13] [INFO] [1794738870.242434117] [bt_navigator]: Activating
+[bt_navigator-13] [INFO] [1794738870.300583454] [bt_navigator]: Creating bond (bt_navigator) to lifecycle manager.
+[lifecycle_manager-18] [INFO] [1794738871.304894982] [lifecycle_manager_navigation]: Server bt_navigator connected with bond.
+[lifecycle_manager-18] [INFO] [1794738871.304921732] [lifecycle_manager_navigation]: [34m[1mActivating waypoint_follower[0m[0m
+[waypoint_follower-14] [INFO] [1794738871.305184691] [waypoint_follower]: Activating
+[waypoint_follower-14] [INFO] [1794738871.305216831] [waypoint_follower]: Creating bond (waypoint_follower) to lifecycle manager.
+[lifecycle_manager-18] [INFO] [1794738872.310935396] [lifecycle_manager_navigation]: Server waypoint_follower connected with bond.
+[lifecycle_manager-18] [INFO] [1794738872.310963825] [lifecycle_manager_navigation]: [34m[1mActivating docking_server[0m[0m
+[opennav_docking-17] [INFO] [1794738872.311232534] [docking_server]: Activating docking_server
+[opennav_docking-17] [INFO] [1794738872.318574220] [docking_server]: Creating bond (docking_server) to lifecycle manager.
+[lifecycle_manager-18] [INFO] [1794738873.324417695] [lifecycle_manager_navigation]: Server docking_server connected with bond.
+[lifecycle_manager-18] [INFO] [1794738873.324446075] [lifecycle_manager_navigation]: [34m[1mManaged nodes are active[0m[0m
+[lifecycle_manager-18] [INFO] [1794738873.324453555] [lifecycle_manager_navigation]: [34m[1mCreating bond timer...[0m[0m
+[bt_navigator-13] [INFO] [1794738875.436946780] [bt_navigator]: Begin navigating from current location (-1.93, -0.48) to (-0.57, 1.49)
+[controller_server-8] [INFO] [1794738875.457788031] [controller_server]: Received a goal, begin computing control effort.
+[controller_server-8] [WARN] [1794738875.457825031] [controller_server]: No goal checker was specified in parameter 'current_goal_checker'. Server will use only plugin loaded goal_checker . This warning will appear once.
+[controller_server-8] [WARN] [1794738875.457843731] [controller_server]: No progress checker was specified in parameter 'current_progress_checker'. Server will use only plugin loaded progress_checker . This warning will appear once.
+[parameter_bridge-2] [INFO] [1794738875.492619115] [ros_gz_bridge]: Passing message from ROS geometry_msgs/msg/Twist to Gazebo gz.msgs.Twist (showing msg only once per type)
+[controller_server-8] [INFO] [1794738876.657930582] [controller_server]: Passing new path to controller.
+[controller_server-8] [INFO] [1794738877.657936068] [controller_server]: Passing new path to controller.
+[ERROR] [controller_server-8]: process has died [pid 42427, exit code -9, cmd '/opt/ros/jazzy/lib/nav2_controller/controller_server --ros-args --log-level info --ros-args -p use_sim_time:=True --params-file /tmp/launch_params_byavsog2 -r /tf:=tf -r /tf_static:=tf_static -r cmd_vel:=cmd_vel_nav'].
+[bt_navigator-13] [WARN] [1794738879.588361974] [bt_navigator_navigate_to_pose_rclcpp_node]: Timed out while waiting for action server to acknowledge goal request for follow_path
+[bt_navigator-13] [WARN] [1794738879.597096404] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-13] [ERROR] [1794738879.597232804] [bt_navigator]: Goal failed
+[bt_navigator-13] [INFO] [1794738879.598655249] [bt_navigator]: Begin navigating from current location (-1.74, -0.04) to (1.93, 1.44)
+[bt_navigator-13] [WARN] [1794738879.638864336] [bt_navigator_navigate_to_pose_rclcpp_node]: Timed out while waiting for action server to acknowledge goal request for follow_path
+[bt_navigator-13] [WARN] [1794738879.648776063] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-13] [ERROR] [1794738879.648868023] [bt_navigator]: Goal failed
+[bt_navigator-13] [INFO] [1794738879.650239288] [bt_navigator]: Begin navigating from current location (-1.74, -0.04) to (1.68, -0.21)
+[bt_navigator-13] [WARN] [1794738879.690704483] [bt_navigator_navigate_to_pose_rclcpp_node]: Timed out while waiting for action server to acknowledge goal request for follow_path
+[bt_navigator-13] [WARN] [1794738879.700606221] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-13] [ERROR] [1794738879.700697630] [bt_navigator]: Goal failed
+[bt_navigator-13] [INFO] [1794738879.702121436] [bt_navigator]: Begin navigating from current location (-1.74, -0.04) to (1.78, -1.86)
+[bt_navigator-13] [WARN] [1794738879.742536131] [bt_navigator_navigate_to_pose_rclcpp_node]: Timed out while waiting for action server to acknowledge goal request for follow_path
+[bt_navigator-13] [WARN] [1794738879.752246519] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-13] [ERROR] [1794738879.752498578] [bt_navigator]: Goal failed
+[bt_navigator-13] [INFO] [1794738879.754329552] [bt_navigator]: Begin navigating from current location (-1.74, -0.04) to (-0.97, -1.86)
+[bt_navigator-13] [WARN] [1794738879.794563739] [bt_navigator_navigate_to_pose_rclcpp_node]: Timed out while waiting for action server to acknowledge goal request for follow_path
+[bt_navigator-13] [WARN] [1794738879.804501796] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-13] [ERROR] [1794738879.804591765] [bt_navigator]: Goal failed
+[bt_navigator-13] [INFO] [1794738879.806193650] [bt_navigator]: Begin navigating from current location (-1.73, -0.05) to (-1.92, 0.94)
+[bt_navigator-13] [WARN] [1794738879.836507039] [bt_navigator_navigate_to_pose_rclcpp_node]: Timed out while waiting for action server to acknowledge goal request for follow_path
+[bt_navigator-13] [WARN] [1794738879.846350986] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-13] [ERROR] [1794738879.846633345] [bt_navigator]: Goal failed
+[bt_navigator-13] [INFO] [1794738879.847922391] [bt_navigator]: Begin navigating from current location (-1.73, -0.05) to (0.53, 0.89)
+[bt_navigator-13] [WARN] [1794738879.889204394] [bt_navigator_navigate_to_pose_rclcpp_node]: Timed out while waiting for action server to acknowledge goal request for follow_path
+[bt_navigator-13] [WARN] [1794738879.898038815] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-13] [ERROR] [1794738879.898137085] [bt_navigator]: Goal failed
+[bt_navigator-13] [INFO] [1794738879.899578580] [bt_navigator]: Begin navigating from current location (-1.73, -0.05) to (-2.00, -0.50)
+[bt_navigator-13] [WARN] [1794738879.939793156] [bt_navigator_navigate_to_pose_rclcpp_node]: Timed out while waiting for action server to acknowledge goal request for follow_path
+[bt_navigator-13] [WARN] [1794738879.949688683] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-13] [ERROR] [1794738879.949765933] [bt_navigator]: Goal failed
+[bt_navigator-13] [INFO] [1794738879.950993639] [bt_navigator]: Begin navigating from current location (-1.73, -0.05) to (-0.57, 1.49)
+[bt_navigator-13] [WARN] [1794738879.992318452] [bt_navigator_navigate_to_pose_rclcpp_node]: Timed out while waiting for action server to acknowledge goal request for follow_path
+[bt_navigator-13] [WARN] [1794738880.001107942] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-13] [ERROR] [1794738880.001201762] [bt_navigator]: Goal failed
+[bt_navigator-13] [INFO] [1794738880.002797877] [bt_navigator]: Begin navigating from current location (-1.73, -0.05) to (1.93, 1.44)
+[bt_navigator-13] [WARN] [1794738880.043007413] [bt_navigator_navigate_to_pose_rclcpp_node]: Timed out while waiting for action server to acknowledge goal request for follow_path
+[bt_navigator-13] [WARN] [1794738880.052907260] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-13] [ERROR] [1794738880.052994810] [bt_navigator]: Goal failed
+[bt_navigator-13] [INFO] [1794738880.054158236] [bt_navigator]: Begin navigating from current location (-1.73, -0.05) to (1.68, -0.21)
+[bt_navigator-13] [WARN] [1794738880.094549842] [bt_navigator_navigate_to_pose_rclcpp_node]: Timed out while waiting for action server to acknowledge goal request for follow_path
+[bt_navigator-13] [WARN] [1794738880.104269850] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-13] [ERROR] [1794738880.104553089] [bt_navigator]: Goal failed
+[bt_navigator-13] [INFO] [1794738880.106472282] [bt_navigator]: Begin navigating from current location (-1.73, -0.04) to (1.78, -1.86)
+[bt_navigator-13] [WARN] [1794738880.146681569] [bt_navigator_navigate_to_pose_rclcpp_node]: Timed out while waiting for action server to acknowledge goal request for follow_path
+[bt_navigator-13] [WARN] [1794738880.156615876] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-13] [ERROR] [1794738880.156721415] [bt_navigator]: Goal failed
+[bt_navigator-13] [INFO] [1794738880.158256040] [bt_navigator]: Begin navigating from current location (-1.73, -0.04) to (-0.97, -1.86)
+[bt_navigator-13] [WARN] [1794738880.198479237] [bt_navigator_navigate_to_pose_rclcpp_node]: Timed out while waiting for action server to acknowledge goal request for follow_path
+[bt_navigator-13] [WARN] [1794738880.208376764] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-13] [ERROR] [1794738880.208524143] [bt_navigator]: Goal failed
+[bt_navigator-13] [INFO] [1794738880.210683206] [bt_navigator]: Begin navigating from current location (-1.73, -0.04) to (-1.92, 0.94)
+[bt_navigator-13] [WARN] [1794738880.250899702] [bt_navigator_navigate_to_pose_rclcpp_node]: Timed out while waiting for action server to acknowledge goal request for follow_path
+[bt_navigator-13] [WARN] [1794738880.260791860] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-13] [ERROR] [1794738880.260898129] [bt_navigator]: Goal failed
+[bt_navigator-13] [INFO] [1794738880.263330841] [bt_navigator]: Begin navigating from current location (-1.73, -0.04) to (0.53, 0.89)
+[bt_navigator-13] [WARN] [1794738880.303571498] [bt_navigator_navigate_to_pose_rclcpp_node]: Timed out while waiting for action server to acknowledge goal request for follow_path
+[bt_navigator-13] [WARN] [1794738880.313453025] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-13] [ERROR] [1794738880.313559164] [bt_navigator]: Goal failed
+[bt_navigator-13] [INFO] [1794738880.315283569] [bt_navigator]: Begin navigating from current location (-1.73, -0.04) to (-2.00, -0.50)
+[bt_navigator-13] [WARN] [1794738880.355556435] [bt_navigator_navigate_to_pose_rclcpp_node]: Timed out while waiting for action server to acknowledge goal request for follow_path
+[bt_navigator-13] [WARN] [1794738880.365410382] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-13] [ERROR] [1794738880.365517502] [bt_navigator]: Goal failed
+[bt_navigator-13] [INFO] [1794738880.367594085] [bt_navigator]: Begin navigating from current location (-1.73, -0.04) to (-0.57, 1.49)
+[bt_navigator-13] [WARN] [1794738880.407817631] [bt_navigator_navigate_to_pose_rclcpp_node]: Timed out while waiting for action server to acknowledge goal request for follow_path
+[bt_navigator-13] [WARN] [1794738880.417718848] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-13] [ERROR] [1794738880.417815288] [bt_navigator]: Goal failed
+[bt_navigator-13] [INFO] [1794738880.419680232] [bt_navigator]: Begin navigating from current location (-1.73, -0.04) to (1.93, 1.44)
+[bt_navigator-13] [WARN] [1794738880.459905008] [bt_navigator_navigate_to_pose_rclcpp_node]: Timed out while waiting for action server to acknowledge goal request for follow_path
+[bt_navigator-13] [WARN] [1794738880.469793096] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-13] [ERROR] [1794738880.469878785] [bt_navigator]: Goal failed
+[bt_navigator-13] [INFO] [1794738880.471710969] [bt_navigator]: Begin navigating from current location (-1.73, -0.04) to (1.68, -0.21)
+[bt_navigator-13] [WARN] [1794738880.511921176] [bt_navigator_navigate_to_pose_rclcpp_node]: Timed out while waiting for action server to acknowledge goal request for follow_path
+[bt_navigator-13] [WARN] [1794738880.521821503] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-13] [ERROR] [1794738880.521902913] [bt_navigator]: Goal failed
+[bt_navigator-13] [INFO] [1794738880.523282828] [bt_navigator]: Begin navigating from current location (-1.73, -0.04) to (1.78, -1.86)
+[bt_navigator-13] [WARN] [1794738880.563604264] [bt_navigator_navigate_to_pose_rclcpp_node]: Timed out while waiting for action server to acknowledge goal request for follow_path
+[bt_navigator-13] [WARN] [1794738880.573421141] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-13] [ERROR] [1794738880.573525861] [bt_navigator]: Goal failed
+[bt_navigator-13] [INFO] [1794738880.575598314] [bt_navigator]: Begin navigating from current location (-1.73, -0.04) to (-0.97, -1.86)
+[bt_navigator-13] [WARN] [1794738880.615806461] [bt_navigator_navigate_to_pose_rclcpp_node]: Timed out while waiting for action server to acknowledge goal request for follow_path
+[bt_navigator-13] [WARN] [1794738880.625708458] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-13] [ERROR] [1794738880.625801057] [bt_navigator]: Goal failed
+[bt_navigator-13] [INFO] [1794738880.627268133] [bt_navigator]: Begin navigating from current location (-1.73, -0.04) to (-1.92, 0.94)
+[bt_navigator-13] [WARN] [1794738880.667509129] [bt_navigator_navigate_to_pose_rclcpp_node]: Timed out while waiting for action server to acknowledge goal request for follow_path
+[bt_navigator-13] [WARN] [1794738880.677388966] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-13] [ERROR] [1794738880.677483066] [bt_navigator]: Goal failed
+[bt_navigator-13] [INFO] [1794738880.679497039] [bt_navigator]: Begin navigating from current location (-1.73, -0.04) to (0.53, 0.89)
+[bt_navigator-13] [WARN] [1794738880.719716105] [bt_navigator_navigate_to_pose_rclcpp_node]: Timed out while waiting for action server to acknowledge goal request for follow_path
+[bt_navigator-13] [WARN] [1794738880.729613262] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-13] [ERROR] [1794738880.729723682] [bt_navigator]: Goal failed
+[bt_navigator-13] [INFO] [1794738880.732055104] [bt_navigator]: Begin navigating from current location (-1.73, -0.04) to (-2.00, -0.50)
+[bt_navigator-13] [WARN] [1794738880.773467287] [bt_navigator_navigate_to_pose_rclcpp_node]: Timed out while waiting for action server to acknowledge goal request for follow_path
+[bt_navigator-13] [WARN] [1794738880.782178288] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-13] [ERROR] [1794738880.782277878] [bt_navigator]: Goal failed
+[bt_navigator-13] [INFO] [1794738880.783679403] [bt_navigator]: Begin navigating from current location (-1.73, -0.04) to (-0.57, 1.49)
+[bt_navigator-13] [WARN] [1794738880.823896469] [bt_navigator_navigate_to_pose_rclcpp_node]: Timed out while waiting for action server to acknowledge goal request for follow_path
+[bt_navigator-13] [WARN] [1794738880.833796927] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-13] [ERROR] [1794738880.833877736] [bt_navigator]: Goal failed
+[bt_navigator-13] [INFO] [1794738880.835293341] [bt_navigator]: Begin navigating from current location (-1.73, -0.04) to (1.93, 1.44)
+[bt_navigator-13] [WARN] [1794738880.875523128] [bt_navigator_navigate_to_pose_rclcpp_node]: Timed out while waiting for action server to acknowledge goal request for follow_path
+[bt_navigator-13] [WARN] [1794738880.885412945] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-13] [ERROR] [1794738880.885516215] [bt_navigator]: Goal failed
+[bt_navigator-13] [INFO] [1794738880.886888410] [bt_navigator]: Begin navigating from current location (-1.73, -0.04) to (1.68, -0.21)
+[bt_navigator-13] [WARN] [1794738880.927108417] [bt_navigator_navigate_to_pose_rclcpp_node]: Timed out while waiting for action server to acknowledge goal request for follow_path
+[bt_navigator-13] [WARN] [1794738880.937019064] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-13] [ERROR] [1794738880.937117013] [bt_navigator]: Goal failed
+[bt_navigator-13] [INFO] [1794738880.939407896] [bt_navigator]: Begin navigating from current location (-1.73, -0.04) to (1.78, -1.86)
+[bt_navigator-13] [WARN] [1794738880.979947721] [bt_navigator_navigate_to_pose_rclcpp_node]: Timed out while waiting for action server to acknowledge goal request for follow_path
+[bt_navigator-13] [WARN] [1794738880.989527839] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-13] [ERROR] [1794738880.989624899] [bt_navigator]: Goal failed
+[bt_navigator-13] [INFO] [1794738880.992038301] [bt_navigator]: Begin navigating from current location (-1.73, -0.04) to (-0.97, -1.86)
+[bt_navigator-13] [WARN] [1794738881.033303554] [bt_navigator_navigate_to_pose_rclcpp_node]: Timed out while waiting for action server to acknowledge goal request for follow_path
+[bt_navigator-13] [WARN] [1794738881.042166244] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-13] [ERROR] [1794738881.042274494] [bt_navigator]: Goal failed
+[bt_navigator-13] [INFO] [1794738881.044546376] [bt_navigator]: Begin navigating from current location (-1.73, -0.04) to (-1.92, 0.94)
+[bt_navigator-13] [WARN] [1794738881.084759913] [bt_navigator_navigate_to_pose_rclcpp_node]: Timed out while waiting for action server to acknowledge goal request for follow_path
+[bt_navigator-13] [WARN] [1794738881.094664620] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-13] [ERROR] [1794738881.094789320] [bt_navigator]: Goal failed
+[bt_navigator-13] [INFO] [1794738881.096443844] [bt_navigator]: Begin navigating from current location (-1.73, -0.04) to (0.53, 0.89)
+[bt_navigator-13] [WARN] [1794738881.136786760] [bt_navigator_navigate_to_pose_rclcpp_node]: Timed out while waiting for action server to acknowledge goal request for follow_path
+[bt_navigator-13] [WARN] [1794738881.146562498] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-13] [ERROR] [1794738881.146674917] [bt_navigator]: Goal failed
+[bt_navigator-13] [INFO] [1794738881.149235059] [bt_navigator]: Begin navigating from current location (-1.73, -0.04) to (-2.00, -0.50)
+[bt_navigator-13] [WARN] [1794738881.189472305] [bt_navigator_navigate_to_pose_rclcpp_node]: Timed out while waiting for action server to acknowledge goal request for follow_path
+[bt_navigator-13] [WARN] [1794738881.199345282] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-13] [ERROR] [1794738881.199429842] [bt_navigator]: Goal failed
+[bt_navigator-13] [INFO] [1794738881.201325926] [bt_navigator]: Begin navigating from current location (-1.73, -0.04) to (-0.57, 1.49)
+[bt_navigator-13] [WARN] [1794738881.241552572] [bt_navigator_navigate_to_pose_rclcpp_node]: Timed out while waiting for action server to acknowledge goal request for follow_path
+[bt_navigator-13] [WARN] [1794738881.251458919] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-13] [ERROR] [1794738881.251560559] [bt_navigator]: Goal failed
+[bt_navigator-13] [INFO] [1794738881.253665592] [bt_navigator]: Begin navigating from current location (-1.73, -0.04) to (1.93, 1.44)
+[bt_navigator-13] [WARN] [1794738881.293877038] [bt_navigator_navigate_to_pose_rclcpp_node]: Timed out while waiting for action server to acknowledge goal request for follow_path
+[bt_navigator-13] [WARN] [1794738881.303774306] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-13] [ERROR] [1794738881.303870225] [bt_navigator]: Goal failed
+[bt_navigator-13] [INFO] [1794738881.305515950] [bt_navigator]: Begin navigating from current location (-1.73, -0.04) to (1.68, -0.21)
+[bt_navigator-13] [WARN] [1794738881.345727506] [bt_navigator_navigate_to_pose_rclcpp_node]: Timed out while waiting for action server to acknowledge goal request for follow_path
+[bt_navigator-13] [WARN] [1794738881.355642753] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-13] [ERROR] [1794738881.355757343] [bt_navigator]: Goal failed
+[bt_navigator-13] [INFO] [1794738881.358059775] [bt_navigator]: Begin navigating from current location (-1.73, -0.04) to (1.78, -1.86)
+[bt_navigator-13] [WARN] [1794738881.398285212] [bt_navigator_navigate_to_pose_rclcpp_node]: Timed out while waiting for action server to acknowledge goal request for follow_path
+[bt_navigator-13] [WARN] [1794738881.408186199] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-13] [ERROR] [1794738881.408298118] [bt_navigator]: Goal failed
+[bt_navigator-13] [INFO] [1794738881.409902243] [bt_navigator]: Begin navigating from current location (-1.73, -0.04) to (-0.97, -1.86)
+[bt_navigator-13] [WARN] [1794738881.451179806] [bt_navigator_navigate_to_pose_rclcpp_node]: Timed out while waiting for action server to acknowledge goal request for follow_path
+[bt_navigator-13] [WARN] [1794738881.460027327] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-13] [ERROR] [1794738881.460167476] [bt_navigator]: Goal failed
+[bt_navigator-13] [INFO] [1794738881.462067810] [bt_navigator]: Begin navigating from current location (-1.73, -0.04) to (-1.92, 0.94)
+[bt_navigator-13] [WARN] [1794738881.493406496] [bt_navigator_navigate_to_pose_rclcpp_node]: Timed out while waiting for action server to acknowledge goal request for follow_path
+[bt_navigator-13] [WARN] [1794738881.502210036] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-13] [ERROR] [1794738881.502319526] [bt_navigator]: Goal failed
+[bt_navigator-13] [INFO] [1794738881.504403179] [bt_navigator]: Begin navigating from current location (-1.73, -0.04) to (0.53, 0.89)
+[bt_navigator-13] [WARN] [1794738881.544620276] [bt_navigator_navigate_to_pose_rclcpp_node]: Timed out while waiting for action server to acknowledge goal request for follow_path
+[bt_navigator-13] [WARN] [1794738881.554542933] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-13] [ERROR] [1794738881.554638212] [bt_navigator]: Goal failed
+[bt_navigator-13] [INFO] [1794738881.557769392] [bt_navigator]: Begin navigating from current location (-1.73, -0.04) to (-2.00, -0.50)
+[bt_navigator-13] [WARN] [1794738881.587981462] [bt_navigator_navigate_to_pose_rclcpp_node]: Timed out while waiting for action server to acknowledge goal request for follow_path
+[bt_navigator-13] [WARN] [1794738881.597885929] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-13] [ERROR] [1794738881.597988898] [bt_navigator]: Goal failed
+[bt_navigator-13] [INFO] [1794738881.599713853] [bt_navigator]: Begin navigating from current location (-1.73, -0.04) to (-0.57, 1.49)
+[bt_navigator-13] [WARN] [1794738881.639933929] [bt_navigator_navigate_to_pose_rclcpp_node]: Timed out while waiting for action server to acknowledge goal request for follow_path
+[bt_navigator-13] [WARN] [1794738881.649827496] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-13] [ERROR] [1794738881.649933896] [bt_navigator]: Goal failed
+[bt_navigator-13] [INFO] [1794738881.652712347] [bt_navigator]: Begin navigating from current location (-1.73, -0.04) to (1.93, 1.44)
+[bt_navigator-13] [WARN] [1794738881.692915903] [bt_navigator_navigate_to_pose_rclcpp_node]: Timed out while waiting for action server to acknowledge goal request for follow_path
+[bt_navigator-13] [WARN] [1794738881.702819270] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-13] [ERROR] [1794738881.702904270] [bt_navigator]: Goal failed
+[bt_navigator-13] [INFO] [1794738881.703738427] [bt_navigator]: Begin navigating from current location (-1.73, -0.04) to (1.68, -0.21)
+[bt_navigator-13] [WARN] [1794738881.743957503] [bt_navigator_navigate_to_pose_rclcpp_node]: Timed out while waiting for action server to acknowledge goal request for follow_path
+[bt_navigator-13] [WARN] [1794738881.753857301] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-13] [ERROR] [1794738881.753952300] [bt_navigator]: Goal failed
+[bt_navigator-13] [INFO] [1794738881.755997334] [bt_navigator]: Begin navigating from current location (-1.73, -0.04) to (1.78, -1.86)
+[bt_navigator-13] [WARN] [1794738881.797285537] [bt_navigator_navigate_to_pose_rclcpp_node]: Timed out while waiting for action server to acknowledge goal request for follow_path
+[bt_navigator-13] [WARN] [1794738881.806110717] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-13] [ERROR] [1794738881.806300686] [bt_navigator]: Goal failed
+[bt_navigator-13] [INFO] [1794738881.808084001] [bt_navigator]: Begin navigating from current location (-1.73, -0.04) to (-0.97, -1.86)
+[bt_navigator-13] [WARN] [1794738881.849371444] [bt_navigator_navigate_to_pose_rclcpp_node]: Timed out while waiting for action server to acknowledge goal request for follow_path
+[bt_navigator-13] [WARN] [1794738881.858211304] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-13] [ERROR] [1794738881.858310914] [bt_navigator]: Goal failed
+[bt_navigator-13] [INFO] [1794738881.860380597] [bt_navigator]: Begin navigating from current location (-1.73, -0.04) to (-1.92, 0.94)
+[bt_navigator-13] [WARN] [1794738881.900601313] [bt_navigator_navigate_to_pose_rclcpp_node]: Timed out while waiting for action server to acknowledge goal request for follow_path
+[bt_navigator-13] [WARN] [1794738881.910501311] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-13] [ERROR] [1794738881.910604000] [bt_navigator]: Goal failed
+[bt_navigator-13] [INFO] [1794738881.913349401] [bt_navigator]: Begin navigating from current location (-1.73, -0.04) to (0.53, 0.89)
+[bt_navigator-13] [WARN] [1794738881.953577927] [bt_navigator_navigate_to_pose_rclcpp_node]: Timed out while waiting for action server to acknowledge goal request for follow_path
+[bt_navigator-13] [WARN] [1794738881.963477794] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-13] [ERROR] [1794738881.963597064] [bt_navigator]: Goal failed
+[bt_navigator-13] [INFO] [1794738881.966610874] [bt_navigator]: Begin navigating from current location (-1.73, -0.04) to (-2.00, -0.50)
+[bt_navigator-13] [WARN] [1794738882.006821441] [bt_navigator_navigate_to_pose_rclcpp_node]: Timed out while waiting for action server to acknowledge goal request for follow_path
+[bt_navigator-13] [WARN] [1794738882.016724288] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-13] [ERROR] [1794738882.016809908] [bt_navigator]: Goal failed
+[bt_navigator-13] [INFO] [1794738882.018636651] [bt_navigator]: Begin navigating from current location (-1.73, -0.04) to (-0.57, 1.49)
+[bt_navigator-13] [WARN] [1794738882.058858318] [bt_navigator_navigate_to_pose_rclcpp_node]: Timed out while waiting for action server to acknowledge goal request for follow_path
+[bt_navigator-13] [WARN] [1794738882.068749735] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-13] [ERROR] [1794738882.068836655] [bt_navigator]: Goal failed
+[bt_navigator-13] [INFO] [1794738882.071073147] [bt_navigator]: Begin navigating from current location (-1.73, -0.04) to (1.93, 1.44)
+[bt_navigator-13] [WARN] [1794738882.112405070] [bt_navigator_navigate_to_pose_rclcpp_node]: Timed out while waiting for action server to acknowledge goal request for follow_path
+[bt_navigator-13] [WARN] [1794738882.121240161] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-13] [ERROR] [1794738882.121355760] [bt_navigator]: Goal failed
+[bt_navigator-13] [INFO] [1794738882.123808352] [bt_navigator]: Begin navigating from current location (-1.73, -0.04) to (1.68, -0.21)
+[bt_navigator-13] [WARN] [1794738882.164029319] [bt_navigator_navigate_to_pose_rclcpp_node]: Timed out while waiting for action server to acknowledge goal request for follow_path
+[bt_navigator-13] [WARN] [1794738882.173927226] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-13] [ERROR] [1794738882.174026355] [bt_navigator]: Goal failed
+[bt_navigator-13] [INFO] [1794738882.175676060] [bt_navigator]: Begin navigating from current location (-1.73, -0.04) to (1.78, -1.86)
+[bt_navigator-13] [WARN] [1794738882.215891136] [bt_navigator_navigate_to_pose_rclcpp_node]: Timed out while waiting for action server to acknowledge goal request for follow_path
+[bt_navigator-13] [WARN] [1794738882.225790284] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-13] [ERROR] [1794738882.225887503] [bt_navigator]: Goal failed
+[bt_navigator-13] [INFO] [1794738882.227719747] [bt_navigator]: Begin navigating from current location (-1.73, -0.04) to (-0.97, -1.86)
+[bt_navigator-13] [WARN] [1794738882.267933963] [bt_navigator_navigate_to_pose_rclcpp_node]: Timed out while waiting for action server to acknowledge goal request for follow_path
+[bt_navigator-13] [WARN] [1794738882.277835221] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-13] [ERROR] [1794738882.277928340] [bt_navigator]: Goal failed
+[bt_navigator-13] [INFO] [1794738882.279633355] [bt_navigator]: Begin navigating from current location (-1.73, -0.04) to (-1.92, 0.94)
+[bt_navigator-13] [WARN] [1794738882.319846871] [bt_navigator_navigate_to_pose_rclcpp_node]: Timed out while waiting for action server to acknowledge goal request for follow_path
+[lifecycle_manager-18] [INFO] [1794738882.324530406] [lifecycle_manager_navigation]: [34m[1mHave not received a heartbeat from controller_server.[0m[0m
+[lifecycle_manager-18] [ERROR] [1794738882.324552845] [lifecycle_manager_navigation]: CRITICAL FAILURE: SERVER controller_server IS DOWN after not receiving a heartbeat for 4000 ms. Shutting down related nodes.
+[lifecycle_manager-18] [INFO] [1794738882.324576915] [lifecycle_manager_navigation]: [34m[1mTerminating bond timer...[0m[0m
+[lifecycle_manager-18] [INFO] [1794738882.324583345] [lifecycle_manager_navigation]: [34m[1mResetting managed nodes...[0m[0m
+[lifecycle_manager-18] [INFO] [1794738882.324637005] [lifecycle_manager_navigation]: [34m[1mDeactivating docking_server[0m[0m
+[opennav_docking-17] [INFO] [1794738882.324919864] [docking_server]: Deactivating docking_server
+[bt_navigator-13] [WARN] [1794738882.329757758] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-13] [ERROR] [1794738882.329861828] [bt_navigator]: Goal failed
+[opennav_docking-17] [INFO] [1794738882.334107314] [docking_server]: Destroying bond (docking_server) to lifecycle manager.
+[bt_navigator-13] [INFO] [1794738882.334841731] [bt_navigator]: Begin navigating from current location (-1.73, -0.04) to (0.53, 0.89)
+[bt_navigator-13] [WARN] [1794738882.375056048] [bt_navigator_navigate_to_pose_rclcpp_node]: Timed out while waiting for action server to acknowledge goal request for follow_path
+[bt_navigator-13] [WARN] [1794738882.384954395] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-13] [ERROR] [1794738882.385029535] [bt_navigator]: Goal failed
+[bt_navigator-13] [INFO] [1794738882.387774716] [bt_navigator]: Begin navigating from current location (-1.73, -0.04) to (-2.00, -0.50)
+[bt_navigator-13] [WARN] [1794738882.427985172] [bt_navigator_navigate_to_pose_rclcpp_node]: Timed out while waiting for action server to acknowledge goal request for follow_path
+[bt_navigator-13] [WARN] [1794738882.437885529] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-13] [ERROR] [1794738882.437975309] [bt_navigator]: Goal failed
+[bt_navigator-13] [INFO] [1794738882.439893423] [bt_navigator]: Begin navigating from current location (-1.73, -0.04) to (-0.57, 1.49)
+[lifecycle_manager-18] [INFO] [1794738882.447818226] [lifecycle_manager_navigation]: [34m[1mDeactivating waypoint_follower[0m[0m
+[waypoint_follower-14] [INFO] [1794738882.448086015] [waypoint_follower]: Deactivating
+[waypoint_follower-14] [INFO] [1794738882.448117095] [waypoint_follower]: Destroying bond (waypoint_follower) to lifecycle manager.
+[bt_navigator-13] [WARN] [1794738882.470101192] [bt_navigator_navigate_to_pose_rclcpp_node]: Timed out while waiting for action server to acknowledge goal request for follow_path
+[bt_navigator-13] [WARN] [1794738882.480002700] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-13] [ERROR] [1794738882.480088949] [bt_navigator]: Goal failed
+[bt_navigator-13] [INFO] [1794738882.481031216] [bt_navigator]: Begin navigating from current location (-1.73, -0.04) to (1.93, 1.44)
+[bt_navigator-13] [WARN] [1794738882.522300139] [bt_navigator_navigate_to_pose_rclcpp_node]: Timed out while waiting for action server to acknowledge goal request for follow_path
+[bt_navigator-13] [WARN] [1794738882.531157940] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-13] [ERROR] [1794738882.531349739] [bt_navigator]: Goal failed
+[bt_navigator-13] [INFO] [1794738882.534214689] [bt_navigator]: Begin navigating from current location (-1.73, -0.04) to (1.68, -0.21)
+[lifecycle_manager-18] [INFO] [1794738882.562539985] [lifecycle_manager_navigation]: [34m[1mDeactivating bt_navigator[0m[0m
+[bt_navigator-13] [INFO] [1794738882.562788634] [bt_navigator]: Deactivating
+[bt_navigator-13] [WARN] [1794738882.562805634] [bt_navigator]: [navigate_to_pose] [ActionServer] Requested to deactivate server but goal is still executing. Should check if action server is running before deactivating.
+[bt_navigator-13] [ERROR] [1794738882.585647889] [bt_navigator_navigate_to_pose_rclcpp_node]: Failed to cancel action server for follow_path
+[bt_navigator-13] [ERROR] [1794738882.605751952] [bt_navigator_navigate_to_pose_rclcpp_node]: Failed to get result for follow_path in node halt!
+[bt_navigator-13] [WARN] [1794738882.605825912] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[bt_navigator-13] [INFO] [1794738882.605894451] [bt_navigator]: Goal canceled
+[bt_navigator-13] [WARN] [1794738882.605901581] [bt_navigator]: [navigate_to_pose] [ActionServer] Stopping the thread per request.
+[bt_navigator-13] [INFO] [1794738882.605947291] [bt_navigator]: Destroying bond (bt_navigator) to lifecycle manager.
+[bt_navigator-13] [INFO] [1794738882.709927906] [bt_navigator]: Action server is inactive. Rejecting the goal.
+[lifecycle_manager-18] [INFO] [1794738882.720306521] [lifecycle_manager_navigation]: [34m[1mDeactivating collision_monitor[0m[0m
+[collision_monitor-16] [INFO] [1794738882.720555711] [collision_monitor]: Deactivating
+[collision_monitor-16] [INFO] [1794738882.720583690] [collision_monitor]: Destroying bond (collision_monitor) to lifecycle manager.
+[lifecycle_manager-18] [INFO] [1794738882.834165623] [lifecycle_manager_navigation]: [34m[1mDeactivating velocity_smoother[0m[0m
+[velocity_smoother-15] [INFO] [1794738882.834475522] [velocity_smoother]: Deactivating
+[velocity_smoother-15] [INFO] [1794738882.834507502] [velocity_smoother]: Destroying bond (velocity_smoother) to lifecycle manager.
+[lifecycle_manager-18] [INFO] [1794738882.948486534] [lifecycle_manager_navigation]: [34m[1mDeactivating behavior_server[0m[0m
+[behavior_server-12] [INFO] [1794738882.948712393] [behavior_server]: Deactivating
+[behavior_server-12] [INFO] [1794738882.948744893] [behavior_server]: Destroying bond (behavior_server) to lifecycle manager.
+[lifecycle_manager-18] [INFO] [1794738883.062018097] [lifecycle_manager_navigation]: [34m[1mDeactivating route_server[0m[0m
+[route_server-11] [INFO] [1794738883.062255286] [route_server]: Deactivating
+[route_server-11] [INFO] [1794738883.062277836] [route_server]: Destroying bond (route_server) to lifecycle manager.
+[lifecycle_manager-18] [INFO] [1794738883.175910719] [lifecycle_manager_navigation]: [34m[1mDeactivating planner_server[0m[0m
+[planner_server-10] [INFO] [1794738883.176094468] [planner_server]: Deactivating
+[planner_server-10] [INFO] [1794738883.176129568] [global_costmap.global_costmap]: Deactivating
+[planner_server-10] [INFO] [1794738883.215117589] [planner_server]: Deactivating plugin GridBased of type NavfnPlanner
+[planner_server-10] [INFO] [1794738883.215156438] [planner_server]: Destroying bond (planner_server) to lifecycle manager.
+[lifecycle_manager-18] [INFO] [1794738883.328423672] [lifecycle_manager_navigation]: [34m[1mDeactivating smoother_server[0m[0m
+[smoother_server-9] [INFO] [1794738883.328613642] [smoother_server]: Deactivating
+[smoother_server-9] [INFO] [1794738883.328642192] [smoother_server]: Destroying bond (smoother_server) to lifecycle manager.
+[lifecycle_manager-18] [INFO] [1794738883.442839053] [lifecycle_manager_navigation]: [34m[1mDeactivating controller_server[0m[0m
+[bt_navigator-13] [INFO] [1794738884.711934200] [bt_navigator]: Action server is inactive. Rejecting the goal.
+[bt_navigator-13] [INFO] [1794738886.713192178] [bt_navigator]: Action server is inactive. Rejecting the goal.
+[bt_navigator-13] [INFO] [1794738888.714335639] [bt_navigator]: Action server is inactive. Rejecting the goal.
+[bt_navigator-13] [INFO] [1794738890.715679911] [bt_navigator]: Action server is inactive. Rejecting the goal.
+[bt_navigator-13] [INFO] [1794738892.717031716] [bt_navigator]: Action server is inactive. Rejecting the goal.
+[bt_navigator-13] [INFO] [1794738894.718273153] [bt_navigator]: Action server is inactive. Rejecting the goal.
+[bt_navigator-13] [INFO] [1794738896.719846601] [bt_navigator]: Action server is inactive. Rejecting the goal.
+[bt_navigator-13] [INFO] [1794738898.721442162] [bt_navigator]: Action server is inactive. Rejecting the goal.
+[bt_navigator-13] [INFO] [1794738900.723072824] [bt_navigator]: Action server is inactive. Rejecting the goal.
+[bt_navigator-13] [INFO] [1794738902.724488280] [bt_navigator]: Action server is inactive. Rejecting the goal.
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[opennav_docking-17] [INFO] [1794738905.198582093] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[opennav_docking-17] [INFO] [1794738905.198630573] [docking_server]: Running Nav2 LifecycleNode rcl preshutdown (docking_server)
+[waypoint_follower-14] [INFO] [1794738905.198590543] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[waypoint_follower-14] [INFO] [1794738905.198656743] [waypoint_follower]: Running Nav2 LifecycleNode rcl preshutdown (waypoint_follower)
+[waypoint_follower-14] [INFO] [1794738905.198691143] [waypoint_follower]: Cleaning up
+[collision_monitor-16] [INFO] [1794738905.198587853] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[collision_monitor-16] [INFO] [1794738905.198653643] [collision_monitor]: Running Nav2 LifecycleNode rcl preshutdown (collision_monitor)
+[collision_monitor-16] [INFO] [1794738905.198691263] [collision_monitor]: Cleaning up
+[collision_monitor-16] [INFO] [1794738905.198709603] [collision_monitor]: [PolygonStop]: Destroying Circle
+[collision_monitor-16] [INFO] [1794738905.198716693] [collision_monitor]: [PolygonStop]: Destroying Polygon
+[collision_monitor-16] [INFO] [1794738905.198724103] [collision_monitor]: [PolygonSlow]: Destroying Polygon
+[collision_monitor-16] [INFO] [1794738905.198730383] [collision_monitor]: [FootprintApproach]: Destroying Polygon
+[collision_monitor-16] [INFO] [1794738905.198737863] [collision_monitor]: [scan]: Destroying Scan
+[behavior_server-12] [INFO] [1794738905.198596503] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[behavior_server-12] [INFO] [1794738905.198655963] [behavior_server]: Running Nav2 LifecycleNode rcl preshutdown (behavior_server)
+[behavior_server-12] [INFO] [1794738905.198692953] [behavior_server]: Cleaning up
+[lifecycle_manager-18] [INFO] [1794738905.198603203] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[lifecycle_manager-18] [INFO] [1794738905.198655713] [lifecycle_manager_navigation]: Running Nav2 LifecycleManager rcl preshutdown (lifecycle_manager_navigation)
+[amcl-6] [INFO] [1794738905.198611863] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[amcl-6] [INFO] [1794738905.198656853] [amcl]: Running Nav2 LifecycleNode rcl preshutdown (amcl)
+[amcl-6] [INFO] [1794738905.198690693] [amcl]: Deactivating
+[amcl-6] [INFO] [1794738905.198704943] [amcl]: Destroying bond (amcl) to lifecycle manager.
+[velocity_smoother-15] [INFO] [1794738905.198654493] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[velocity_smoother-15] [INFO] [1794738905.198711093] [velocity_smoother]: Running Nav2 LifecycleNode rcl preshutdown (velocity_smoother)
+[velocity_smoother-15] [INFO] [1794738905.198740613] [velocity_smoother]: Cleaning up
+[velocity_smoother-15] [INFO] [1794738905.198754843] [velocity_smoother]: Destroying bond (velocity_smoother) to lifecycle manager.
+[route_server-11] [INFO] [1794738905.198687883] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[route_server-11] [INFO] [1794738905.198736733] [route_server]: Running Nav2 LifecycleNode rcl preshutdown (route_server)
+[route_server-11] [INFO] [1794738905.198774523] [route_server]: Cleaning up
+[INFO] [topic_heartbeat-23]: sending signal 'SIGINT' to process[topic_heartbeat-23]
+[INFO] [job_roster-22]: sending signal 'SIGINT' to process[job_roster-22]
+[INFO] [mcu_standin_node-21]: sending signal 'SIGINT' to process[mcu_standin_node-21]
+[INFO] [health_monitor_node-20]: sending signal 'SIGINT' to process[health_monitor_node-20]
+[INFO] [lifecycle_manager-18]: sending signal 'SIGINT' to process[lifecycle_manager-18]
+[INFO] [opennav_docking-17]: sending signal 'SIGINT' to process[opennav_docking-17]
+[INFO] [collision_monitor-16]: sending signal 'SIGINT' to process[collision_monitor-16]
+[INFO] [velocity_smoother-15]: sending signal 'SIGINT' to process[velocity_smoother-15]
+[INFO] [waypoint_follower-14]: sending signal 'SIGINT' to process[waypoint_follower-14]
+[INFO] [bt_navigator-13]: sending signal 'SIGINT' to process[bt_navigator-13]
+[INFO] [behavior_server-12]: sending signal 'SIGINT' to process[behavior_server-12]
+[INFO] [route_server-11]: sending signal 'SIGINT' to process[route_server-11]
+[ERROR] [velocity_smoother-15]: process has died [pid 42434, exit code -2, cmd '/opt/ros/jazzy/lib/nav2_velocity_smoother/velocity_smoother --ros-args --log-level info --ros-args -r __node:=velocity_smoother -p use_sim_time:=True --params-file /tmp/launch_params_byavsog2 -r /tf:=tf -r /tf_static:=tf_static -r cmd_vel:=cmd_vel_nav'].
+[INFO] [planner_server-10]: sending signal 'SIGINT' to process[planner_server-10]
+[INFO] [smoother_server-9]: sending signal 'SIGINT' to process[smoother_server-9]
+[INFO] [lifecycle_manager-7]: sending signal 'SIGINT' to process[lifecycle_manager-7]
+[INFO] [amcl-6]: sending signal 'SIGINT' to process[amcl-6]
+[INFO] [map_server-5]: sending signal 'SIGINT' to process[map_server-5]
+[INFO] [robot_state_publisher-3]: sending signal 'SIGINT' to process[robot_state_publisher-3]
+[INFO] [parameter_bridge-2]: sending signal 'SIGINT' to process[parameter_bridge-2]
+[INFO] [gazebo-1]: sending signal 'SIGINT' to process[gazebo-1]
+[lifecycle_manager-7] [INFO] [1794738905.198744983] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[lifecycle_manager-7] [INFO] [1794738905.198799293] [lifecycle_manager_localization]: Running Nav2 LifecycleManager rcl preshutdown (lifecycle_manager_localization)
+[lifecycle_manager-7] [INFO] [1794738905.198821243] [lifecycle_manager_localization]: [34m[1mTerminating bond timer...[0m[0m
+[gazebo-1] [1;36m[Dbg] [SignalHandler.cc:142] [0m[1;36mReceived signal[[0m[1;36m2[0m[1;36m].[0m
+[gazebo-1] [1;36m[Dbg] [ServerPrivate.cc:122] [0m[1;36mServer received signal[[0m[1;36m2[0m[1;36m][0m
+[gazebo-1] [1;36m[Dbg] [Sensors.cc:565] [0m[1;36mSensorsPrivate::Stop[0m[1;36m[0m
+[opennav_docking-17] [INFO] [1794738905.199027112] [docking_server]: Cleaning up docking_server
+[bt_navigator-13] [INFO] [1794738905.198763913] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[bt_navigator-13] [INFO] [1794738905.198803183] [bt_navigator]: Running Nav2 LifecycleNode rcl preshutdown (bt_navigator)
+[bt_navigator-13] [INFO] [1794738905.198836173] [bt_navigator]: Cleaning up
+[parameter_bridge-2] [INFO] [1794738905.198806683] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[planner_server-10] [INFO] [1794738905.198868743] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[planner_server-10] [INFO] [1794738905.198909112] [planner_server]: Running Nav2 LifecycleNode rcl preshutdown (planner_server)
+[planner_server-10] [INFO] [1794738905.198942552] [planner_server]: Cleaning up
+[smoother_server-9] [INFO] [1794738905.198884562] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[smoother_server-9] [INFO] [1794738905.198934112] [smoother_server]: Running Nav2 LifecycleNode rcl preshutdown (smoother_server)
+[smoother_server-9] [INFO] [1794738905.198970322] [smoother_server]: Cleaning up
+[robot_state_publisher-3] [INFO] [1794738905.198900722] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[map_server-5] [INFO] [1794738905.199110432] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[map_server-5] [INFO] [1794738905.199189381] [map_server]: Running Nav2 LifecycleNode rcl preshutdown (map_server)
+[map_server-5] [INFO] [1794738905.199224701] [map_server]: Deactivating
+[map_server-5] [INFO] [1794738905.199235591] [map_server]: Destroying bond (map_server) to lifecycle manager.
+[collision_monitor-16] [INFO] [1794738905.207509464] [collision_monitor]: Destroying bond (collision_monitor) to lifecycle manager.
+[topic_heartbeat-23] Traceback (most recent call last):
+[topic_heartbeat-23]   File "/ws/install/oomwoo_health_kit/lib/oomwoo_health_kit/topic_heartbeat", line 33, in <module>
+[topic_heartbeat-23]     sys.exit(load_entry_point('oomwoo-health-kit==0.0.1', 'console_scripts', 'topic_heartbeat')())
+[topic_heartbeat-23]              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[topic_heartbeat-23]   File "/ws/install/oomwoo_health_kit/lib/python3.12/site-packages/oomwoo_health_kit/topic_heartbeat_node.py", line 290, in main
+[topic_heartbeat-23]     node.destroy_node()
+[topic_heartbeat-23]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py", line 1956, in destroy_node
+[topic_heartbeat-23]     self.destroy_publisher(self._publishers[0])
+[topic_heartbeat-23]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py", line 1836, in destroy_publisher
+[topic_heartbeat-23]     publisher.destroy()
+[topic_heartbeat-23]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/publisher.py", line 105, in destroy
+[topic_heartbeat-23]     self.__publisher.destroy_when_not_in_use()
+[topic_heartbeat-23] KeyboardInterrupt
+[amcl-6] [INFO] [1794738905.208891730] [amcl]: Cleaning up
+[map_server-5] [INFO] [1794738905.209500977] [map_server]: Cleaning up
+[map_server-5] [INFO] [1794738905.209530567] [map_server]: Destroying bond (map_server) to lifecycle manager.
+[mcu_standin_node-21] Traceback (most recent call last):
+[mcu_standin_node-21]   File "/ws/install/oomwoo_health_kit/lib/oomwoo_health_kit/mcu_standin_node", line 33, in <module>
+[mcu_standin_node-21]     sys.exit(load_entry_point('oomwoo-health-kit==0.0.1', 'console_scripts', 'mcu_standin_node')())
+[mcu_standin_node-21]              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[mcu_standin_node-21]   File "/ws/install/oomwoo_health_kit/lib/python3.12/site-packages/oomwoo_health_kit/mcu_standin_node.py", line 121, in main
+[mcu_standin_node-21]     node.destroy_node()
+[mcu_standin_node-21]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py", line 1956, in destroy_node
+[mcu_standin_node-21]     self.destroy_publisher(self._publishers[0])
+[mcu_standin_node-21]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py", line 1836, in destroy_publisher
+[mcu_standin_node-21]     publisher.destroy()
+[mcu_standin_node-21]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/publisher.py", line 105, in destroy
+[mcu_standin_node-21]     self.__publisher.destroy_when_not_in_use()
+[mcu_standin_node-21] KeyboardInterrupt
+[behavior_server-12] [INFO] [1794738905.214113142] [behavior_server]: Destroying bond (behavior_server) to lifecycle manager.
+[job_roster-22] Traceback (most recent call last):
+[job_roster-22]   File "/ws/install/oomwoo_health_kit/lib/oomwoo_health_kit/job_roster", line 33, in <module>
+[job_roster-22]     sys.exit(load_entry_point('oomwoo-health-kit==0.0.1', 'console_scripts', 'job_roster')())
+[job_roster-22]              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[job_roster-22]   File "/ws/install/oomwoo_health_kit/lib/python3.12/site-packages/oomwoo_health_kit/job_roster_node.py", line 131, in main
+[job_roster-22]     node.destroy_node()
+[job_roster-22]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py", line 1962, in destroy_node
+[job_roster-22]     self.destroy_service(self._services[0])
+[job_roster-22]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py", line 1886, in destroy_service
+[job_roster-22]     service.destroy()
+[job_roster-22]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/service.py", line 123, in destroy
+[job_roster-22]     self.__service.destroy_when_not_in_use()
+[job_roster-22] KeyboardInterrupt
+[velocity_smoother-15] [INFO] [1794738905.217601960] [velocity_smoother]: Destroying
+[health_monitor_node-20] Traceback (most recent call last):
+[health_monitor_node-20]   File "/ws/install/oomwoo_health_monitor/lib/oomwoo_health_monitor/health_monitor_node", line 33, in <module>
+[health_monitor_node-20]     sys.exit(load_entry_point('oomwoo-health-monitor==0.1.0', 'console_scripts', 'health_monitor_node')())
+[health_monitor_node-20]              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[health_monitor_node-20]   File "/ws/install/oomwoo_health_monitor/lib/python3.12/site-packages/oomwoo_health_monitor/health_monitor_node.py", line 137, in main
+[health_monitor_node-20]     node.destroy_node()
+[health_monitor_node-20]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py", line 1958, in destroy_node
+[health_monitor_node-20]     self.destroy_subscription(self._subscriptions[0])
+[health_monitor_node-20]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py", line 1854, in destroy_subscription
+[health_monitor_node-20]     subscription.destroy()
+[health_monitor_node-20]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/subscription.py", line 101, in destroy
+[health_monitor_node-20]     self.handle.destroy_when_not_in_use()
+[health_monitor_node-20] KeyboardInterrupt
+[collision_monitor-16] [INFO] [1794738905.221051289] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[behavior_server-12] [INFO] [1794738905.229038503] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[amcl-6] [INFO] [1794738905.231380665] [amcl]: Destroying bond (amcl) to lifecycle manager.
+[waypoint_follower-14] [INFO] [1794738905.236170369] [waypoint_follower]: Destroying bond (waypoint_follower) to lifecycle manager.
+[gazebo-1] [1;36m[Dbg] [Sensors.cc:551] [0m[1;36mSensorsPrivate::RenderThread stopped[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [gz.cc:434] [0m[1;36mShutting down gz-sim-server[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:654] [0m[1;36mExiting postupdate worker thread ([0m[1;36m4[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:654] [0m[1;36mExiting postupdate worker thread ([0m[1;36m1[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:654] [0m[1;36mExiting postupdate worker thread ([0m[1;36m5[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:654] [0m[1;36mExiting postupdate worker thread ([0m[1;36m6[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:654] [0m[1;36mExiting postupdate worker thread ([0m[1;36m0[Dbg] [SimulationRunner.cc:654] [0m[1;36mExiting postupdate worker thread ([0m[1;36m7[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m0[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:654] [0m[1;36mExiting postupdate worker thread ([0m[1;36m2[0m[1;36m)[0m[1;36m[0m
+[waypoint_follower-14] [INFO] [1794738905.243577965] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[amcl-6] [INFO] [1794738905.243976193] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:654] [0m[1;36mExiting postupdate worker thread ([0m[1;36m3[0m[1;36m)[0m[1;36m[0m
+[map_server-5] [INFO] [1794738905.245951357] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[map_server-5] [INFO] [1794738905.248256919] [map_server]: Destroying
+[robot_state_publisher-3] [INFO] [1794738905.248355759] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[smoother_server-9] [INFO] [1794738905.248683728] [smoother_server]: Destroying bond (smoother_server) to lifecycle manager.
+[parameter_bridge-2] [INFO] [1794738905.250132983] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[lifecycle_manager-7] [INFO] [1794738905.255501195] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[opennav_docking-17] [INFO] [1794738905.259098783] [docking_server]: Destroying bond (docking_server) to lifecycle manager.
+[smoother_server-9] [INFO] [1794738905.261016387] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[collision_monitor-16] [INFO] [1794738905.262540622] [collision_monitor]: Destroying
+[planner_server-10] [INFO] [1794738905.265510492] [global_costmap.global_costmap]: Cleaning up
+[opennav_docking-17] [INFO] [1794738905.271566612] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[lifecycle_manager-7] [INFO] [1794738905.272358759] [lifecycle_manager_localization]: Destroying lifecycle_manager_localization
+[route_server-11] [INFO] [1794738905.273332126] [route_server]: Destroying bond (route_server) to lifecycle manager.
+[smoother_server-9] [INFO] [1794738905.275914938] [smoother_server]: Destroying
+[route_server-11] [INFO] [1794738905.289090834] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[amcl-6] [INFO] [1794738905.300628956] [amcl]: Destroying
+[waypoint_follower-14] [INFO] [1794738905.308265791] [waypoint_follower]: Destroying
+[planner_server-10] [INFO] [1794738905.309467697] [planner_server]: Cleaning up plugin GridBased of type NavfnPlanner
+[planner_server-10] [INFO] [1794738905.309756956] [planner_server]: Destroying plugin GridBased of type NavfnPlanner
+[ERROR] [job_roster-22]: process has died [pid 42443, exit code -2, cmd '/ws/install/oomwoo_health_kit/lib/oomwoo_health_kit/job_roster --ros-args -r __node:=job_roster --params-file /tmp/launch_params_8u_4z5rl'].
+[opennav_docking-17] [INFO] [1794738905.320648970] [docking_server]: Destroying
+[route_server-11] [INFO] [1794738905.325890822] [route_server]: Destroying
+[ERROR] [mcu_standin_node-21]: process has died [pid 42442, exit code -2, cmd '/ws/install/oomwoo_health_kit/lib/oomwoo_health_kit/mcu_standin_node --ros-args -r __node:=mcu_standin --params-file /tmp/launch_params_63b5cxbp -r cmd_vel_in:=cmd_vel -r cmd_vel:=cmd_vel_gated'].
+[ERROR] [health_monitor_node-20]: process has died [pid 42441, exit code -2, cmd '/ws/install/oomwoo_health_monitor/lib/oomwoo_health_monitor/health_monitor_node --ros-args -r __node:=health_monitor --params-file /tmp/launch_params_dhpohf5y'].
+[INFO] [parameter_bridge-2]: process has finished cleanly [pid 42420]
+[gazebo-1] [1;36m[Dbg] [Sensors.cc:565] [0m[1;36mSensorsPrivate::Stop[0m[1;36m[0m
+[behavior_server-12] [INFO] [1794738905.359620771] [behavior_server]: Destroying
+[ERROR] [topic_heartbeat-23]: process has died [pid 42444, exit code -2, cmd '/ws/install/oomwoo_health_kit/lib/oomwoo_health_kit/topic_heartbeat --ros-args -r __node:=topic_heartbeat --params-file /tmp/launch_params_s3_48339'].
+[planner_server-10] [INFO] [1794738905.371471532] [planner_server]: Destroying bond (planner_server) to lifecycle manager.
+[planner_server-10] [INFO] [1794738905.374452592] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[planner_server-10] [INFO] [1794738905.376948884] [global_costmap.global_costmap]: Destroying
+[ERROR] [gazebo-1]: process has died [pid 42419, exit code -2, cmd 'ruby /opt/ros/jazzy/opt/gz_tools_vendor/bin/gz sim -s -r --headless-rendering -v 4 /ros_ws/install/oomwoo_gazebo/share/oomwoo_gazebo/worlds/living_room.world --force-version 8'].
+[INFO] [launch]: process[gazebo-1] was required: shutting down launched system
+[planner_server-10] [INFO] [1794738905.394638735] [planner_server]: Destroying
+[INFO] [robot_state_publisher-3]: process has finished cleanly [pid 42421]
+[bt_navigator-13] [INFO] [1794738905.425626683] [bt_navigator]: Completed Cleaning up
+[bt_navigator-13] [INFO] [1794738905.425656152] [bt_navigator]: Destroying bond (bt_navigator) to lifecycle manager.
+[bt_navigator-13] [INFO] [1794738905.426509439] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [map_server-5]: process has finished cleanly [pid 42424]
+[bt_navigator-13] [INFO] [1794738905.442546037] [bt_navigator]: Destroying
+[INFO] [lifecycle_manager-7]: process has finished cleanly [pid 42426]
+[INFO] [collision_monitor-16]: process has finished cleanly [pid 42436]
+[INFO] [smoother_server-9]: process has finished cleanly [pid 42428]
+[INFO] [amcl-6]: process has finished cleanly [pid 42425]
+[INFO] [waypoint_follower-14]: process has finished cleanly [pid 42433]
+[INFO] [route_server-11]: process has finished cleanly [pid 42430]
+[INFO] [opennav_docking-17]: process has finished cleanly [pid 42438]
+[INFO] [behavior_server-12]: process has finished cleanly [pid 42431]
+[INFO] [planner_server-10]: process has finished cleanly [pid 42429]
+[INFO] [bt_navigator-13]: process has finished cleanly [pid 42432]
+[ERROR] [lifecycle_manager-18]: process[lifecycle_manager-18] failed to terminate '5' seconds after receiving 'SIGINT', escalating to 'SIGTERM'
+[INFO] [lifecycle_manager-18]: sending signal 'SIGTERM' to process[lifecycle_manager-18]
+[ERROR] [lifecycle_manager-18]: process[lifecycle_manager-18] failed to terminate '10.0' seconds after receiving 'SIGTERM', escalating to 'SIGKILL'
+[INFO] [lifecycle_manager-18]: sending signal 'SIGKILL' to process[lifecycle_manager-18]
+[ERROR] [lifecycle_manager-18]: process has died [pid 42439, exit code -9, cmd '/opt/ros/jazzy/lib/nav2_lifecycle_manager/lifecycle_manager --ros-args --log-level info --ros-args -r __node:=lifecycle_manager_navigation -p use_sim_time:=True --params-file /tmp/launch_params_jsppc_yc --params-file /tmp/launch_params_akul8xv3'].

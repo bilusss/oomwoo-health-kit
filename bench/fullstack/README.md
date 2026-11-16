@@ -85,3 +85,39 @@ Workloads (`jobs.py`): coverage = upstream `coverage_planner` started after armi
 attempts (its records carry `harness_actions`; `summarize.py --by-task` reports soft stops within 2 s of one); recovery = goals with a wall spawned
 across the path (persistent or removed after 8 s) so that bt_navigator's own recovery branch runs. The gz service calls use the python
 gz-transport bindings (the `gz` CLI stalled /odom and /cmd_vel). Fault triggers (`when`): moving, fast (>= 0.30 m/s), recovery, dock_back.
+
+## M8 (command-chain and dock-fix rules; at most 2 instances)
+New watcher rules (opt-in, `docs/SPEC.md` M8, `docs/M8_RECON.md`) and their bench tasks: `nav_amcl_chain`, `recovery_chain` (soaks; rule A, `nav_watch_amcl_chain.yaml` +
+`nav_rosters_amcl_chain.yaml`), `recovery_probe_chain` / `recovery_probe` (fault trials for behavior_server with the rule / with the M7 watch set as control;
+workload `jobs.RecoveryProbeJob` = NavigateToPose to an open pose, then a 3.14 rad spin and a 0.45 m backup at 0.15 m/s sent directly, so that the nominal rate lasts
+seconds), `dock_fix` (rule B, `nav_watch_dock_fix.yaml` + `nav_rosters_dock_fix.yaml`). Fault `sigkill_behavior_nominal` / `sigstop_behavior_nominal` is signalled only while a
+recovery action runs at its nominal rate (spin >= 0.9 rad/s or backup >= 0.10 m/s): the exposure criterion of `summarize_faults.py`, written down before the runs.
+`run.py` writes one stack log per session or trial and run: `results/fullstack/m8/<i>/stack_<run start>_<task>_<soak|faults>_<n>.log` (no overwriting); records name it in
+`stack_log`. `OHK_RUN_STAGGER_S` only spaces the instances of ONE `tools/sim.sh run all` call. `loadavg_series` (host 1-min load average every 10 s) is in every soak session and
+fault trial and is summarised by `summarize.py --by-task` and `summarize_faults.py`.
+
+    # recon: traces of the message streams while a stack and a workload run (inside the container; see m8_analysis.py)
+    python3 bench/fullstack/probe_trace.py --seconds 600 --out /results/trace.jsonl
+    python3 bench/fullstack/m8_analysis.py chain|dock|derive|replay-chain|replay-dock|reactive TRACE...
+    python3 bench/fullstack/m8_stops.py results/fullstack/soak_m8_*.jsonl      # every soft stop with the watcher's own reason from the retained stack log
+    # runs as executed (OHK_RES_SUB=m8 keeps the raw data in results/fullstack/m8/<i>/)
+    export OHK_RES_SUB=m8; tools/sim.sh down; tools/sim.sh up 2
+    tools/sim.sh run 1 --mode faults --reps 12 --health-sources watcher --task recovery_probe_chain --composition false --faults sigkill_behavior_nominal,sigstop_behavior_nominal --label m8_faults
+    tools/sim.sh run 2 --mode faults --reps 10 --health-sources watcher --task nav_amcl_chain --composition false --faults sigkill_controller,sigstop_controller --label m8_faults
+    tools/sim.sh run 2 --mode faults --reps 3 --health-sources watcher --task nav_amcl_chain --composition false --faults sigkill_controller --label m8_faults   # replaces one trial that did not arm
+    tools/sim.sh run 2 --mode faults --reps 10 --health-sources watcher --task dock_fix --faults sigkill_dock_detector,sigstop_dock_detector --label m8_faults
+    tools/sim.sh run 1 --mode faults --reps 10 --health-sources watcher --task recovery_probe --composition false --faults sigkill_behavior_nominal,sigstop_behavior_nominal --label m8_faults_control
+    tools/sim.sh run 1 --mode faults --reps 10 --health-sources watcher --task nav_amcl --composition false --faults sigkill_controller,sigstop_controller --label m8_faults_control
+    tools/sim.sh run 2 --health-sources watcher --task dock_fix --duration-sim 1800 --sessions 2 --profile default --label m8_soak
+    tools/sim.sh run 1 --health-sources watcher --task recovery_chain --duration-sim 1800 --sessions 4 --profile default --label m8_soak      # started together with the next line
+    tools/sim.sh run 2 --health-sources watcher --task nav_amcl_chain --workload mix --duration-sim 1800 --sessions 4 --profile default --label m8_soak
+    # item D, one instance only, nothing else running
+    tools/sim.sh run 1 --health-sources watcher --task coverage_reactive --duration-sim 700 --sessions 2 --profile default --label m8_reactive    # run twice (4 sessions)
+    docker exec -d ohk-sim-1 ...probe_trace.py --seconds 2000 --out /results/trace_reactive.jsonl     # started right after each run; copied to results/fullstack/m8_recon/
+    python3 bench/fullstack/m8_analysis.py reactive results/fullstack/m8_recon/trace_reactive*.jsonl
+    # sort the raw records into the published files, then print every table
+    python3 bench/fullstack/collect_m8.py
+    python3 bench/fullstack/summarize.py --by-task results/fullstack/soak_m8_*_2026-11-15_kitwip.jsonl
+    python3 bench/fullstack/summarize_faults.py results/fullstack/faults_m8_2026-11-15_kitwip.jsonl --label=m8_faults          # the rule under test
+    python3 bench/fullstack/summarize_faults.py results/fullstack/faults_m8_2026-11-15_kitwip.jsonl --label=m8_faults_control  # M7 watch set, same trials
+    python3 bench/fullstack/summarize_faults.py results/fullstack/faults_m7_2026-11-14_kitwip.jsonl --latest-label-per-task    # the M7 baseline rows

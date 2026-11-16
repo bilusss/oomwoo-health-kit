@@ -1,0 +1,14 @@
+# M8 (opt-in): nav_rosters_dock.yaml plus the critical component dock_fix (see nav_watch_dock_fix.yaml).
+# M7 dock task: static roster. lidar, odom and drive_supervision are critical; there is no map, localization or costmap in this
+# stack (kitchen_dining, no Nav2). Why static and why drive_supervision: see nav_rosters.yaml. max_age_sec: about 3 periods of
+# the measured rates (docs/M7_RECON.md).
+state_source: {type: static}
+
+rosters:
+  nav:
+    task_id: dock
+    components:
+      - {component_id: lidar,             critical: true,  max_age_sec: 0.6}    # 5 Hz
+      - {component_id: odom,              critical: true,  max_age_sec: 0.15}   # 50 Hz
+      - {component_id: drive_supervision, critical: true,  max_age_sec: 0.15}
+      - {component_id: dock_fix,          critical: true,  max_age_sec: 0.15}   # M8 rule B; emitted at up to 25 Hz like drive_supervision

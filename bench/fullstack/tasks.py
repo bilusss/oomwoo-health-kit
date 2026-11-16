@@ -32,6 +32,19 @@ TASKS = {
     "coverage_reactive_cmd30": dict(localization="amcl", world="living_room.world", spawn=LIVING_ROOM_SPAWN, job="coverage_support",
                                     workload="coverage", watch="nav_watch_amcl_reactive.yaml", roster="nav_rosters_amcl.yaml", nav=True,
                                     planner="reactive"),
+    # M8: the same stacks and workloads with a watcher config that selects a new rule (opt-in; the M7 tasks above are unchanged)
+    "nav_amcl_chain": dict(localization="amcl", world="living_room.world", spawn=LIVING_ROOM_SPAWN, job="none", workload="goals",
+                           watch="nav_watch_amcl_chain.yaml", roster="nav_rosters_amcl_chain.yaml", nav=True, planner=None),
+    "recovery_chain": dict(localization="amcl", world="living_room.world", spawn=LIVING_ROOM_SPAWN, job="none", workload="recovery",
+                           watch="nav_watch_amcl_chain.yaml", roster="nav_rosters_amcl_chain.yaml", nav=True, planner=None),
+    # M8 fault trials for behavior_server: long direct spin / backup actions after a goal (jobs.RecoveryProbeJob); `recovery_probe` is the
+    # control with the M7 watch set, `recovery_probe_chain` selects rule A
+    "recovery_probe": dict(localization="amcl", world="living_room.world", spawn=LIVING_ROOM_SPAWN, job="none", workload="recovery_probe",
+                           watch="nav_watch_amcl.yaml", roster="nav_rosters_amcl.yaml", nav=True, planner=None),
+    "recovery_probe_chain": dict(localization="amcl", world="living_room.world", spawn=LIVING_ROOM_SPAWN, job="none", workload="recovery_probe",
+                                 watch="nav_watch_amcl_chain.yaml", roster="nav_rosters_amcl_chain.yaml", nav=True, planner=None),
+    "dock_fix": dict(localization="none", world="kitchen_dining.world", spawn=DOCK_SPAWN, job="dock", workload="dock",
+                     watch="nav_watch_dock_fix.yaml", roster="nav_rosters_dock_fix.yaml", nav=False, planner=None),
     "dock": dict(localization="none", world="kitchen_dining.world", spawn=DOCK_SPAWN, job="dock", workload="dock",
                  watch="nav_watch_dock.yaml", roster="nav_rosters_dock.yaml", nav=False, planner=None),
     "recovery": dict(localization="amcl", world="living_room.world", spawn=LIVING_ROOM_SPAWN, job="none", workload="recovery",
@@ -159,8 +172,9 @@ def parse_planner_log(lines):
 
 # --------------------------------------------------------------------------- fault targets (non-composed Nav2 + job nodes)
 # fragment = substring of argv[0] (+ argv[1] for python scripts); resume = SIGSTOP faults are resumed after the hold time.
-# `when` names the condition under which the trial signals (run.py when_ok): moving (>= 0.12 m/s) | fast (>= 0.30 m/s) | recovery | dock_back.
-WHEN_DWELL_S = {"recovery": 0.4}   # seconds the condition must hold before the signal (default 2.0); spin / backup last only a few seconds
+# `when` names the condition under which the trial signals (run.py when_ok): moving (>= 0.12 m/s) | fast (>= 0.30 m/s) | recovery | recovery_nominal | dock_back.
+NOMINAL_YAW_RATE, NOMINAL_BACKUP_SPEED = 0.9, 0.10
+WHEN_DWELL_S = {"recovery": 0.4, "recovery_nominal": 0.2}   # seconds the condition must hold before the signal (default 2.0); spin / backup last only a few seconds
 M7_FAULTS = {
     "sigkill_amcl": ("/nav2_amcl/amcl", "SIGKILL", False, "moving"),
     "sigstop_amcl": ("/nav2_amcl/amcl", "SIGSTOP", True, "moving"),
@@ -173,6 +187,9 @@ M7_FAULTS = {
     "sigstop_coverage_fast": ("/oomwoo_coverage/coverage_planner", "SIGSTOP", True, "fast"),
     "sigkill_behavior": ("/nav2_behaviors/behavior_server", "SIGKILL", False, "recovery"),
     "sigstop_behavior": ("/nav2_behaviors/behavior_server", "SIGSTOP", True, "recovery"),
+    # M8: the behavior_server fault triggered only at the nominal spin / backup rate (the exposure criterion of summarize_faults.py)
+    "sigkill_behavior_nominal": ("/nav2_behaviors/behavior_server", "SIGKILL", False, "recovery_nominal"),
+    "sigstop_behavior_nominal": ("/nav2_behaviors/behavior_server", "SIGSTOP", True, "recovery_nominal"),
     "sigkill_dock_drive": ("/oomwoo_dock/dock_drive", "SIGKILL", False, "dock_back"),
     "sigstop_dock_drive": ("/oomwoo_dock/dock_drive", "SIGSTOP", True, "dock_back"),
     "sigkill_dock_detector": ("/oomwoo_dock/dock_detector", "SIGKILL", False, "dock_back"),
@@ -188,6 +205,8 @@ def when_ok(when, speed, yaw_rate, recovery_active=False, dock_state=None):
         return speed >= 0.30
     if when == "recovery":   # a behavior_server action (spin / backup / wait) is active AND the robot is moving or turning
         return bool(recovery_active) and (speed >= 0.03 or yaw_rate >= 0.2)
+    if when == "recovery_nominal":   # M8: an action is active AND it runs at its nominal rate: spin >= 0.9 rad/s or backup >= 0.10 m/s
+        return bool(recovery_active) and (yaw_rate >= NOMINAL_YAW_RATE or speed >= NOMINAL_BACKUP_SPEED)
     if when == "dock_back":  # dock_drive is reversing into the bay
         return dock_state == "BACK" and speed >= 0.03
     return speed >= 0.12

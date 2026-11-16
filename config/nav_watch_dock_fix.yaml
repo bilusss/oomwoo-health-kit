@@ -1,0 +1,60 @@
+# M8 rule B (opt-in): nav_watch_dock.yaml plus the `dock_fix` watch (reverse_fix). Everything else is identical to nav_watch_dock.yaml.
+# Why: dock_drive keeps reversing on odometry for pose_timeout_s (3.0 s) after the dock detector died or froze, and publishes a fresh -0.06 m/s
+# command at 20 Hz meanwhile, so drive_supervision never sees it (M7: 0.16-0.18 m of unsupervised reversing, 0/10 detected). dock_fix requires,
+# while the held command on /cmd_vel is a reverse (linear x <= -0.02 m/s), that the newest /dock_detector/dock_pose is at most fix_max_age_s old.
+# Bound DERIVED from the recon traces (docs/M8_RECON.md, results/fullstack/m8_recon/trace_dock_{a,b,c}.jsonl; 89 reversing episodes, all in
+# dock_drive state BACK; 844 gaps between consecutive fixes inside them): the fix period is 0.60 s (p50 0.600, p95 0.606); 3.8% of the gaps
+# are 1.2 s (one fit missing), one is 2.4 s.
+#   fix_max_age_s 1.85 = ceil_to_50ms(1.5 x p99 of the in-episode gaps, 1.202 s)   (written down before any M8 trial or soak)
+# from_reverse_start false: the newest fix must be fresh from the first reversing command on (age at the start of the 89 episodes: max 0.79 s).
+# PRECONDITION: dock_drive is the ONLY writer on the watched command stream that can reverse. "Reversing" is inferred from ANY writer of /cmd_vel: Nav2 BackUp
+# (about 3 s at -0.1..-0.15 m/s), teleop or any other reverse would trip the rule after fix_max_age_s because no dock fix exists. Use this config only in the
+# dock stack (only task dock_fix uses it; test_only_the_dock_config_selects_rule_b). Message type: cmd_type (default geometry_msgs/msg/Twist); a command
+# topic whose publishers have another type is not-ok (graph check), not silently ignored.
+# Known cost: replaying the recon traces through the core, 3 of the 89 episodes exceed the bound near the end of the reverse (ages 1.89-2.34 s
+# without a fix; dock_drive itself carries on and docks); the soak counts these. Not covered: the other dock states (GOTO/TURN never reverse
+# in the recon), and a detector that is alive but wrong.
+watches:
+  - component_id: lidar
+    topic: /scan
+    type: sensor_msgs/msg/LaserScan
+
+  - component_id: odom
+    topic: /odom
+    type: nav_msgs/msg/Odometry
+    max_emit_hz: 50
+
+  # cmd_topic = what the stand-in receives (cmd_vel_in remapped to /cmd_vel): the last hop before the gate, any writer counts
+  # (max_publishers is not applied to it). Measured on the dock stack (M7_RECON): dock_drive is the only writer; /cmd_vel_nav has 6 writers (controller_server,
+  # 5x behavior_server), /cmd_vel_smoothed 1: neither is the last hop.
+  # Drive supervision (default critical). Tracks the SETPOINT the MCU holds (last value on cmd_topic). Beats only if a command
+  # newer than cmd_max_age_s exists, or the held setpoint is zero (or none was ever seen) and odom has been below the
+  # thresholds for settle_s, or less than coast_max_s passed since the setpoint became zero (coasting). A non-zero held setpoint
+  # with no fresh command never beats whatever odom says (held creep command, stalled wheels with live odometry).
+  # cmd_topic must be the topic the MCU stand-in receives (the last hop; any writer counts, max_publishers is not applied).
+  # Proves: some fresh command exists whenever a non-zero setpoint is held, and the robot is not moving without a setpoint.
+  # Does NOT prove the command is right, or that the wheels follow it (odom here is ground truth in the sim).
+  - component_id: drive_supervision
+    max_emit_hz: 25
+    motion_consistency:
+      odom_topic: /odom
+      cmd_topic: /cmd_vel
+      linear_threshold: 0.02
+      angular_threshold: 0.05
+      cmd_max_age_s: 0.15
+      odom_max_age_s: 0.3
+      settle_s: 0.1                     # odom below the thresholds this long = settled (zero or unknown setpoint)
+      coast_max_s: 0.5                  # zero setpoint: odom may stay above the thresholds this long. Data: Nav2 flows had 0 uncommanded motion in 104 goals; Gazebo coast after a zero command about 0.12 s (5 trials)
+
+  # M8 rule B. Reversing is inferred from the held command, not from /dock_drive/state (published on change only). The command topic is
+  # the stand-in input (RELIABLE); the fix topic is dock_detector's PoseStamped (RELIABLE, depth 10), ~1.67 Hz while reversing.
+  - component_id: dock_fix
+    max_emit_hz: 25
+    reverse_fix:
+      cmd_topic: /cmd_vel
+      fix_topic: /dock_detector/dock_pose
+      fix_type: geometry_msgs/msg/PoseStamped
+      tick_topic: /odom
+      fix_max_age_s: 1.85
+      reverse_threshold: 0.02
+      from_reverse_start: false

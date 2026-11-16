@@ -282,6 +282,40 @@ class RecoveryJob(Workload):
         return self.records
 
 
+class RecoveryProbeJob(Workload):
+    """M8 workload for behavior_server fault trials: NavigateToPose to an open pose, then LONG direct spin and backup actions (no BT, no
+    wall), so that a spin at its nominal 1 rad/s or a backup at 0.15 m/s lasts several seconds and the fault trial can be signalled
+    inside it. Same command path as BT recoveries (behavior_server -> /cmd_vel_nav -> smoother -> collision monitor -> /cmd_vel). One
+    record per goal and per probe. Spin 3.14 rad at the behavior_server's 1.0 rad/s limit takes about 3.3 s; backup 0.45 m at 0.15 m/s 3 s."""
+    PROBE = {"spin_rad": 3.14, "backup_m": 0.45, "backup_mps": 0.15, "steps": ("spin",)}
+    BACKUP = {**PROBE, "steps": ("backup",)}
+
+    def ready(self):
+        return self.client.server_is_ready()
+
+    def run(self, duration_sim_s=None, should_stop=lambda: False, on_goal=None):
+        if not self.wait_clock():
+            self.log("recovery_probe: no advancing /clock")
+            return self.records
+        t0 = self.sim_now()
+        i = 0
+        while not should_stop() and (duration_sim_s is None or self.sim_now() - t0 < duration_sim_s):
+            stop = lambda: should_stop() or (duration_sim_s is not None and self.sim_now() - t0 >= duration_sim_s)  # noqa: E731
+            rec = self.one_goal(i, POSES[1 + i % 6], stop)     # P2..P6, P7: open poses
+            if on_goal:
+                on_goal(rec)
+            i += 1
+            for spec in (self.PROBE, self.BACKUP):
+                if stop():
+                    break
+                rec = self.recovery_probe(i, stop, spec)
+                if on_goal:
+                    on_goal(rec)
+                i += 1
+                time.sleep(1.0)
+        return self.records
+
+
 class Gz:
     """Persistent gz-transport client (python bindings shipped with ros_gz): the `gz` CLI costs ~0.3 s of CPU and ~2 s of start-up per call,
     which stalled the /odom and /cmd_vel streams of the stack under test (M7 smoke runs); this does not start a process per call."""

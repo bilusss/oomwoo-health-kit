@@ -1,7 +1,7 @@
 import pytest
 
 from oomwoo_health_kit.topic_watch import (
-    EmitLimiter, MotionConsistency, TfTracker, TtlCache, parse_watches, publishers_ok, queued_too_long,
+    CommandChainGuard, EmitLimiter, MotionConsistency, ReverseFixGuard, TfTracker, TtlCache, parse_watches, publishers_ok, queued_too_long,
     stamp_level, strip_frame,
 )
 
@@ -369,3 +369,293 @@ def test_motion_queue_stale_command_updates_the_setpoint_without_credit():
     m.on_cmd(1.5, 0.0, 0.0, fresh=False)  # a stale zero makes the held setpoint zero
     quiet(m, 1.5, 1.7)
     assert m.ok(1.7)[0]
+
+
+# ---------------------------------------------------------------- M8: CommandChainGuard (rule A)
+
+def chain(**kw):
+    return CommandChainGuard(**{"in_max_age_s": 0.35, "stop_grace_s": 1.0, **kw})
+
+
+def test_chain_nothing_replayed_is_ok():
+    g = chain()
+    assert g.ok(1.0)[0]                  # no output ever seen
+    g.on_out(1.0, 0.0, 0.0)
+    assert g.ok(1.1)[0]                  # zero output, no input
+
+
+def test_chain_output_without_any_input_is_not_ok():
+    g = chain()
+    g.on_out(1.0, 0.2, 0.0)
+    ok, why = g.ok(1.0)
+    assert not ok and "no input ever seen" in why
+
+
+def test_chain_live_commander_keeps_it_ok_and_a_silent_one_trips_at_the_bound():
+    g = chain(in_max_age_s=0.35)
+    t = 10.0
+    for i in range(10):                  # 5 Hz input, 20 Hz output
+        g.on_in(t, 0.2, 0.0)
+        for k in range(4):
+            g.on_out(t + k * 0.05, 0.2, 0.0)
+            assert g.ok(t + k * 0.05)[0]
+        t += 0.2
+    last_in = t - 0.2
+    assert g.ok(last_in + 0.35)[0]
+    ok, why = g.ok(last_in + 0.36)
+    assert not ok and "no non-zero input newer than 0.35" in why
+    g.on_in(last_in + 0.4, 0.2, 0.0)     # the commander comes back
+    assert g.ok(last_in + 0.4)[0]
+
+
+def test_chain_commanded_stop_gets_a_bounded_grace():
+    g = chain(stop_grace_s=1.0)
+    g.on_in(5.0, 0.2, 0.0)
+    g.on_out(5.0, 0.2, 0.0)
+    g.on_in(5.2, 0.0, 0.0)               # commander says stop; the smoother decelerates
+    assert g.ok(5.9)[0]
+    assert g.ok(6.19)[0]
+    ok, why = g.ok(6.21)
+    assert not ok and "after the input went to zero" in why
+
+
+def test_chain_repeated_zero_inputs_do_not_extend_the_grace_and_nonzero_resets_it():
+    g = chain(stop_grace_s=1.0)
+    g.on_in(5.0, 0.2, 0.0)
+    g.on_out(5.0, 0.2, 0.0)
+    for i in range(30):
+        g.on_in(5.2 + i * 0.05, 0.0, 0.0)
+    assert not g.ok(6.8)[0]
+    g.on_in(7.0, 0.0, 0.1)               # non-zero again (turn)
+    assert g.ok(7.3)[0]
+    assert not g.ok(7.4)[0]
+
+
+def test_chain_output_back_to_zero_is_ok_again():
+    g = chain()
+    g.on_in(1.0, 0.2, 0.0)
+    g.on_out(1.0, 0.2, 0.0)
+    assert not g.ok(3.0)[0]
+    g.on_out(3.0, 0.0, 0.0)
+    assert g.ok(3.0)[0]
+
+
+def test_chain_non_finite_and_backwards_time_are_not_ok():
+    g = chain()
+    g.on_in(1.0, 0.2, 0.0)
+    g.on_out(1.0, 0.2, 0.0)
+    assert g.ok(1.1)[0]
+    assert not g.ok(float("nan"))[0]
+    assert not g.ok(0.5)[0]              # clock jumped back
+    g.on_in(1.1, float("nan"), 0.0)
+    ok, why = g.ok(1.1)
+    assert not ok and "non-finite" in why
+    g.on_in(1.2, 0.2, 0.0)
+    assert g.ok(1.2)[0]
+    g.on_out(1.2, float("inf"), 0.0)     # non-finite output = a non-zero setpoint
+    g.on_out(float("nan"), 0.0, 0.0)
+    assert g.ok(1.3)[0]                  # still covered by the fresh input
+    assert not g.ok(2.0)[0]
+
+
+def test_chain_output_zero_ignored_input_values_below_epsilon_count_as_zero():
+    g = chain()
+    g.on_in(1.0, 1e-12, 0.0)
+    g.on_out(1.0, 0.2, 0.0)
+    assert g.ok(1.5)[0]                  # inside the stop grace (input zero since 1.0)
+    assert not g.ok(2.1)[0]
+
+
+@pytest.mark.parametrize("kw", [{"in_max_age_s": 0}, {"in_max_age_s": float("nan")}, {"stop_grace_s": -1}, {"stop_grace_s": float("inf")}])
+def test_chain_rejects_bad_parameters(kw):
+    with pytest.raises(ValueError):
+        chain(**kw)
+
+
+# ---------------------------------------------------------------- M8: ReverseFixGuard (rule B)
+
+def rev(**kw):
+    return ReverseFixGuard(**{"fix_max_age_s": 1.5, **kw})
+
+
+def test_reverse_not_reversing_is_ok_without_fixes():
+    g = rev()
+    assert g.ok(1.0)[0]                  # no command ever seen
+    g.on_cmd(1.0, 0.1)
+    assert g.ok(100.0)[0]                # driving forward: the rule does not apply
+    g.on_cmd(100.0, 0.0)
+    assert g.ok(200.0)[0]
+
+
+def test_reverse_needs_a_fresh_fix_and_trips_at_the_bound():
+    g = rev(fix_max_age_s=1.5)
+    g.on_fix(10.0)
+    g.on_cmd(10.1, -0.06)
+    assert g.ok(11.5)[0]
+    ok, why = g.ok(11.65)
+    assert not ok and "dock fix" in why
+    g.on_fix(11.7)
+    assert g.ok(13.1)[0]
+    assert not g.ok(13.3)[0]
+
+
+def test_reverse_start_reference_gives_an_old_fix_one_bound_to_refresh():
+    g = rev(fix_max_age_s=1.0, from_reverse_start=True)
+    g.on_fix(0.0)
+    g.on_cmd(20.0, -0.06)
+    assert g.ok(20.9)[0]
+    assert not g.ok(21.1)[0]
+    s = rev(fix_max_age_s=1.0, from_reverse_start=False)
+    s.on_fix(0.0)
+    s.on_cmd(20.0, -0.06)
+    assert not s.ok(20.0)[0]             # strict: the last fix must be fresh from the first reversing command
+
+
+def test_reverse_no_fix_ever_trips_strict_mode_and_times_out_in_start_mode():
+    s = rev(from_reverse_start=False)
+    s.on_cmd(1.0, -0.06)
+    ok, why = s.ok(1.0)
+    assert not ok and "no dock fix ever seen" in why
+    g = rev(fix_max_age_s=1.0)
+    g.on_cmd(1.0, -0.06)
+    assert g.ok(1.5)[0] and not g.ok(2.1)[0]
+
+
+def test_reverse_threshold_and_stop_clear_the_rule():
+    g = rev(reverse_threshold=0.02)
+    g.on_fix(0.0)
+    g.on_cmd(5.0, -0.019)                # creep below the threshold is not reversing
+    assert g.ok(9.0)[0]
+    g.on_cmd(9.0, -0.02)
+    assert g.ok(9.5)[0] and not g.ok(10.6)[0]
+    g.on_cmd(10.7, 0.0)
+    assert g.ok(10.7)[0]
+
+
+def test_reverse_non_finite_command_counts_as_reversing_and_backwards_time_is_not_ok():
+    g = rev()
+    g.on_fix(0.0)
+    g.on_cmd(0.1, float("nan"))
+    assert g.ok(0.2)[0] and not g.ok(5.0)[0]
+    assert not g.ok(float("nan"))[0]
+    g.on_cmd(5.0, 0.0)
+    assert g.ok(5.0)[0]
+    assert not g.ok(1.0)[0]
+
+
+def test_reverse_fix_with_non_finite_time_is_ignored():
+    g = rev(from_reverse_start=False)
+    g.on_cmd(1.0, -0.06)
+    g.on_fix(float("nan"))
+    assert not g.ok(1.0)[0]
+
+
+@pytest.mark.parametrize("kw", [{"fix_max_age_s": 0}, {"fix_max_age_s": float("nan")}, {"reverse_threshold": -0.1}])
+def test_reverse_rejects_bad_parameters(kw):
+    with pytest.raises(ValueError):
+        rev(**kw)
+
+
+# ---------------------------------------------------------------- M8: parsing
+
+def test_parse_command_chain_and_reverse_fix_defaults():
+    c, r = parse_watches(doc(
+        {"component_id": "command_chain", "command_chain": {"in_topic": "/cmd_vel_nav", "out_topic": "/cmd_vel_smoothed"}},
+        {"component_id": "dock_fix", "reverse_fix": {"cmd_topic": "/cmd_vel", "fix_topic": "/f", "fix_type": "geometry_msgs/msg/PoseStamped"}},
+    ))
+    assert c.is_chain and not c.is_motion and c.chain["in_max_age_s"] == 0.35 and c.chain["stop_grace_s"] == 1.0
+    assert c.topic == "/odom" and c.msg_type == "nav_msgs/msg/Odometry"
+    assert r.is_reverse_fix and r.reverse_fix["fix_max_age_s"] == 1.5 and r.reverse_fix["from_reverse_start"] is True
+
+
+@pytest.mark.parametrize(
+    "bad",
+    [
+        doc({"component_id": "a", "command_chain": {"in_topic": "/i"}}),
+        doc({"component_id": "a", "command_chain": {"in_topic": "/i", "out_topic": "/o", "in_max_age_s": 0}}),
+        doc({"component_id": "a", "command_chain": {"in_topic": "/i", "out_topic": "/o", "stop_grace_s": "x"}}),
+        doc({"component_id": "a", "topic": "t", "command_chain": {"in_topic": "/i", "out_topic": "/o"}}),
+        doc({"component_id": "a", "reverse_fix": {"cmd_topic": "/c", "fix_topic": "/f"}}),
+        doc({"component_id": "a", "reverse_fix": {"cmd_topic": "/c", "fix_topic": "/f", "fix_type": "x/msg/Y", "fix_max_age_s": -1}}),
+        doc({"component_id": "a", "reverse_fix": {"cmd_topic": "/c", "fix_topic": "/f", "fix_type": "x/msg/Y"},
+             "command_chain": {"in_topic": "/i", "out_topic": "/o"}}),
+        doc({"component_id": "a", "tf": {"parent": "m", "child": "o"}, "reverse_fix": {"cmd_topic": "/c", "fix_topic": "/f", "fix_type": "x/msg/Y"}}),
+        doc({"component_id": "a", "command_chain": "oops"}),
+    ],
+)
+def test_parse_rejects_bad_m8_watches(bad):
+    with pytest.raises(ValueError):
+        parse_watches(bad)
+
+
+# ---------------------------------------------------------------- M8 review fixes: rules that must not switch off silently
+
+def test_chain_graph_problem_is_not_ok_and_recovers():
+    g = chain()
+    assert g.ok(1.0)[0]
+    g.set_graph(False, "/cmd_vel_nav: no publisher")
+    ok, why = g.ok(1.0)
+    assert not ok and "no publisher" in why
+    g.set_graph(True)
+    assert g.ok(1.0)[0]
+
+
+def test_chain_motion_without_any_output_is_not_ok_after_the_grace():
+    g = chain(motion_grace_s=0.5)
+    g.on_odom(1.0, 0.0, 0.0)
+    assert g.ok(1.0)[0]
+    g.on_odom(2.0, 0.2, 0.0)              # odometry shows motion, the stage never emitted anything
+    assert g.ok(2.4)[0]                   # inside the grace (a command may be on its way)
+    ok, why = g.ok(2.6)
+    assert not ok and "no output was ever seen" in why
+    g.on_odom(2.7, 0.0, 0.0)              # standing again: healthy
+    assert g.ok(2.7)[0]
+    g.on_odom(3.0, 0.0, 0.3)              # a turn counts as motion
+    assert not g.ok(3.6)[0]
+    g.on_out(3.6, 0.0, 0.3)               # the stage has emitted: the old rules apply (input missing -> not ok, zero output -> ok)
+    assert "no input ever seen" in g.ok(3.6)[1]
+    g.on_out(3.7, 0.0, 0.0)
+    assert g.ok(3.8)[0]
+
+
+def test_chain_motion_check_needs_odometry_and_treats_non_finite_odometry_as_motion():
+    g = chain()
+    assert g.ok(100.0)[0]                 # no on_odom calls: the check does nothing (documented)
+    g.on_odom(float("nan"), 0.0, 0.0)
+    assert not g.ok(1.0)[0]
+    h = chain()
+    h.on_odom(1.0, float("nan"), 0.0)
+    assert not h.ok(2.0)[0]
+
+
+def test_reverse_by_any_writer_trips_without_a_fix():
+    """Documented precondition of rule B: a Nav2 BackUp or teleop that reverses is 'reversing' too; no dock fix exists, so it trips."""
+    g = rev(fix_max_age_s=1.85, from_reverse_start=False)
+    g.on_cmd(10.0, -0.12)                 # e.g. BackUp at -0.12 m/s, no detector in the stack
+    assert not g.ok(10.0)[0]
+    h = rev(fix_max_age_s=1.85, from_reverse_start=True)
+    h.on_cmd(10.0, -0.12)
+    assert h.ok(11.8)[0] and not h.ok(12.0)[0]
+
+
+def test_reverse_graph_problem_is_not_ok():
+    g = rev()
+    g.set_graph(False, "/cmd_vel: publisher type ['geometry_msgs/msg/TwistStamped'] is not geometry_msgs/msg/Twist")
+    ok, why = g.ok(1.0)
+    assert not ok and "TwistStamped" in why
+    g.set_graph(True)
+    assert g.ok(1.0)[0]
+
+
+def test_parse_message_types_and_motion_options():
+    (c,) = parse_watches(doc({"component_id": "c", "command_chain": {"in_topic": "/i", "out_topic": "/o", "msg_type": "geometry_msgs/msg/TwistStamped"}}))
+    assert c.chain["msg_type"] == "geometry_msgs/msg/TwistStamped" and c.chain["motion_grace_s"] == 0.5
+    (r,) = parse_watches(doc({"component_id": "r", "reverse_fix": {"cmd_topic": "/c", "fix_topic": "/f", "fix_type": "x/msg/Y"}}))
+    assert r.reverse_fix["cmd_type"] == "geometry_msgs/msg/Twist"
+    for bad in (
+        doc({"component_id": "c", "command_chain": {"in_topic": "/i", "out_topic": "/o", "msg_type": "std_msgs/msg/String"}}),
+        doc({"component_id": "c", "command_chain": {"in_topic": "/i", "out_topic": "/o", "motion_grace_s": 0}}),
+        doc({"component_id": "r", "reverse_fix": {"cmd_topic": "/c", "fix_topic": "/f", "fix_type": "x/msg/Y", "cmd_type": "nope"}}),
+    ):
+        with pytest.raises(ValueError):
+            parse_watches(bad)
