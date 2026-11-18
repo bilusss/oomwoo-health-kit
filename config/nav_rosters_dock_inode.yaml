@@ -1,0 +1,20 @@
+# M9 (in-node heartbeats): nav_rosters_dock.yaml plus the two critical components that dock_detector and dock_drive publish themselves
+# (oomwoo_health_beat, health_component_id). max_age_sec derived from the M9 recon (docs/M9_RECON.md; bench/fullstack/beat_stats.py rule written
+# before the data was read: max(3 x median beat period, 1.5 x the largest age before refresh), rounded up to 0.05 s):
+#   dock_detector 1.8 s = 3 x 0.600 s (one fit attempt per 0.6 s: 5 Hz scans through a 2 Hz gate); largest age before refresh 0.762 s
+#   dock_drive    0.15 s = 3 x 0.050 s (20 Hz control tick); largest age before refresh 0.061 s
+# Needs the overlay build of oomwoo-ros2-tools (branch health-in-node-heartbeats) and bench/fullstack/beat_relay.py in the sim.
+# M7 dock task: static roster. lidar, odom and drive_supervision are critical; there is no map, localization or costmap in this
+# stack (kitchen_dining, no Nav2). Why static and why drive_supervision: see nav_rosters.yaml. max_age_sec: about 3 periods of
+# the measured rates (docs/M7_RECON.md).
+state_source: {type: static}
+
+rosters:
+  nav:
+    task_id: dock
+    components:
+      - {component_id: lidar,             critical: true,  max_age_sec: 0.6}    # 5 Hz
+      - {component_id: odom,              critical: true,  max_age_sec: 0.15}   # 50 Hz
+      - {component_id: drive_supervision, critical: true,  max_age_sec: 0.15}
+      - {component_id: dock_detector,    critical: true,  max_age_sec: 1.8}    # in-node, 0.6 s period
+      - {component_id: dock_drive,       critical: true,  max_age_sec: 0.15}   # in-node, 0.05 s period

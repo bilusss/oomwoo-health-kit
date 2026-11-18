@@ -15,3 +15,11 @@
   core, 0.7%, within noise) -> rule says use it: all later runs use GPU on both instances (OHK_GPU_INSTANCES="1 2" tools/sim.sh up 2; run ... --gpu).
   coverage_planner nav2 beat period 0.200 s (max 0.202), recommended max_age 0.6.
 - Recon wave 2 started 22:10: dock (inst 1) + coverage reactive (inst 2), GPU, traces beat_trace_dock_gpu / beat_trace_coverage_reactive_gpu.
+- Wave 2 22:10: dock recon valid (1801 sim s, 57 goals, RTF 0.978, container 3.08 cores, 4 soft stops all 'end / drive_supervision' = harness set_pose); reactive recon on inst 2 INVALID:
+  gz sim SIGSEGV (exit 139) 19 s after start when both GPU stacks started within seconds of each other (raw record kept: m9/2/sessions.jsonl line 2). Retried alone 22:38
+  (label m9_recon_retry), trace beat_trace_coverage_reactive_gpu_retry.jsonl. LESSON: stagger GPU stack starts (OHK_RUN_STAGGER_S / manual sleep).
+- Dock final roster written (config/nav_rosters_dock_inode.yaml: detector 1.8 s, drive 0.15 s). Fault chain inst 1 started 22:40 (tools/m9_chain.sh, args in
+  results/fullstack/m9/_chains/faults_inst1.txt): dock_detector kill x20, stop x10, dock_drive kill x10; label m9_faults. NOTE the reactive recon overlaps with these
+  trials' stack starts (load spikes) -> its max gaps are conservative.
+- TODO after reactive recon: roster nav_rosters_amcl_inode.yaml (coverage_planner, nav2: 0.6 s), reactive value from data; fault chain inst 2 (coverage kill 10/stop 5 nav2 + reactive);
+  then soaks (>= 6 sim h: dock 5x1800, nav_amcl 2x1800 inst 1; coverage nav2 3x1800 + reactive 3x1800 inst 2); then docs/M9_RECON.md, tests, commit.
