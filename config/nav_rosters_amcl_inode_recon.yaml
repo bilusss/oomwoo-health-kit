@@ -1,0 +1,29 @@
+# M9 RECON roster (see docs/M9_RECON.md): nav_rosters_amcl.yaml plus the in-node heartbeat components with a deliberately generous max_age_sec of 5 s,
+# so that a recon session can measure their beat periods without the loop reacting to them. NOT a deployment value; the roster with
+# per-component values derived from the recon is nav_rosters_amcl_inode.yaml.
+# M7: static roster for the AMCL stack (see nav_watch_amcl.yaml). Same components as nav_rosters.yaml except global_costmap's max_age
+# (its footprint is 2 Hz on this stack). Published once (latched) by job_roster with state_source static.
+# Run: ros2 run oomwoo_health_kit job_roster --ros-args -p config_file:=<this file>
+#
+# local_costmap is CRITICAL: in this stack the collision monitor is disabled (navigation.yaml: enabled false, all polygons
+# enabled false), so the local costmap (scan-fed obstacle layer, read by the controller) is the only obstacle protection;
+# its published_footprint (5 Hz) comes from its update loop. Frozen costmap with a live controller is invisible to commands.
+# Why static: with "hold last setpoint" MCU semantics a robot that moves while the roster says "idle" is unsupervised.
+# Docking, wall-follow, coverage, recovery and teleop all publish cmd_vel outside the two Nav2 actions, so a roster
+# that follows the Nav2 job state can be wrong exactly when it matters. drive_supervision is satisfied while the robot
+# is stationary and while commands accompany motion, so it needs no job state and nothing goes silent by design.
+# max_age_sec: about 3 heartbeat periods (see nav_watch.yaml). Plumbing liveness: if the topic_heartbeat process dies
+# every component below goes stale and the robot stops.
+state_source: {type: static}
+
+rosters:
+  nav:
+    task_id: nav
+    components:
+      - {component_id: lidar,             critical: true,  max_age_sec: 0.6}    # 5 Hz
+      - {component_id: odom,              critical: true,  max_age_sec: 0.15}   # 50 Hz, unlimited (7 periods)
+      - {component_id: localization,      critical: true,  max_age_sec: 0.6}   # map->odom new stamps 5 Hz measured (driving and stationary), 3 periods
+      - {component_id: drive_supervision, critical: true,  max_age_sec: 0.15}   # emitted at up to 25 Hz
+      - {component_id: local_costmap,     critical: true,  max_age_sec: 0.6}    # 5 Hz
+      - {component_id: global_costmap,    critical: false, max_age_sec: 1.5}   # 2.0 Hz measured on the AMCL stack, 3 periods
+      - {component_id: coverage_planner, critical: true,  max_age_sec: 5.0}   # in-node heartbeat, recon value

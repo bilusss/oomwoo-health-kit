@@ -19,7 +19,11 @@ def test_every_task_has_existing_configs_that_parse_and_match():
     for name, t in tk.TASKS.items():
         w = {x.component_id for x in parse_watches(yaml.safe_load((ROOT / "config" / t["watch"]).read_text()))}
         (rs,) = parse_job_config(yaml.safe_load((ROOT / "config" / t["roster"]).read_text())).rosters.values()
-        assert {c["component_id"] for c in rs.components} <= w, name
+        # M9: in-node components are published by the nodes themselves, not by the watcher
+        inode = set(t.get("inode", ()))
+        assert {c["component_id"] for c in rs.components} - inode <= w, name
+        assert not inode & w, name
+        assert inode <= {c["component_id"] for c in rs.components if c["critical"]}, name
         assert "drive_supervision" in {c["component_id"] for c in rs.components if c["critical"]}, name
 
 
@@ -33,6 +37,22 @@ def test_amcl_global_costmap_max_age_is_three_periods_of_2hz():
 def test_launch_args():
     a = tk.launch_args("dock", "false")
     assert "localization:=none" in a and "job:=dock" in a and "world:=kitchen_dining.world" in a and "composition:=false" in a
+
+
+def test_inode_tasks_select_inode_launch_arg_and_other_tasks_do_not():
+    assert "inode_health:=true" in tk.launch_args("dock_inode", "true")
+    assert "inode_health:=true" in tk.launch_args("coverage_reactive_inode_recon", "true")
+    for name, t in tk.TASKS.items():
+        assert ("inode_health:=true" in tk.launch_args(name)) == bool(t.get("inode")), name
+
+
+def test_planner_cmd_health_component_id_is_opt_in():
+    sys.path.insert(0, str(ROOT / "bench"))
+    sys.path.insert(0, str(ROOT / "bench" / "fullstack"))
+    pytest.importorskip("rclpy", reason="jobs.py imports ohk_bench")
+    import jobs
+    assert not any("health_component_id" in a for a in jobs.planner_cmd("nav2", prefix="/x"))
+    assert "health_component_id:=coverage_planner" in jobs.planner_cmd("reactive", prefix="/x", component_id="coverage_planner")
 
 
 def test_wall_sdf():

@@ -1,0 +1,17 @@
+# M9 RECON roster (see docs/M9_RECON.md): nav_rosters_dock.yaml plus the in-node heartbeat components with a deliberately generous max_age_sec of 5 s,
+# so that a recon session can measure their beat periods without the loop reacting to them. NOT a deployment value; the roster with
+# per-component values derived from the recon is nav_rosters_dock_inode.yaml.
+# M7 dock task: static roster. lidar, odom and drive_supervision are critical; there is no map, localization or costmap in this
+# stack (kitchen_dining, no Nav2). Why static and why drive_supervision: see nav_rosters.yaml. max_age_sec: about 3 periods of
+# the measured rates (docs/M7_RECON.md).
+state_source: {type: static}
+
+rosters:
+  nav:
+    task_id: dock
+    components:
+      - {component_id: lidar,             critical: true,  max_age_sec: 0.6}    # 5 Hz
+      - {component_id: odom,              critical: true,  max_age_sec: 0.15}   # 50 Hz
+      - {component_id: drive_supervision, critical: true,  max_age_sec: 0.15}
+      - {component_id: dock_detector,    critical: true,  max_age_sec: 5.0}   # in-node heartbeat, recon value
+      - {component_id: dock_drive,       critical: true,  max_age_sec: 5.0}   # in-node heartbeat, recon value

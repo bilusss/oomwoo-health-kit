@@ -43,6 +43,9 @@ def generate_launch_description():
         DeclareLaunchArgument("watch_config", default_value=os.path.join(CONFIG, "nav_watch_sim.yaml")),
         DeclareLaunchArgument("roster_config", default_value=os.path.join(CONFIG, "nav_rosters.yaml")),
         DeclareLaunchArgument("job", default_value="none", choices=["none", "coverage_support", "dock"]),
+        # M9: true = set health_component_id on dock_detector / dock_drive (needs the oomwoo_health_beat overlay, tools/sim.sh overlay-build);
+        # the coverage planner is started by the bench worker (jobs.planner_cmd). Needs health_sim_time:=true (stamps are sim time).
+        DeclareLaunchArgument("inode_health", default_value="false", choices=["true", "false"]),
         # amcl only: true = unmodified oomwoo_clean nav.launch.py (ONE composed nav2_container); false = the same nav2_bringup
         # bringup_launch.py call with use_composition:=False (one process per Nav2 node, needed for per-node SIGKILL/SIGSTOP)
         DeclareLaunchArgument("composition", default_value="true", choices=["true", "false"]),
@@ -127,19 +130,26 @@ def generate_launch_description():
         ]
     # The coverage planner itself is started by the bench worker once the loop is armed (it begins driving at once).
     jobs = coverage_nodes("coverage_support")
-    dock_cond = LaunchConfigurationEquals("job", "dock")
     # dock_sim.launch.py's nodes without its Shutdown-on-exit of dock_drive (a SIGKILLed dock_drive must not end the stack);
-    # dock_drive: exit_when_done false, auto_start false (the bench enables it per attempt through ~/enable)
-    jobs += [
-        Node(package="oomwoo_sim_support", executable="ir_beacon_sim", name="ir_beacon_sim", output="screen", condition=dock_cond,
-             parameters=[{"use_sim_time": True, "dock_x": -2.11, "dock_y": -0.5, "dock_yaw_deg": 180.0}],
-             remappings=[("~/bearing", "/dock_detector/beacon_bearing"), ("~/visible", "/dock_drive/beacon_visible")]),
-        Node(package="oomwoo_dock", executable="dock_detector", name="dock_detector", output="screen", condition=dock_cond,
-             parameters=[{"use_sim_time": True, "prior_x": 0.6, "prior_y": 0.0, "prior_yaw_deg": 0.0}]),
-        Node(package="oomwoo_dock", executable="dock_drive", name="dock_drive", output="screen", condition=dock_cond,
-             parameters=[{"use_sim_time": True, "auto_start": False, "exit_when_done": False}],
-             remappings=[("~/dock_pose", "/dock_detector/dock_pose")]),
-    ]
+    # dock_drive: exit_when_done false, auto_start false (the bench enables it per attempt through ~/enable).
+    # M9: with inode_health:=true the two dock nodes get health_component_id (otherwise the parameter is not passed at all).
+    def dock_nodes(context):
+        if context.perform_substitution(LC("job")) != "dock":
+            return []
+        beat = context.perform_substitution(LC("inode_health")) == "true"
+        return [
+            Node(package="oomwoo_sim_support", executable="ir_beacon_sim", name="ir_beacon_sim", output="screen",
+                 parameters=[{"use_sim_time": True, "dock_x": -2.11, "dock_y": -0.5, "dock_yaw_deg": 180.0}],
+                 remappings=[("~/bearing", "/dock_detector/beacon_bearing"), ("~/visible", "/dock_drive/beacon_visible")]),
+            Node(package="oomwoo_dock", executable="dock_detector", name="dock_detector", output="screen",
+                 parameters=[{"use_sim_time": True, "prior_x": 0.6, "prior_y": 0.0, "prior_yaw_deg": 0.0,
+                              **({"health_component_id": "dock_detector"} if beat else {})}]),
+            Node(package="oomwoo_dock", executable="dock_drive", name="dock_drive", output="screen",
+                 parameters=[{"use_sim_time": True, "auto_start": False, "exit_when_done": False,
+                              **({"health_component_id": "dock_drive"} if beat else {})}],
+                 remappings=[("~/dock_pose", "/dock_detector/dock_pose")]),
+        ]
+    jobs += [OpaqueFunction(function=dock_nodes)]
     health = [
         Node(package="oomwoo_health_monitor", executable="health_monitor_node", name="health_monitor",
              parameters=[{"use_sim_time": ParameterValue(LC("health_sim_time"), value_type=bool)}]),

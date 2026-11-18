@@ -624,7 +624,8 @@ def worker_main(spec_path):
     if kind == "goals":
         work = wl.Workload(node, mix=spec.get("workload") == "mix", **wkw)
     elif kind == "coverage":
-        work = jobs.CoverageJob(node, executor=task_cfg["planner"], tally=tally, restart=not spec.get("fault"), **wkw)
+        work = jobs.CoverageJob(node, executor=task_cfg["planner"], tally=tally, restart=not spec.get("fault"),
+                                component_id="coverage_planner" if "coverage_planner" in task_cfg.get("inode", ()) else None, **wkw)
     elif kind == "dock":
         work = jobs.DockJob(node, **wkw)
     elif kind == "recovery":
@@ -704,8 +705,14 @@ def worker_main(spec_path):
         return (sim_now() > 0 and lifecycle_active() and st["last_state"] == "run" and (st["stack_last"] or {}).get("emit_mcu_heartbeat") is True
                 and work.ready() and localized())
 
+    def ready_for_planner():
+        """M9: Nav2 active and the robot localized, the same conditions as armed() minus the health loop (which waits for the planner)."""
+        return sim_now() > 0 and lifecycle_active() and work.ready() and localized()
+
     t_start = time.monotonic()
     while not stop.is_set() and time.monotonic() - t_start < spec["arm_timeout_s"] and not armed():
+        if getattr(work, "component_id", None) and not work.prestarted and ready_for_planner():
+            work.prestart()   # the roster lists the planner as critical: it must beat before the loop can arm
         time.sleep(0.5)
     res["arm_wall_s"] = round(time.monotonic() - t_start, 1)
     res["armed"] = (not stop.is_set()) and armed()
@@ -988,6 +995,7 @@ def session_record(args, k, profile, log, windows):
                               if args.health_sources == "watcher" else None),
            "domain_id": os.environ.get("ROS_DOMAIN_ID"), "instance": os.environ.get("OHK_INSTANCE"),
            "kit_commit": os.environ.get("OHK_KIT_COMMIT"), "aggregator_commit": os.environ.get("OHK_AGG_COMMIT"),
+           "tools_commit": os.environ.get("OHK_TOOLS_COMMIT") or None, "inode_health": list(tk.TASKS[args.task].get("inode", ())),
            "start": dt.datetime.now().astimezone().isoformat(timespec="seconds"), "valid": False,
            "timing_note": "sim = Gazebo /clock, wall = host monotonic; stand-in decides on wall clock (steady)"}
     if args.health_sources == "watcher":
@@ -1144,6 +1152,7 @@ def trial_record(args, k, fault, rep, log, windows):
            "gpu": args.gpu, "health_sources": args.health_sources, "health_clock": args.health_clock, "label": args.label,
            "requested_rtf": args.rtf, "domain_id": os.environ.get("ROS_DOMAIN_ID"), "instance": os.environ.get("OHK_INSTANCE"),
            "kit_commit": os.environ.get("OHK_KIT_COMMIT"), "aggregator_commit": os.environ.get("OHK_AGG_COMMIT"),
+           "tools_commit": os.environ.get("OHK_TOOLS_COMMIT") or None, "inode_health": list(tk.TASKS[args.task].get("inode", ())),
            "start": dt.datetime.now().astimezone().isoformat(timespec="seconds"), "valid": False,
            "soft_stop_timeout_s": args.soft_stop, "workload": "plain", "task": args.task, "composition": args.composition,
            "config_sha256": config_sha256(args.task),
@@ -1263,6 +1272,11 @@ def parent_main(args):
         if p not in s.PROFILES:
             raise SystemExit(f"unknown profile {p!r}; known: {', '.join(s.PROFILES)}")
     set_task(args.task, args.composition)
+    if tk.TASKS[args.task].get("inode"):
+        if args.health_clock != "sim":
+            raise SystemExit("in-node heartbeats are stamped with the node's ROS clock (sim time): use --health-clock sim")
+        if not os.environ.get("OHK_TOOLS_COMMIT"):
+            raise SystemExit("in-node heartbeat tasks need the overlay: OHK_OVERLAY=1 tools/sim.sh up N && tools/sim.sh overlay-build")
     if args.composition == "true" and any(f.strip() in tk.M7_FAULTS and tk.M7_FAULTS[f.strip()][0].startswith("/nav2_")
                                           for f in args.faults.split(",")) and args.mode == "faults":
         raise SystemExit("per-node Nav2 faults need --composition false (one process per Nav2 node)")

@@ -31,14 +31,15 @@ COVERAGE_PARAMS = {"cleaning_radius": 0.20, "robot_radius": 0.18, "coverage_targ
                    "min_transit_len": 0.7, "use_sim_time": True}
 
 
-def planner_cmd(executor, prefix=None):
+def planner_cmd(executor, prefix=None, component_id=None):
     """argv of the upstream coverage_planner with the parameters and remaps of coverage_regression.launch.py (the executable is
-    started directly, not through `ros2 run`, so a signal reaches the planner itself)."""
+    started directly, not through `ros2 run`, so a signal reaches the planner itself). M9: component_id sets health_component_id
+    (the in-node heartbeat of the oomwoo_health_beat overlay); None passes nothing."""
     if prefix is None:
         from ament_index_python.packages import get_package_prefix
         prefix = get_package_prefix("oomwoo_coverage")
     argv = [os.path.join(prefix, "lib", "oomwoo_coverage", "coverage_planner"), "--ros-args"]
-    for k, v in {**COVERAGE_PARAMS, "executor": executor}.items():
+    for k, v in {**COVERAGE_PARAMS, "executor": executor, **({"health_component_id": component_id} if component_id else {})}.items():
         argv += ["-p", f"{k}:={str(v).lower() if isinstance(v, bool) else v}"]
     for a, c in (("map", "/map"), ("coverage_ratio", "/coverage_meter/ratio"), ("covered_grid", "/coverage_meter/covered_grid"),
                  ("navigate_to_pose", "/navigate_to_pose")):
@@ -47,9 +48,11 @@ def planner_cmd(executor, prefix=None):
 
 
 class CoverageJob(Workload):
-    def __init__(self, node, executor, log_dir="/tmp", tally=None, restart=True, **kw):
+    def __init__(self, node, executor, log_dir="/tmp", tally=None, restart=True, component_id=None, **kw):
         super().__init__(node, **kw)
         self.restart = restart
+        self.component_id = component_id    # M9: in-node heartbeat id of the planner (None = off)
+        self.prestarted = False
         from std_msgs.msg import Float32
         self.executor = executor
         self.log_dir = log_dir
@@ -65,9 +68,18 @@ class CoverageJob(Workload):
     def start_planner(self, n):
         path = os.path.join(self.log_dir, f"coverage_planner_{n}.log")
         self.proc_log = path
-        self.proc = subprocess.Popen(planner_cmd(self.executor), stdout=open(path, "w"), stderr=subprocess.STDOUT,
+        self.proc = subprocess.Popen(planner_cmd(self.executor, component_id=self.component_id), stdout=open(path, "w"), stderr=subprocess.STDOUT,
                                      start_new_session=True, preexec_fn=b.die_with_parent)
         self.log(f"coverage_planner ({self.executor}) pid {self.proc.pid} log {path}")
+
+    def prestart(self):
+        """M9: start the first planner process before the health loop is armed. A critical in-node planner component is part of the
+        roster, so the loop cannot arm until the planner beats (the M7/M8 workers started it after arming). The caller does this only
+        once Nav2 is active and the robot localized, so that the planner's first goals are not refused; the stand-in keeps cmd_vel
+        gated until the loop is armed."""
+        if not self.prestarted:
+            self.prestarted = True
+            self.start_planner(1)
 
     def stop_planner(self):
         if self.proc and self.proc.poll() is None:
@@ -87,7 +99,10 @@ class CoverageJob(Workload):
             n += 1
             rec = {"idx": n - 1, "pose": "COVERAGE", "executor": self.executor, "result": "error"}
             t0w, t0s, d0 = time.monotonic(), self.sim_now(), self.odo.distance()
-            self.start_planner(n)
+            if n == 1 and self.prestarted:
+                self.log("coverage_planner was started before arming (in-node heartbeat in the roster)")
+            else:
+                self.start_planner(n)
             while not should_stop() and self.proc.poll() is None and (duration_sim_s is None or self.sim_now() - t0 < duration_sim_s):
                 time.sleep(0.5)
             if self.proc.poll() is None:
