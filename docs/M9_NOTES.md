@@ -11,3 +11,7 @@
   Smoke 2 with relay (results/fullstack/m9/_smoke2): 0 soft stops in 301 sim s, container CPU 3.16 cores (sim-clock variant 4.01).
 - Recon wave 1 started 2026-11-18 ~21:45: coverage nav2 executor, inst 1 (cpu) + inst 2 (--gpu), 1800 sim s each, traces beat_trace_coverage_nav2_{cpu,gpu}.jsonl.
   Env for every sim.sh call: export OHK_RES_SUB=m9 OHK_OVERLAY=1 ; GPU only on instance 2 via OHK_GPU_INSTANCES=2.
+- Recon wave 1 done 22:07 (valid both; coverage nav2: container CPU 4.093 cores without GPU vs 4.064 with --gpu, same RTF 0.9997): GPU nominally cheaper (-0.029
+  core, 0.7%, within noise) -> rule says use it: all later runs use GPU on both instances (OHK_GPU_INSTANCES="1 2" tools/sim.sh up 2; run ... --gpu).
+  coverage_planner nav2 beat period 0.200 s (max 0.202), recommended max_age 0.6.
+- Recon wave 2 started 22:10: dock (inst 1) + coverage reactive (inst 2), GPU, traces beat_trace_dock_gpu / beat_trace_coverage_reactive_gpu.

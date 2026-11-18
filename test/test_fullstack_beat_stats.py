@@ -53,3 +53,12 @@ def test_relay_moves_sim_age_onto_the_wall_clock_and_never_negative():
     for bad in ({"component_id": "a"}, {"stamp_sec": "x"}, {"stamp_sec": float("nan")}, {"stamp_sec": float("inf")}):
         with pytest.raises((KeyError, ValueError, TypeError)):
             br.convert(bad, 1.0, 2.0)
+
+
+def test_age_before_refresh_and_recommended_max_age():
+    a = bs.analyse(rows())["dock_detector"]
+    # stamps 1.0 1.5 2.0 2.5 4.0 4.5, receipt sim_now = stamp + 0.03: the 2.5 -> 4.0 pair: 4.03 - 2.5 = 1.53
+    assert abs(max(a["all"]["abr"]) - 1.53) < 1e-9
+    assert bs.recommended_max_age(a["all"]) == 2.3          # max(3 x 0.5, 1.5 x 1.53 = 2.295) -> 2.3
+    flat = {"stamp": [0.6] * 9, "abr": [0.65] * 9}
+    assert bs.recommended_max_age(flat) == 1.8              # 3 x 0.6 = 1.8 > 1.5 x 0.65
