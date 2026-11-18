@@ -41,6 +41,8 @@ def planner_cmd(executor, prefix=None, component_id=None):
     argv = [os.path.join(prefix, "lib", "oomwoo_coverage", "coverage_planner"), "--ros-args"]
     for k, v in {**COVERAGE_PARAMS, "executor": executor, **({"health_component_id": component_id} if component_id else {})}.items():
         argv += ["-p", f"{k}:={str(v).lower() if isinstance(v, bool) else v}"]
+    if component_id:   # M9: the beats go to beat_relay.py first (see its docstring)
+        argv += ["-r", "/oomwoo/health/component:=/oomwoo/health/component_node"]
     for a, c in (("map", "/map"), ("coverage_ratio", "/coverage_meter/ratio"), ("covered_grid", "/coverage_meter/covered_grid"),
                  ("navigate_to_pose", "/navigate_to_pose")):
         argv += ["-r", f"{a}:={c}"]

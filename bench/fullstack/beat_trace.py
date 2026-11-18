@@ -4,7 +4,7 @@
   python3 beat_trace.py --seconds 2000 --out /results/beat_trace_dock.jsonl
 
 One JSON line per message, flushed as it goes (receive time = host monotonic clock, sim time = the /clock value at receipt):
-  ["beat", t_mono, sim_now, component_id, stamp_sec, sequence, health, detail]   /oomwoo/health/component (QoS of the contract, depth 200)
+  ["beat", t_mono, sim_now, component_id, stamp_sec, sequence, health, detail]   --topic (QoS of the contract, depth 200)
   ["odom", t_mono, v, w]                                                         /odom twist, 10 Hz sub-sampled
   ["state", t_mono, sim_now, "BACK"]                                             /dock_drive/state (published on change only)
 Analysis: beat_stats.py. Only volatile subscriptions; nothing here changes the graph (the extra subscriber on the shared heartbeat topic is
@@ -31,6 +31,8 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--seconds", type=float, default=600.0)
     ap.add_argument("--out", required=True)
+    ap.add_argument("--topic", default="/oomwoo/health/component_node",
+                    help="default: what the instrumented nodes publish (stamps = the node's sim clock; beat_relay.py moves them to /oomwoo/health/component)")
     a = ap.parse_args()
     rclpy.init()
     node = Node("ohk_beat_trace")
@@ -60,7 +62,7 @@ def main():
             w(["odom", t, round(m.twist.twist.linear.x, 4), round(m.twist.twist.angular.z, 4)])
 
     node.create_subscription(Clock, "/clock", lambda m: sim.__setitem__(0, m.clock.sec + m.clock.nanosec / 1e9), BE)
-    node.create_subscription(String, "/oomwoo/health/component", on_beat, REL)
+    node.create_subscription(String, a.topic, on_beat, REL)
     node.create_subscription(Odometry, "/odom", on_odom, BE)
     node.create_subscription(String, "/dock_drive/state", lambda m: w(["state", time.monotonic(), sim[0], m.data]), REL)
     threading.Thread(target=rclpy.spin, args=(node,), daemon=True).start()

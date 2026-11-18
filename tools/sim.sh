@@ -98,7 +98,11 @@ up() {
   fi
   docker run --rm -v "$VOL:/ws:ro" "$IMAGE" test -f /ws/install/setup.bash 2>/dev/null \
     || { echo "no build in volume $VOL; run: tools/sim.sh build" >&2; exit 3; }
+  local gpu_all=$gpu
   for i in $(seq "$n"); do
+    # M9: OHK_GPU_INSTANCES="2" (space separated) gives only those instances the GPU, e.g. for a GPU/CPU comparison of two sessions
+    gpu=$gpu_all
+    case " ${OHK_GPU_INSTANCES:-} " in *" $i "*) gpu=1 ;; esac
     local name="ohk-sim-$i" cur="" curo=""
     mkdir -p "$RES/$i"
     if docker container inspect "$name" >/dev/null 2>&1; then

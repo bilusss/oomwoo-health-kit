@@ -47,7 +47,7 @@ TASKS = {
                      watch="nav_watch_dock_fix.yaml", roster="nav_rosters_dock_fix.yaml", nav=False, planner=None),
     "dock": dict(localization="none", world="kitchen_dining.world", spawn=DOCK_SPAWN, job="dock", workload="dock",
                  watch="nav_watch_dock.yaml", roster="nav_rosters_dock.yaml", nav=False, planner=None),
-    # M9: in-node heartbeats (oomwoo_health_beat overlay). inode=<component ids the task's roster lists as critical>; needs --health-clock sim.
+    # M9: in-node heartbeats (oomwoo_health_beat overlay). inode=<component ids the task's roster lists as critical>; needs --health-clock wall (beat_relay.py).
     # The `*_recon` tasks list the same components with a generous max_age_sec (5 s) so that a recon session measures the beat periods
     # without the loop reacting; the others carry the per-component max_age_sec derived from that recon (docs/M9_RECON.md).
     "dock_inode_recon": dict(localization="none", world="kitchen_dining.world", spawn=DOCK_SPAWN, job="dock", workload="dock",

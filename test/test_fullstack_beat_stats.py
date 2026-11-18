@@ -39,3 +39,17 @@ def test_sequence_gap_counted_and_files_are_not_bridged():
     assert bs.analyse(r)["dock_detector"]["all"]["seq_gaps"] == 1
     m = bs.merge([bs.analyse(rows()), bs.analyse(rows())])
     assert len(m["dock_detector"]["all"]["stamp"]) == 10
+
+
+def test_relay_moves_sim_age_onto_the_wall_clock_and_never_negative():
+    import beat_relay as br
+    p = {"component_id": "dock_drive", "health": "ok", "stamp_sec": 100.0, "sequence": 7, "detail": "x"}
+    out = br.convert(p, sim_now=100.25, wall_now=1000.0)
+    assert abs(out["stamp_sec"] - 999.75) < 1e-9
+    assert {k: v for k, v in out.items() if k != "stamp_sec"} == {k: v for k, v in p.items() if k != "stamp_sec"}
+    assert p["stamp_sec"] == 100.0                                   # input untouched
+    assert br.convert(p, sim_now=99.999, wall_now=1000.0)["stamp_sec"] == 1000.0   # the relay's clock behind the sender's: age 0, not negative
+    import pytest
+    for bad in ({"component_id": "a"}, {"stamp_sec": "x"}, {"stamp_sec": float("nan")}, {"stamp_sec": float("inf")}):
+        with pytest.raises((KeyError, ValueError, TypeError)):
+            br.convert(bad, 1.0, 2.0)

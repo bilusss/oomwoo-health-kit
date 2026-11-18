@@ -12,10 +12,11 @@ would also end at /cmd_vel and be gated.
 """
 
 import os
+import sys
 
 from ament_index_python.packages import get_package_share_path
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, OpaqueFunction
+from launch.actions import DeclareLaunchArgument, ExecuteProcess, IncludeLaunchDescription, OpaqueFunction
 from launch.conditions import IfCondition, LaunchConfigurationEquals
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration as LC, PythonExpression
@@ -23,6 +24,8 @@ from launch_ros.actions import Node
 from launch_ros.parameter_descriptions import ParameterValue
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+# M9: the instrumented nodes publish their heartbeats here; bench/fullstack/beat_relay.py moves them onto /oomwoo/health/component (wall-clock stamps)
+BEAT_REMAP = [("/oomwoo/health/component", "/oomwoo/health/component_node")]
 CONFIG = os.path.join(os.path.dirname(os.path.dirname(HERE)), "config")
 MAP = os.path.join(str(get_package_share_path("oomwoo_gazebo")), "maps", "living_room.yaml")
 
@@ -44,7 +47,7 @@ def generate_launch_description():
         DeclareLaunchArgument("roster_config", default_value=os.path.join(CONFIG, "nav_rosters.yaml")),
         DeclareLaunchArgument("job", default_value="none", choices=["none", "coverage_support", "dock"]),
         # M9: true = set health_component_id on dock_detector / dock_drive (needs the oomwoo_health_beat overlay, tools/sim.sh overlay-build);
-        # the coverage planner is started by the bench worker (jobs.planner_cmd). Needs health_sim_time:=true (stamps are sim time).
+        # the coverage planner is started by the bench worker (jobs.planner_cmd). Needs health_sim_time:=false: beats are stamped with sim time and moved onto the wall clock by beat_relay.py.
         DeclareLaunchArgument("inode_health", default_value="false", choices=["true", "false"]),
         # amcl only: true = unmodified oomwoo_clean nav.launch.py (ONE composed nav2_container); false = the same nav2_bringup
         # bringup_launch.py call with use_composition:=False (one process per Nav2 node, needed for per-node SIGKILL/SIGSTOP)
@@ -143,13 +146,17 @@ def generate_launch_description():
                  remappings=[("~/bearing", "/dock_detector/beacon_bearing"), ("~/visible", "/dock_drive/beacon_visible")]),
             Node(package="oomwoo_dock", executable="dock_detector", name="dock_detector", output="screen",
                  parameters=[{"use_sim_time": True, "prior_x": 0.6, "prior_y": 0.0, "prior_yaw_deg": 0.0,
-                              **({"health_component_id": "dock_detector"} if beat else {})}]),
+                              **({"health_component_id": "dock_detector"} if beat else {})}],
+                 remappings=BEAT_REMAP if beat else []),
             Node(package="oomwoo_dock", executable="dock_drive", name="dock_drive", output="screen",
                  parameters=[{"use_sim_time": True, "auto_start": False, "exit_when_done": False,
                               **({"health_component_id": "dock_drive"} if beat else {})}],
-                 remappings=[("~/dock_pose", "/dock_detector/dock_pose")]),
+                 remappings=[("~/dock_pose", "/dock_detector/dock_pose")] + (BEAT_REMAP if beat else [])),
         ]
     jobs += [OpaqueFunction(function=dock_nodes)]
+    # M9: sim-clock bridge for the in-node heartbeats (see its docstring); the coverage planner is remapped in jobs.planner_cmd
+    relay = [ExecuteProcess(cmd=[sys.executable, "-u", os.path.join(HERE, "beat_relay.py")], output="screen",
+                            condition=LaunchConfigurationEquals("inode_health", "true"))]
     health = [
         Node(package="oomwoo_health_monitor", executable="health_monitor_node", name="health_monitor",
              parameters=[{"use_sim_time": ParameterValue(LC("health_sim_time"), value_type=bool)}]),
@@ -171,4 +178,4 @@ def generate_launch_description():
         launch_arguments={"max_age_sec": LC("max_age_sec"), "rate_hz": LC("rate_hz"),
                           "sim_time": LC("health_sim_time"), "watch_config": LC("watch_config"),
                           "roster_config": LC("roster_config")}.items())
-    return LaunchDescription(args + [world, nav, nav_amcl, *nav_amcl_split, *jobs, *health, fake, watcher])
+    return LaunchDescription(args + [world, nav, nav_amcl, *nav_amcl_split, *jobs, *relay, *health, fake, watcher])

@@ -66,7 +66,7 @@ RTF_WINDOW_S = 30.0
 # Regexes (the [x] form keeps pkill from matching its own command line) for everything a session can leave behind.
 KILL_RE = ("[g]z sim|[r]uby .*gz|[c]omponent_container|[p]arameter_bridge|[r]obot_state_publisher|[l]ocalization_slam_toolbox|"
            "[h]ealth_monitor_node|[m]cu_standin_node|[r]oster_publisher_node|[f]ake_component_node|[t]opic_heartbeat_node|"
-           "[j]ob_roster_node|[b]ench/fullstack/run.py --(worker|recorder)|[r]viz2|[r]os2 launch|[r]os2cli.daemon|[r]os_gz_sim|ros_gz_sim/create|[l]aunch_ros|"
+           "[b]eat_relay.py|[j]ob_roster_node|[b]ench/fullstack/run.py --(worker|recorder)|[r]viz2|[r]os2 launch|[r]os2cli.daemon|[r]os_gz_sim|ros_gz_sim/create|[l]aunch_ros|"
            # M7: separate Nav2 processes (composition:=false), job nodes
            "lib/[n]av2_|lib/[o]omwoo_dock/|lib/[o]omwoo_coverage/|lib/[o]omwoo_sim_support/|lib/[t]f2_ros/")
 # Processes whose death invalidates a session, by /proc comm or a cmdline fragment.
@@ -87,6 +87,8 @@ def key_procs_for(task, composition="true"):
             out.update(amcl="lib/nav2_amcl/amcl", controller="lib/nav2_controller/controller_server",
                        behavior="lib/nav2_behaviors/behavior_server", bt_navigator="lib/nav2_bt_navigator/bt_navigator",
                        planner="lib/nav2_planner/planner_server")
+    if t.get("inode"):
+        out["beat_relay"] = "bench/fullstack/beat_relay.py"
     if t["job"] == "dock":
         out.update(dock_drive="lib/oomwoo_dock/dock_drive", dock_detector="lib/oomwoo_dock/dock_detector")
     return out
@@ -1273,8 +1275,8 @@ def parent_main(args):
             raise SystemExit(f"unknown profile {p!r}; known: {', '.join(s.PROFILES)}")
     set_task(args.task, args.composition)
     if tk.TASKS[args.task].get("inode"):
-        if args.health_clock != "sim":
-            raise SystemExit("in-node heartbeats are stamped with the node's ROS clock (sim time): use --health-clock sim")
+        if args.health_clock != "wall":
+            raise SystemExit("in-node heartbeats are moved onto the wall clock by bench/fullstack/beat_relay.py: use --health-clock wall")
         if not os.environ.get("OHK_TOOLS_COMMIT"):
             raise SystemExit("in-node heartbeat tasks need the overlay: OHK_OVERLAY=1 tools/sim.sh up N && tools/sim.sh overlay-build")
     if args.composition == "true" and any(f.strip() in tk.M7_FAULTS and tk.M7_FAULTS[f.strip()][0].startswith("/nav2_")
