@@ -23,3 +23,9 @@
   trials' stack starts (load spikes) -> its max gaps are conservative.
 - TODO after reactive recon: roster nav_rosters_amcl_inode.yaml (coverage_planner, nav2: 0.6 s), reactive value from data; fault chain inst 2 (coverage kill 10/stop 5 nav2 + reactive);
   then soaks (>= 6 sim h: dock 5x1800, nav_amcl 2x1800 inst 1; coverage nav2 3x1800 + reactive 3x1800 inst 2); then docs/M9_RECON.md, tests, commit.
+- 22:47 GPU ABANDONED: containers lose GPU access after ~30 min (docker exec nvidia-smi: "Failed to initialize NVML: Unknown Error" in ohk-sim-2; wave-1 gpu_mid/gpu_at_end
+  snapshots show the same), after which a stack start cannot render (gazebo "Unable to load Ogre Plugin RenderSystem_GL3Plus", SIGSEGV 139): reactive recon crashed twice in
+  ohk-sim-2 (22:08, 22:39), the dock fault chain would have broken the same way. The GPU saving was 0.029 core (0.7%) anyway. Everything from here on runs on CPU rendering
+  (containers recreated without GPU). Dock chain: 9 valid GPU-rendered sigkill_dock_detector trials (m9/1/faults.jsonl trials 1-9, trial 10 aborted by my SIGTERM) are kept;
+  the chain restarted on CPU 22:55 with --reps 11 so that the kill series reaches 20 valid. Chain file: results/fullstack/m9/_chains/faults_inst1_cpu.txt.
+  Reactive recon (CPU) on inst 2 started 22:53, label m9_recon_retry2, trace beat_trace_coverage_reactive_cpu.jsonl (invalid starts: m9/2/sessions.jsonl lines 2-3).

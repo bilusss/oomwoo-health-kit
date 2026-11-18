@@ -157,3 +157,133 @@ World file name : /ros_ws/install/oomwoo_gazebo/share/oomwoo_gazebo/worlds/kitch
 [dock_drive-7] [INFO] [1795038059.437447840] [dock_drive]: state -> GOTO
 [dock_detector-6] [INFO] [1795038060.106785238] [dock_detector]: dock fix: +0.45 m ahead, +0.01 m across, -1 deg; coverage 0.71, sides 0.60, 54 points
 [dock_drive-7] [INFO] [1795038061.270910507] [dock_drive]: state -> TURN
+[dock_detector-6] [INFO] [1795038065.508354853] [dock_detector]: dock fix: -0.42 m ahead, +0.05 m across, +173 deg; coverage 0.66, sides 0.56, 55 points
+[dock_drive-7] [INFO] [1795038065.973470229] [dock_drive]: state -> BACK
+[ERROR] [dock_detector-6]: process has died [pid 6910, exit code -9, cmd '/overlay/install/oomwoo_dock/lib/oomwoo_dock/dock_detector --ros-args -r __node:=dock_detector --params-file /tmp/launch_params_c413oz_l -r /oomwoo/health/component:=/oomwoo/health/component_node'].
+[dock_drive-7] [WARN] [1795038070.922668254] [dock_drive]: no dock fix for 3.0 s; holding
+[dock_drive-7] [WARN] [1795038072.922686038] [dock_drive]: no dock fix for 5.0 s; holding
+[dock_drive-7] [WARN] [1795038074.922716287] [dock_drive]: no dock fix for 7.0 s; holding
+[dock_drive-7] [WARN] [1795038076.972905555] [dock_drive]: no dock fix for 9.1 s; holding
+[dock_drive-7] [WARN] [1795038079.022730670] [dock_drive]: no dock fix for 11.1 s; holding
+[dock_drive-7] [WARN] [1795038081.072649820] [dock_drive]: no dock fix for 13.2 s; holding
+[dock_drive-7] [WARN] [1795038083.072742733] [dock_drive]: no dock fix for 15.2 s; holding
+[dock_drive-7] [WARN] [1795038085.072789871] [dock_drive]: no dock fix for 17.2 s; holding
+[dock_drive-7] [WARN] [1795038087.122709829] [dock_drive]: no dock fix for 19.2 s; holding
+[dock_drive-7] [WARN] [1795038089.172659272] [dock_drive]: no dock fix for 21.3 s; holding
+[dock_drive-7] [WARN] [1795038091.172709219] [dock_drive]: no dock fix for 23.3 s; holding
+[dock_drive-7] [WARN] [1795038093.172817681] [dock_drive]: no dock fix for 25.3 s; holding
+[dock_drive-7] [INFO] [1795038093.236041298] [dock_drive]: state -> IDLE
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[robot_state_publisher-3] [INFO] [1795038094.244518371] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[parameter_bridge-2] [INFO] [1795038094.244518211] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [topic_heartbeat-12]: sending signal 'SIGINT' to process[topic_heartbeat-12]
+[INFO] [job_roster-11]: sending signal 'SIGINT' to process[job_roster-11]
+[INFO] [mcu_standin_node-10]: sending signal 'SIGINT' to process[mcu_standin_node-10]
+[INFO] [health_monitor_node-9]: sending signal 'SIGINT' to process[health_monitor_node-9]
+[INFO] [python3-8]: sending signal 'SIGINT' to process[python3-8]
+[INFO] [dock_drive-7]: sending signal 'SIGINT' to process[dock_drive-7]
+[INFO] [ir_beacon_sim-5]: sending signal 'SIGINT' to process[ir_beacon_sim-5]
+[INFO] [robot_state_publisher-3]: sending signal 'SIGINT' to process[robot_state_publisher-3]
+[INFO] [parameter_bridge-2]: sending signal 'SIGINT' to process[parameter_bridge-2]
+[INFO] [gazebo-1]: sending signal 'SIGINT' to process[gazebo-1]
+[gazebo-1] [1;36m[Dbg] [SignalHandler.cc:142] [0m[1;36mReceived signal[[0m[1;36m2[0m[1;36m].[0m
+[gazebo-1] [1;36m[Dbg] [ServerPrivate.cc:122] [0m[1;36mServer received signal[[0m[1;36m2[0m[1;36m][0m
+[gazebo-1] [1;36m[Dbg] [Sensors.cc:565] [0m[1;36mSensorsPrivate::Stop[0m[1;36m[0m
+[topic_heartbeat-12] Traceback (most recent call last):
+[topic_heartbeat-12]   File "/ws/install/oomwoo_health_kit/lib/oomwoo_health_kit/topic_heartbeat", line 33, in <module>
+[topic_heartbeat-12]     sys.exit(load_entry_point('oomwoo-health-kit==0.0.1', 'console_scripts', 'topic_heartbeat')())
+[topic_heartbeat-12]              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[topic_heartbeat-12]   File "/ws/install/oomwoo_health_kit/lib/python3.12/site-packages/oomwoo_health_kit/topic_heartbeat_node.py", line 290, in main
+[topic_heartbeat-12]     node.destroy_node()
+[topic_heartbeat-12]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py", line 1962, in destroy_node
+[topic_heartbeat-12]     self.destroy_service(self._services[0])
+[topic_heartbeat-12]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py", line 1886, in destroy_service
+[topic_heartbeat-12]     service.destroy()
+[topic_heartbeat-12]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/service.py", line 123, in destroy
+[topic_heartbeat-12]     self.__service.destroy_when_not_in_use()
+[topic_heartbeat-12] KeyboardInterrupt
+[job_roster-11] Traceback (most recent call last):
+[job_roster-11]   File "/ws/install/oomwoo_health_kit/lib/oomwoo_health_kit/job_roster", line 33, in <module>
+[job_roster-11]     sys.exit(load_entry_point('oomwoo-health-kit==0.0.1', 'console_scripts', 'job_roster')())
+[job_roster-11]              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[job_roster-11]   File "/ws/install/oomwoo_health_kit/lib/python3.12/site-packages/oomwoo_health_kit/job_roster_node.py", line 131, in main
+[job_roster-11]     node.destroy_node()
+[job_roster-11]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py", line 1962, in destroy_node
+[job_roster-11]     self.destroy_service(self._services[0])
+[job_roster-11]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py", line 1886, in destroy_service
+[job_roster-11]     service.destroy()
+[job_roster-11]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/service.py", line 123, in destroy
+[job_roster-11]     self.__service.destroy_when_not_in_use()
+[job_roster-11] KeyboardInterrupt
+[health_monitor_node-9] Traceback (most recent call last):
+[health_monitor_node-9]   File "/ws/install/oomwoo_health_monitor/lib/oomwoo_health_monitor/health_monitor_node", line 33, in <module>
+[health_monitor_node-9]     sys.exit(load_entry_point('oomwoo-health-monitor==0.1.0', 'console_scripts', 'health_monitor_node')())
+[health_monitor_node-9]              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[health_monitor_node-9]   File "/ws/install/oomwoo_health_monitor/lib/python3.12/site-packages/oomwoo_health_monitor/health_monitor_node.py", line 137, in main
+[health_monitor_node-9]     node.destroy_node()
+[health_monitor_node-9]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py", line 1968, in destroy_node
+[health_monitor_node-9]     self.__node.destroy_when_not_in_use()
+[health_monitor_node-9] KeyboardInterrupt
+[dock_drive-7] Traceback (most recent call last):
+[dock_drive-7]   File "/overlay/install/oomwoo_dock/lib/oomwoo_dock/dock_drive", line 33, in <module>
+[dock_drive-7]     sys.exit(load_entry_point('oomwoo-dock==0.1.0', 'console_scripts', 'dock_drive')())
+[dock_drive-7]              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[dock_drive-7]   File "/overlay/install/oomwoo_dock/lib/python3.12/site-packages/oomwoo_dock/dock_drive_node.py", line 378, in main
+[dock_drive-7]     node.destroy_node()
+[dock_drive-7]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py", line 1962, in destroy_node
+[dock_drive-7]     self.destroy_service(self._services[0])
+[dock_drive-7]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py", line 1886, in destroy_service
+[dock_drive-7]     service.destroy()
+[dock_drive-7]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/service.py", line 123, in destroy
+[dock_drive-7]     self.__service.destroy_when_not_in_use()
+[dock_drive-7] KeyboardInterrupt
+[mcu_standin_node-10] Traceback (most recent call last):
+[mcu_standin_node-10]   File "/ws/install/oomwoo_health_kit/lib/oomwoo_health_kit/mcu_standin_node", line 33, in <module>
+[mcu_standin_node-10]     sys.exit(load_entry_point('oomwoo-health-kit==0.0.1', 'console_scripts', 'mcu_standin_node')())
+[mcu_standin_node-10]              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[mcu_standin_node-10]   File "/ws/install/oomwoo_health_kit/lib/python3.12/site-packages/oomwoo_health_kit/mcu_standin_node.py", line 121, in main
+[mcu_standin_node-10]     node.destroy_node()
+[mcu_standin_node-10]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py", line 1968, in destroy_node
+[mcu_standin_node-10]     self.__node.destroy_when_not_in_use()
+[mcu_standin_node-10] KeyboardInterrupt
+[robot_state_publisher-3] [INFO] [1795038094.254081242] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[ir_beacon_sim-5] Traceback (most recent call last):
+[ir_beacon_sim-5]   File "/ros_ws/install/oomwoo_sim_support/lib/oomwoo_sim_support/ir_beacon_sim", line 33, in <module>
+[ir_beacon_sim-5]     sys.exit(load_entry_point('oomwoo-sim-support', 'console_scripts', 'ir_beacon_sim')())
+[ir_beacon_sim-5]              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[ir_beacon_sim-5]   File "/ros_ws/build/oomwoo_sim_support/oomwoo_sim_support/ir_beacon_sim_node.py", line 224, in main
+[ir_beacon_sim-5]     node.destroy_node()
+[ir_beacon_sim-5]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py", line 1968, in destroy_node
+[ir_beacon_sim-5]     self.__node.destroy_when_not_in_use()
+[ir_beacon_sim-5] KeyboardInterrupt
+[python3-8] Traceback (most recent call last):
+[python3-8]   File "/ws/src/oomwoo_health_kit/bench/fullstack/beat_relay.py", line 78, in <module>
+[python3-8]     main()
+[python3-8]   File "/ws/src/oomwoo_health_kit/bench/fullstack/beat_relay.py", line 72, in main
+[python3-8]     node.destroy_node()
+[python3-8]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py", line 1968, in destroy_node
+[python3-8]     self.__node.destroy_when_not_in_use()
+[python3-8] KeyboardInterrupt
+[parameter_bridge-2] [INFO] [1795038094.255593209] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[ERROR] [python3-8]: process has died [pid 6912, exit code -2, cmd '/usr/bin/python3 -u /ws/src/oomwoo_health_kit/bench/fullstack/beat_relay.py'].
+[ERROR] [mcu_standin_node-10]: process has died [pid 6914, exit code -2, cmd '/ws/install/oomwoo_health_kit/lib/oomwoo_health_kit/mcu_standin_node --ros-args -r __node:=mcu_standin --params-file /tmp/launch_params_rzhcglci -r cmd_vel_in:=cmd_vel -r cmd_vel:=cmd_vel_gated'].
+[ERROR] [topic_heartbeat-12]: process has died [pid 6916, exit code -2, cmd '/ws/install/oomwoo_health_kit/lib/oomwoo_health_kit/topic_heartbeat --ros-args -r __node:=topic_heartbeat --params-file /tmp/launch_params_l117v825'].
+[ERROR] [ir_beacon_sim-5]: process has died [pid 6909, exit code -2, cmd '/ros_ws/install/oomwoo_sim_support/lib/oomwoo_sim_support/ir_beacon_sim --ros-args -r __node:=ir_beacon_sim --params-file /tmp/launch_params_6xf9wi3a -r ~/bearing:=/dock_detector/beacon_bearing -r ~/visible:=/dock_drive/beacon_visible'].
+[ERROR] [job_roster-11]: process has died [pid 6915, exit code -2, cmd '/ws/install/oomwoo_health_kit/lib/oomwoo_health_kit/job_roster --ros-args -r __node:=job_roster --params-file /tmp/launch_params_1b9lcmc0'].
+[ERROR] [health_monitor_node-9]: process has died [pid 6913, exit code -2, cmd '/ws/install/oomwoo_health_monitor/lib/oomwoo_health_monitor/health_monitor_node --ros-args -r __node:=health_monitor --params-file /tmp/launch_params_441zr831'].
+[ERROR] [dock_drive-7]: process has died [pid 6911, exit code -2, cmd '/overlay/install/oomwoo_dock/lib/oomwoo_dock/dock_drive --ros-args -r __node:=dock_drive --params-file /tmp/launch_params_5x8vucdi -r ~/dock_pose:=/dock_detector/dock_pose -r /oomwoo/health/component:=/oomwoo/health/component_node'].
+[gazebo-1] [1;36m[Dbg] [Sensors.cc:551] [0m[1;36mSensorsPrivate::RenderThread stopped[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [gz.cc:434] [0m[1;36mShutting down gz-sim-server[0m[1;36m[0m
+[INFO] [robot_state_publisher-3]: process has finished cleanly [pid 6906]
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:654] [0m[1;36mExiting postupdate worker thread ([0m[1;36m0[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:654] [0m[1;36mExiting postupdate worker thread ([0m[1;36m3[0m[1;36m)[0m[1;36m[0m
+[INFO] [parameter_bridge-2]: process has finished cleanly [pid 6905]
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:654] [0m[1;36mExiting postupdate worker thread ([0m[1;36m6[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:654] [Dbg] [SimulationRunner.cc:654] [0m[1;36m[Dbg] [SimulationRunner.cc:654] [0m[1;36mExiting postupdate worker thread ([0m[1;36m7[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36mExiting postupdate worker thread ([0m[1;36m4[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36mExiting postupdate worker thread ([0m[1;36m5[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36mExiting postupdate worker thread ([0m[1;36m2[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36mExiting postupdate worker thread ([0m[1;36mExiting postupdate worker thread ([0m[1;36m1[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [Sensors.cc:565] [0m[1;36mSensorsPrivate::Stop[0m[1;36m[0m
+[ERROR] [gazebo-1]: process has died [pid 6904, exit code -2, cmd 'ruby /opt/ros/jazzy/opt/gz_tools_vendor/bin/gz sim -s -r --headless-rendering -v 4 /ros_ws/install/oomwoo_gazebo/share/oomwoo_gazebo/worlds/kitchen_dining.world --force-version 8'].
+[INFO] [launch]: process[gazebo-1] was required: shutting down launched system

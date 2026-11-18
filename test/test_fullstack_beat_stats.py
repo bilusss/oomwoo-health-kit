@@ -62,3 +62,12 @@ def test_age_before_refresh_and_recommended_max_age():
     assert bs.recommended_max_age(a["all"]) == 2.3          # max(3 x 0.5, 1.5 x 1.53 = 2.295) -> 2.3
     flat = {"stamp": [0.6] * 9, "abr": [0.65] * 9}
     assert bs.recommended_max_age(flat) == 1.8              # 3 x 0.6 = 1.8 > 1.5 x 0.65
+
+
+def test_collect_m9_routes_by_label_and_mode():
+    import collect_m9 as c
+    assert c.route({"label": "m9_faults", "task": "dock_inode"}, "faults") == "faults_m9.jsonl"
+    assert c.route({"label": "m9_soak", "task": "dock_inode"}, "soak") == "soak_m9_dock_inode.jsonl"
+    assert c.route({"label": "m9_recon_gpu", "task": "coverage_inode_recon"}, "soak") == "recon_sessions.jsonl"
+    assert c.route({"label": "m9_smoke"}, "soak") == "other_records.jsonl"
+    assert c.route({"label": "m9_soak"}, "faults") == "other_records.jsonl"
