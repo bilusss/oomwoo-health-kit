@@ -35,6 +35,27 @@ def convert(payload, sim_now, wall_now):
     return out
 
 
+class BeatRelay:
+    """The relay's whole logic, ROS-free: one input message gives at most one output message, immediately; there is no timer, no stored
+    beat and no way to emit without an input, so a node that stops beating stops being forwarded (tested in test_fullstack_beat_stats.py)."""
+
+    def __init__(self):
+        self.n = self.bad = self.clamped = 0
+
+    def on_beat(self, raw, sim_now, wall_now):
+        """Raw JSON text from the node -> JSON text for the aggregator, or None for a malformed beat (dropped, counted)."""
+        try:
+            p = json.loads(raw)
+            out = convert(p, sim_now, wall_now)
+        except (ValueError, KeyError, TypeError):
+            self.bad += 1
+            return None
+        self.n += 1
+        if sim_now < float(p["stamp_sec"]):
+            self.clamped += 1   # the relay's own /clock was behind the sender's: age 0 instead of negative
+        return json.dumps(out, sort_keys=True)
+
+
 def main():
     import rclpy
     from rclpy.node import Node
@@ -45,24 +66,17 @@ def main():
     node = Node("beat_relay", parameter_overrides=[rclpy.parameter.Parameter("use_sim_time", value=True)])
     qos = QoSProfile(history=HistoryPolicy.KEEP_LAST, depth=10, reliability=ReliabilityPolicy.RELIABLE, durability=DurabilityPolicy.VOLATILE)
     pub = node.create_publisher(String, OUT_TOPIC, qos)
-    stats = {"n": 0, "bad": 0, "clamped": 0}
+    relay = BeatRelay()
 
     def on_beat(m):
-        try:
-            p = json.loads(m.data)
-            sim_now = node.get_clock().now().nanoseconds * 1e-9
-            out = convert(p, sim_now, time.time())
-        except (ValueError, KeyError, TypeError) as exc:
-            stats["bad"] += 1
-            node.get_logger().warn(f"dropping malformed beat: {exc}", throttle_duration_sec=5.0)
-            return
-        stats["n"] += 1
-        if sim_now < float(p["stamp_sec"]):
-            stats["clamped"] += 1   # the relay's own /clock was behind the sender's: age 0 instead of negative
-        pub.publish(String(data=json.dumps(out, sort_keys=True)))
+        out = relay.on_beat(m.data, node.get_clock().now().nanoseconds * 1e-9, time.time())
+        if out is None:
+            node.get_logger().warn("dropping malformed beat", throttle_duration_sec=5.0)
+        else:
+            pub.publish(String(data=out))
 
     node.create_subscription(String, NODE_TOPIC, on_beat, qos)
-    node.create_timer(60.0, lambda: node.get_logger().info(f"beat_relay: {stats}"))
+    node.create_timer(60.0, lambda: node.get_logger().info(f"beat_relay: n={relay.n} bad={relay.bad} clamped={relay.clamped}"))
     node.get_logger().info(f"beat_relay: {NODE_TOPIC} -> {OUT_TOPIC} (sim age moved onto the wall clock)")
     try:
         rclpy.spin(node)

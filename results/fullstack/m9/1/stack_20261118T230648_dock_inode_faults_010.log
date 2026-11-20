@@ -1,0 +1,317 @@
+[INFO] [launch]: All log files can be found below /tmp/.ros/log/2026-11-18-23-13-54-078462-48b8067f0116-9385
+[INFO] [launch]: Default logging verbosity is set to INFO
+/opt/ros/jazzy/lib/python3.12/site-packages/launch/conditions/launch_configuration_equals.py:53: UserWarning: The 'LaunchConfigurationEquals' and 'LaunchConfigurationNotEquals' Conditions are  deprecated. Use the 'EqualsSubstitution' and 'NotEqualsSubstitution' substitutions instead! E.g.:
+  IfCondition(
+  	EqualsSubstitution(LaunchConfiguration('some_launch_arg'), "some_equality_check")
+  )
+  warnings.warn(
+URDF  file name : /ros_ws/install/oomwoo_one/share/oomwoo_one/urdf/robot.urdf.xacro
+World file name : /ros_ws/install/oomwoo_gazebo/share/oomwoo_gazebo/worlds/kitchen_dining.world
+[INFO] [gazebo-1]: process started with pid [9424]
+[INFO] [parameter_bridge-2]: process started with pid [9425]
+[INFO] [robot_state_publisher-3]: process started with pid [9427]
+[INFO] [create-4]: process started with pid [9428]
+[INFO] [ir_beacon_sim-5]: process started with pid [9429]
+[INFO] [dock_detector-6]: process started with pid [9430]
+[INFO] [dock_drive-7]: process started with pid [9431]
+[INFO] [python3-8]: process started with pid [9432]
+[INFO] [health_monitor_node-9]: process started with pid [9433]
+[INFO] [mcu_standin_node-10]: process started with pid [9434]
+[INFO] [job_roster-11]: process started with pid [9437]
+[INFO] [topic_heartbeat-12]: process started with pid [9438]
+[robot_state_publisher-3] [INFO] [1795040034.787720435] [robot_state_publisher]: Robot initialized
+[create-4] [INFO] [1795040034.845006916] [ros_gz_sim]: Requesting list of world names.
+[gazebo-1] [1;32m[Msg] [0m[1;32mGazebo Sim Server v[0m[1;32m8.15.0[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mLoading SDF world file[[0m[1;32m/ros_ws/install/oomwoo_gazebo/share/oomwoo_gazebo/worlds/kitchen_dining.world[0m[1;32m].[0m
+[python3-8] [INFO] [1795040035.636725190] [beat_relay]: beat_relay: /oomwoo/health/component_node -> /oomwoo/health/component (sim age moved onto the wall clock)
+[dock_detector-6] [INFO] [1795040035.723316324] [dock_detector]: dock_detector: fitting the dock cross-section
+[job_roster-11] [INFO] [1795040035.761930630] [job_roster]: roster 'nav' (task_id dock) posted
+[ir_beacon_sim-5] [INFO] [1795040035.821908538] [ir_beacon_sim]: ir_beacon_sim: dock at (-2.11, -0.50, 180 deg), beacon visible within +-40 deg of the bay axis
+[parameter_bridge-2] [INFO] [1795040035.824873693] [ros_gz_bridge]: Creating GZ->ROS Bridge: [clock (gz.msgs.Clock) -> clock (rosgraph_msgs/msg/Clock)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1795040035.830129317] [ros_gz_bridge]: Creating GZ->ROS Bridge: [joint_states (gz.msgs.Model) -> joint_states (sensor_msgs/msg/JointState)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1795040035.835796738] [ros_gz_bridge]: Creating GZ->ROS Bridge: [imu (gz.msgs.IMU) -> imu (sensor_msgs/msg/Imu)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1795040035.839927367] [ros_gz_bridge]: Creating GZ->ROS Bridge: [odom (gz.msgs.Odometry) -> odom (nav_msgs/msg/Odometry)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1795040035.844223146] [ros_gz_bridge]: Creating GZ->ROS Bridge: [odom_wheel (gz.msgs.Odometry) -> odom_wheel (nav_msgs/msg/Odometry)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1795040035.847751388] [ros_gz_bridge]: Creating GZ->ROS Bridge: [odom_truth (gz.msgs.Odometry) -> odom_truth (nav_msgs/msg/Odometry)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1795040035.851894437] [ros_gz_bridge]: Creating GZ->ROS Bridge: [tf (gz.msgs.Pose_V) -> tf (tf2_msgs/msg/TFMessage)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1795040035.856292565] [ros_gz_bridge]: Creating ROS->GZ Bridge: [cmd_vel (geometry_msgs/msg/Twist) -> cmd_vel (gz.msgs.Twist)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1795040035.862304555] [ros_gz_bridge]: Creating GZ->ROS Bridge: [scan (gz.msgs.LaserScan) -> scan (sensor_msgs/msg/LaserScan)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1795040035.865216810] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/world/default/model/oomwoo_one/link/base_footprint/sensor/bumper_left/contact (gz.msgs.Contacts) -> bumper_left/contact (ros_gz_interfaces/msg/Contacts)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1795040035.869965356] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/world/default/model/oomwoo_one/link/base_footprint/sensor/bumper_right/contact (gz.msgs.Contacts) -> bumper_right/contact (ros_gz_interfaces/msg/Contacts)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1795040035.872527353] [ros_gz_bridge]: Creating GZ->ROS Bridge: [range_left (gz.msgs.LaserScan) -> range_left (sensor_msgs/msg/LaserScan)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1795040035.874653492] [ros_gz_bridge]: Creating GZ->ROS Bridge: [range_right (gz.msgs.LaserScan) -> range_right (sensor_msgs/msg/LaserScan)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1795040035.877541978] [ros_gz_bridge]: Creating GZ->ROS Bridge: [tof_front/points (gz.msgs.PointCloudPacked) -> tof_front/points (sensor_msgs/msg/PointCloud2)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1795040035.879432978] [ros_gz_bridge]: Creating GZ->ROS Bridge: [camera/image (gz.msgs.Image) -> camera/image (sensor_msgs/msg/Image)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1795040035.881474138] [ros_gz_bridge]: Creating GZ->ROS Bridge: [camera/camera_info (gz.msgs.CameraInfo) -> camera/camera_info (sensor_msgs/msg/CameraInfo)] (Lazy 0)
+[topic_heartbeat-12] [INFO] [1795040035.946272862] [topic_heartbeat]: watching lidar<-/scan, odom<-/odom, drive_supervision<-/odom
+[gazebo-1] [1;32m[Msg] [0m[1;32mServing entity system service on [[0m[1;32m/[0m[1;32mentity/system/add[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;36m[Dbg] [Physics.cc:1004] [0m[1;36mLoaded [[0m[1;36mgz::physics::dartsim::Plugin[0m[1;36m] from library [[0m[1;36m/opt/ros/jazzy/opt/gz_physics_vendor/lib/gz-physics-7/engine-plugins/libgz-physics-dartsim-plugin.so[0m[1;36m][0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SystemManager.cc:80] [0m[1;36mLoaded system [[0m[1;36mgz::sim::systems::Physics[0m[1;36m] for entity [[0m[1;36m1[0m[1;36m][0m[1;36m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mCreate[0m[1;32m service on [[0m[1;32m/world/default/create_multiple[0m[1;32m] (async)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mCreate[0m[1;32m service on [[0m[1;32m/world/default/create_multiple/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mRemove[0m[1;32m service on [[0m[1;32m/world/default/remove[0m[1;32m] (async)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mRemove[0m[1;32m service on [[0m[1;32m/world/default/remove/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mPose[0m[1;32m service on [[0m[1;32m/world/default/set_pose[0m[1;32m] (async)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mPose[0m[1;32m service on [[0m[1;32m/world/default/set_pose/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mPose[0m[1;32m service on [[0m[1;32m/world/default/set_pose_vector[0m[1;32m] (async)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mPose[0m[1;32m service on [[0m[1;32m/world/default/set_pose_vector/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mLight configuration[0m[1;32m service on [[0m[1;32m/world/default/light_config[0m[1;32m] (async)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mLight configuration[0m[1;32m service on [[0m[1;32m/world/default/light_config/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mPhysics[0m[1;32m service on [[0m[1;32m/world/default/set_physics[0m[1;32m] (async)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mPhysics[0m[1;32m service on [[0m[1;32m/world/default/set_physics/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mSphericalCoordinates[0m[1;32m service on [[0m[1;32m/world/default/set_spherical_coordinates[0m[1;32m] (async)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mSphericalCoordinates[0m[1;32m service on [[0m[1;32m/world/default/set_spherical_coordinates/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mEnable collision[0m[1;32m service on [[0m[1;32m/world/default/enable_collision[0m[1;32m] (async)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mEnable collision[0m[1;32m service on [[0m[1;32m/world/default/enable_collision/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mDisable collision[0m[1;32m service on [[0m[1;32m/world/default/disable_collision[0m[1;32m] (async)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mDisable collision[0m[1;32m service on [[0m[1;32m/world/default/disable_collision/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mMaterial[0m[1;32m service on [[0m[1;32m/world/default/visual_config[0m[1;32m] (async)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mMaterial[0m[1;32m service on [[0m[1;32m/world/default/visual_config/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mMaterial[0m[1;32m service on [[0m[1;32m/world/default/wheel_slip[0m[1;32m] (async)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mMaterial[0m[1;32m service on [[0m[1;32m/world/default/wheel_slip/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gazebo-1] [1;36m[Dbg] [SystemManager.cc:80] [0m[1;36mLoaded system [[0m[1;36mgz::sim::systems::UserCommands[0m[1;36m] for entity [[0m[1;36m1[0m[1;36m][0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SystemManager.cc:80] [0m[1;36mLoaded system [[0m[1;36mgz::sim::systems::SceneBroadcaster[0m[1;36m] for entity [[0m[1;36m1[0m[1;36m][0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [Sensors.cc:697] [0m[1;36mConfiguring Sensors system[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [Sensors.cc:557] [0m[1;36mSensorsPrivate::Run[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SystemManager.cc:80] [0m[1;36mLoaded system [[0m[1;36mgz::sim::systems::Sensors[0m[1;36m] for entity [[0m[1;36m1[0m[1;36m][0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [Sensors.cc:532] [0m[1;36mSensorsPrivate::RenderThread started[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [Sensors.cc:337] [0m[1;36mWaiting for init[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SystemManager.cc:80] [0m[1;36mLoaded system [[0m[1;36mgz::sim::systems::Imu[0m[1;36m] for entity [[0m[1;36m1[0m[1;36m][0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SystemManager.cc:80] [0m[1;36mLoaded system [[0m[1;36mgz::sim::systems::Contact[0m[1;36m] for entity [[0m[1;36m1[0m[1;36m][0m[1;36m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mLoaded level [[0m[1;32mdefault[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mServing world controls on [[0m[1;32m/world/default[0m[1;32m/control], [[0m[1;32m/world/default[0m[1;32m/control/state] and [[0m[1;32m/world/default[0m[1;32m/playback/control][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mServing GUI information on [[0m[1;32m/world/default[0m[1;32m/[0m[1;32mgui/info[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mWorld [[0m[1;32mdefault[0m[1;32m] initialized with [[0m[1;32mdefault_physics[0m[1;32m] physics profile.[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mServing world SDF generation service on [[0m[1;32m/world/default[0m[1;32m/[0m[1;32mgenerate_world_sdf[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mServing world names on [[0m[1;32m/gazebo/worlds[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mResource path add service on [[0m[1;32m/gazebo/resource_paths/add[0m[1;32m].[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mResource path get service on [[0m[1;32m/gazebo/resource_paths/get[0m[1;32m].[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mResource path resolve service on [[0m[1;32m/gazebo/resource_paths/resolve[0m[1;32m].[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mResource paths published on [[0m[1;32m/gazebo/resource_paths[0m[1;32m].[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mServer control service on [[0m[1;32m/server_control[0m[1;32m].[0m[1;32m[0m
+[create-4] [INFO] [1795040036.702793136] [ros_gz_sim]: Waiting messages on topic [robot_description].
+[create-4] [INFO] [1795040036.715312093] [ros_gz_sim]: Entity creation successful.
+[INFO] [create-4]: process has finished cleanly [pid 9428]
+[gazebo-1] [1;32m[Msg] [0m[1;32mFound no publishers on /stats, adding root stats topic[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mFound no publishers on /clock, adding root clock topic[0m[1;32m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:627] [0m[1;36mCreating PostUpdate worker threads: [0m[1;36m5[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:638] [0m[1;36mCreating postupdate worker thread ([0m[1;36m0[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:638] [0m[1;36mCreating postupdate worker thread ([0m[1;36m1[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:638] [0m[1;36mCreating postupdate worker thread ([0m[1;36m2[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:638] [0m[1;36mCreating postupdate worker thread ([0m[1;36m3[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;33mWarning [Utils.cc:132][0m [/sdf/model[@name="oomwoo_one"]/link[@name="base_footprint"]/sensor[@name="laser_scan_sensor"]/gz_frame_id:<urdf-string>:L0]: XML Element[gz_frame_id], child of element[sensor], not defined in SDF. Copying[gz_frame_id] as children of [sensor].
+[gazebo-1] [1;32m[Msg] [0m[1;32mDiffDrive subscribing to twist messages on [[0m[1;32mcmd_vel[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;36m[Dbg] [SystemManager.cc:80] [0m[1;36mLoaded system [[0m[1;36mgz::sim::systems::DiffDrive[0m[1;36m] for entity [[0m[1;36m475[0m[1;36m][0m[1;36m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mOdometryPublisher publishing odometry on [[0m[1;32m/odom[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mOdometryPublisher publishing odometry with covariance on [[0m[1;32m/model/oomwoo_one/odometry_with_covariance[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mOdometryPublisher publishing Pose_V (TF) on [[0m[1;32m/tf[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;36m[Dbg] [SystemManager.cc:80] [0m[1;36mLoaded system [[0m[1;36mgz::sim::systems::OdometryPublisher[0m[1;36m] for entity [[0m[1;36m475[0m[1;36m][0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SystemManager.cc:80] [0m[1;36mLoaded system [[0m[1;36mgz::sim::systems::JointStatePublisher[0m[1;36m] for entity [[0m[1;36m475[0m[1;36m][0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SystemManager.cc:80] [0m[1;36mLoaded system [[0m[1;36mgz::sim::systems::Contact[0m[1;36m] for entity [[0m[1;36m475[0m[1;36m][0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [UserCommands.cc:1093] [0m[1;36mCreated entity [[0m[1;36m475[0m[1;36m] named [[0m[1;36moomwoo_one[0m[1;36m][0m[1;36m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mContact system publishing on [0m[1;32mworld/default/model/oomwoo_one/link/base_footprint/sensor/bumper_left/contact[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mContact system publishing on [0m[1;32mworld/default/model/oomwoo_one/link/base_footprint/sensor/bumper_right/contact[0m[1;32m[0m
+[gazebo-1] [1;36m[Dbg] [SDFFeatures.cc:333] [0m[1;36mMesh construction from an SDF has not been implemented yet for [0m[1;36mdartsim. Use AttachMeshShapeFeature to use mesh shapes.[0m
+[gazebo-1] [1;36m[Dbg] [SDFFeatures.cc:865] [0m[1;36mThe geometry element of collision [[0m[1;36mperson[0m[1;36m] [0m[1;36mcouldn't be created[0m
+[gazebo-1] [1;36m[Dbg] [SDFFeatures.cc:333] [0m[1;36mMesh construction from an SDF has not been implemented yet for [0m[1;36mdartsim. Use AttachMeshShapeFeature to use mesh shapes.[0m
+[gazebo-1] [1;36m[Dbg] [SDFFeatures.cc:865] [0m[1;36mThe geometry element of collision [[0m[1;36mcollision[0m[1;36m] [0m[1;36mcouldn't be created[0m
+[gazebo-1] [1;36m[Dbg] [SDFFeatures.cc:333] [0m[1;36mMesh construction from an SDF has not been implemented yet for [0m[1;36mdartsim. Use AttachMeshShapeFeature to use mesh shapes.[0m
+[gazebo-1] [1;36m[Dbg] [SDFFeatures.cc:865] [0m[1;36mThe geometry element of collision [[0m[1;36mcollision_0[0m[1;36m] [0m[1;36mcouldn't be created[0m
+[gazebo-1] [1;36m[Dbg] [Sensors.cc:953] [0m[1;36mInitialization needed[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [Sensors.cc:349] [0m[1;36mInitializing render context[0m[1;36m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mLoading plugin [[0m[1;32mgz-rendering-ogre2[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mServing scene information on [[0m[1;32m/world/default[0m[1;32m/[0m[1;32mscene/info[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mServing graph information on [[0m[1;32m/world/default[0m[1;32m/[0m[1;32mscene/graph[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mServing full state on [[0m[1;32m/world/default[0m[1;32m/[0m[1;32mstate[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mServing full state (async) on [[0m[1;32m/world/default[0m[1;32m/[0m[1;32mstate_async[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mPublishing scene information on [[0m[1;32m/world/default/scene/info[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mPublishing entity deletions on [[0m[1;32m/world/default/scene/deletion[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mPublishing state changes on [[0m[1;32m/world/default/state[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mPublishing pose messages on [[0m[1;32m/world/default[0m[1;32m/[0m[1;32mpose/info[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mPublishing dynamic pose messages on [[0m[1;32m/world/default[0m[1;32m/[0m[1;32mdynamic_pose/info[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:654] [0m[1;36mExiting postupdate worker thread ([0m[1;36m1[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:654] [0m[1;36mExiting postupdate worker thread ([0m[1;36m0[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:654] [0m[1;36mExiting postupdate worker thread ([0m[1;36m2[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:654] [0m[1;36mExiting postupdate worker thread ([0m[1;36m3[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:627] [0m[1;36mCreating PostUpdate worker threads: [0m[1;36m9[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:638] [0m[1;36mCreating postupdate worker thread ([0m[1;36m0[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:638] [0m[1;36mCreating postupdate worker thread ([0m[1;36m1[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:638] [0m[1;36mCreating postupdate worker thread ([0m[1;36m2[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:638] [0m[1;36mCreating postupdate worker thread ([0m[1;36m3[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:638] [0m[1;36mCreating postupdate worker thread ([0m[1;36m4[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:638] [0m[1;36mCreating postupdate worker thread ([0m[1;36m5[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:638] [0m[1;36mCreating postupdate worker thread ([0m[1;36m6[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:638] [0m[1;36mCreating postupdate worker thread ([0m[1;36m7[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [RenderUtil.cc:2646] [0m[1;36mCreate scene [[0m[1;36mscene[0m[1;36m][0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [Sensors.cc:953] [0m[1;36mInitialization needed[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [Sensors.cc:391] [0m[1;36mRendering Thread initialized[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [Lidar.cc:139] [0m[1;36mLaser scans for [[0m[1;36moomwoo_one::base_footprint::laser_scan_sensor[0m[1;36m] advertised on [[0m[1;36mscan[0m[1;36m][0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [GpuLidarSensor.cc:164] [0m[1;36mLidar points for [[0m[1;36moomwoo_one::base_footprint::laser_scan_sensor[0m[1;36m] advertised on [[0m[1;36mscan/points[0m[1;36m][0m[1;36m[0m
+[topic_heartbeat-12] [WARN] [1795040039.349004178] [topic_heartbeat]: drive_supervision: no heartbeat, robot moving or not yet settled with a zero or unknown setpoint
+[parameter_bridge-2] [INFO] [1795040039.803978325] [ros_gz_bridge]: Passing message from ROS geometry_msgs/msg/Twist to Gazebo gz.msgs.Twist (showing msg only once per type)
+[dock_detector-6] [INFO] [1795040039.959285015] [dock_detector]: dock fit held: waiting for a second scan to agree
+[dock_detector-6] [INFO] [1795040040.539611324] [dock_detector]: dock fix: -0.68 m ahead, +0.00 m across, +180 deg; coverage 0.60, sides 0.49, 36 points
+[dock_detector-6] [INFO] [1795040041.965120287] [dock_detector]: dock fit held: jumped 0.24 m from the running estimate
+[dock_drive-7] [INFO] [1795040045.298909101] [dock_drive]: state -> SEARCH
+[dock_drive-7] [INFO] [1795040045.309914846] [dock_drive]: state -> GOTO
+[dock_detector-6] [INFO] [1795040045.875724328] [dock_detector]: dock fix: +0.49 m ahead, +0.00 m across, -0 deg; coverage 0.68, sides 0.60, 50 points
+[dock_drive-7] [INFO] [1795040047.425601477] [dock_drive]: state -> TURN
+[dock_detector-6] [INFO] [1795040051.090612815] [dock_detector]: dock fix: -0.35 m ahead, +0.19 m across, +147 deg; coverage 0.69, sides 0.60, 58 points
+[dock_drive-7] [INFO] [1795040052.397741260] [dock_drive]: state -> BACK
+[ERROR] [dock_drive-7]: process has died [pid 9431, exit code -9, cmd '/overlay/install/oomwoo_dock/lib/oomwoo_dock/dock_drive --ros-args -r __node:=dock_drive --params-file /tmp/launch_params_i8okrsbt -r ~/dock_pose:=/dock_detector/dock_pose -r /oomwoo/health/component:=/oomwoo/health/component_node'].
+[topic_heartbeat-12] [WARN] [1795040054.704468194] [topic_heartbeat]: drive_supervision: no heartbeat, non-zero setpoint held without a command newer than 0.15s
+[dock_detector-6] [INFO] [1795040056.211719782] [dock_detector]: dock fix: -0.27 m ahead, +0.00 m across, +180 deg; coverage 0.72, sides 0.62, 79 points
+[topic_heartbeat-12] [WARN] [1795040059.724626874] [topic_heartbeat]: drive_supervision: no heartbeat, non-zero setpoint held without a command newer than 0.15s
+[dock_detector-6] [INFO] [1795040061.394285665] [dock_detector]: dock fix: -0.27 m ahead, +0.00 m across, -180 deg; coverage 0.71, sides 0.58, 79 points
+[topic_heartbeat-12] [WARN] [1795040064.739816415] [topic_heartbeat]: drive_supervision: no heartbeat, non-zero setpoint held without a command newer than 0.15s
+[dock_detector-6] [INFO] [1795040066.592056075] [dock_detector]: dock fix: -0.27 m ahead, -0.00 m across, -181 deg; coverage 0.73, sides 0.62, 79 points
+[dock_detector-6] [INFO] [1795040068.493270355] [dock_detector]: dock fit rejected: cost 0.00127 (max 0.00400), coverage 0.72 (min 0.35), sides 0.64 (min 0.10), 3 in the bay (max 2), 79 points [tracking]
+[topic_heartbeat-12] [WARN] [1795040069.771441620] [topic_heartbeat]: drive_supervision: no heartbeat, non-zero setpoint held without a command newer than 0.15s
+[dock_detector-6] [INFO] [1795040071.757972502] [dock_detector]: dock fix: -0.27 m ahead, +0.00 m across, +180 deg; coverage 0.72, sides 0.62, 79 points
+[topic_heartbeat-12] [WARN] [1795040074.778465360] [topic_heartbeat]: drive_supervision: no heartbeat, non-zero setpoint held without a command newer than 0.15s
+[dock_detector-6] [INFO] [1795040076.848357197] [dock_detector]: dock fix: -0.27 m ahead, +0.01 m across, -178 deg; coverage 0.72, sides 0.62, 79 points
+[topic_heartbeat-12] [WARN] [1795040079.779907820] [topic_heartbeat]: drive_supervision: no heartbeat, non-zero setpoint held without a command newer than 0.15s
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[INFO] [topic_heartbeat-12]: sending signal 'SIGINT' to process[topic_heartbeat-12]
+[INFO] [job_roster-11]: sending signal 'SIGINT' to process[job_roster-11]
+[INFO] [mcu_standin_node-10]: sending signal 'SIGINT' to process[mcu_standin_node-10]
+[INFO] [health_monitor_node-9]: sending signal 'SIGINT' to process[health_monitor_node-9]
+[INFO] [python3-8]: sending signal 'SIGINT' to process[python3-8]
+[INFO] [dock_detector-6]: sending signal 'SIGINT' to process[dock_detector-6]
+[INFO] [ir_beacon_sim-5]: sending signal 'SIGINT' to process[ir_beacon_sim-5]
+[INFO] [robot_state_publisher-3]: sending signal 'SIGINT' to process[robot_state_publisher-3]
+[INFO] [parameter_bridge-2]: sending signal 'SIGINT' to process[parameter_bridge-2]
+[INFO] [gazebo-1]: sending signal 'SIGINT' to process[gazebo-1]
+[robot_state_publisher-3] [INFO] [1795040080.794268100] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[gazebo-1] [1;36m[Dbg] [SignalHandler.cc:142] [0m[1;36mReceived signal[[0m[1;36m2[0m[1;36m].[0m
+[gazebo-1] [1;36m[Dbg] [ServerPrivate.cc:122] [0m[1;36mServer received signal[[0m[1;36m2[0m[1;36m][0m
+[gazebo-1] [1;36m[Dbg] [Sensors.cc:565] [0m[1;36mSensorsPrivate::Stop[0m[1;36m[0m
+[parameter_bridge-2] [INFO] [1795040080.796031801] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[topic_heartbeat-12] Traceback (most recent call last):
+[topic_heartbeat-12]   File "/ws/install/oomwoo_health_kit/lib/oomwoo_health_kit/topic_heartbeat", line 33, in <module>
+[topic_heartbeat-12]     sys.exit(load_entry_point('oomwoo-health-kit==0.0.1', 'console_scripts', 'topic_heartbeat')())
+[topic_heartbeat-12]              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[topic_heartbeat-12]   File "/ws/install/oomwoo_health_kit/lib/python3.12/site-packages/oomwoo_health_kit/topic_heartbeat_node.py", line 290, in main
+[topic_heartbeat-12]     node.destroy_node()
+[topic_heartbeat-12]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py", line 1958, in destroy_node
+[topic_heartbeat-12]     self.destroy_subscription(self._subscriptions[0])
+[topic_heartbeat-12]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py", line 1854, in destroy_subscription
+[topic_heartbeat-12]     subscription.destroy()
+[topic_heartbeat-12]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/subscription.py", line 101, in destroy
+[topic_heartbeat-12]     self.handle.destroy_when_not_in_use()
+[topic_heartbeat-12] KeyboardInterrupt
+[mcu_standin_node-10] Traceback (most recent call last):
+[mcu_standin_node-10]   File "/ws/install/oomwoo_health_kit/lib/oomwoo_health_kit/mcu_standin_node", line 33, in <module>
+[health_monitor_node-9] Traceback (most recent call last):
+[health_monitor_node-9]   File "/ws/install/oomwoo_health_monitor/lib/oomwoo_health_monitor/health_monitor_node", line 33, in <module>
+[health_monitor_node-9]     sys.exit(load_entry_point('oomwoo-health-monitor==0.1.0', 'console_scripts', 'health_monitor_node')())
+[health_monitor_node-9]              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[health_monitor_node-9]   File "/ws/install/oomwoo_health_monitor/lib/python3.12/site-packages/oomwoo_health_monitor/health_monitor_node.py", line 137, in main
+[health_monitor_node-9]     node.destroy_node()
+[mcu_standin_node-10]     sys.exit(load_entry_point('oomwoo-health-kit==0.0.1', 'console_scripts', 'mcu_standin_node')())
+[python3-8] Traceback (most recent call last):
+[python3-8]   File "/ws/src/oomwoo_health_kit/bench/fullstack/beat_relay.py", line 68, in main
+[python3-8]     rclpy.spin(node)
+[python3-8]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/__init__.py", line 247, in spin
+[python3-8]     executor.spin_once()
+[python3-8]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 926, in spin_once
+[mcu_standin_node-10]              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[mcu_standin_node-10]   File "/ws/install/oomwoo_health_kit/lib/python3.12/site-packages/oomwoo_health_kit/mcu_standin_node.py", line 121, in main
+[python3-8]     self._spin_once_impl(timeout_sec)
+[python3-8]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 918, in _spin_once_impl
+[python3-8]     raise handler.exception()
+[python3-8]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/task.py", line 286, in _execute_coroutine_step
+[python3-8]     result = coro.send(None)
+[python3-8]              ^^^^^^^^^^^^^^^
+[python3-8]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 584, in handler
+[python3-8]     call_coroutine = take_from_wait_list(entity)
+[python3-8]                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[python3-8]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 470, in _take_subscription
+[python3-8]     msg_info = sub.handle.take_message(sub.msg_type, sub.raw)
+[python3-8]                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[python3-8] RuntimeError: Unable to convert call argument '0' to Python object (#define PYBIND11_DETAILED_ERROR_MESSAGES or compile in debug mode for details)
+[python3-8] 
+[python3-8] During handling of the above exception, another exception occurred:
+[python3-8] 
+[python3-8] Traceback (most recent call last):
+[python3-8]   File "/ws/src/oomwoo_health_kit/bench/fullstack/beat_relay.py", line 78, in <module>
+[python3-8]     main()
+[python3-8]   File "/ws/src/oomwoo_health_kit/bench/fullstack/beat_relay.py", line 72, in main
+[python3-8]     node.destroy_node()
+[python3-8]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py", line 1962, in destroy_node
+[python3-8]     self.destroy_service(self._services[0])
+[python3-8]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py", line 1886, in destroy_service
+[health_monitor_node-9]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py", line 1962, in destroy_node
+[health_monitor_node-9]     self.destroy_service(self._services[0])
+[health_monitor_node-9]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py", line 1886, in destroy_service
+[health_monitor_node-9]     service.destroy()
+[health_monitor_node-9]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/service.py", line 123, in destroy
+[health_monitor_node-9]     self.__service.destroy_when_not_in_use()
+[health_monitor_node-9] KeyboardInterrupt
+[mcu_standin_node-10]     node.destroy_node()
+[mcu_standin_node-10]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py", line 1962, in destroy_node
+[python3-8]     service.destroy()
+[python3-8]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/service.py", line 123, in destroy
+[python3-8]     self.__service.destroy_when_not_in_use()
+[python3-8] KeyboardInterrupt
+[mcu_standin_node-10]     self.destroy_service(self._services[0])
+[mcu_standin_node-10]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py", line 1886, in destroy_service
+[mcu_standin_node-10]     service.destroy()
+[mcu_standin_node-10]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/service.py", line 123, in destroy
+[mcu_standin_node-10]     self.__service.destroy_when_not_in_use()
+[mcu_standin_node-10] KeyboardInterrupt
+[ir_beacon_sim-5] Traceback (most recent call last):
+[ir_beacon_sim-5]   File "/ros_ws/install/oomwoo_sim_support/lib/oomwoo_sim_support/ir_beacon_sim", line 33, in <module>
+[ir_beacon_sim-5]     sys.exit(load_entry_point('oomwoo-sim-support', 'console_scripts', 'ir_beacon_sim')())
+[ir_beacon_sim-5]              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[ir_beacon_sim-5]   File "/ros_ws/build/oomwoo_sim_support/oomwoo_sim_support/ir_beacon_sim_node.py", line 224, in main
+[ir_beacon_sim-5]     node.destroy_node()
+[ir_beacon_sim-5]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py", line 1958, in destroy_node
+[ir_beacon_sim-5]     self.destroy_subscription(self._subscriptions[0])
+[ir_beacon_sim-5]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py", line 1854, in destroy_subscription
+[ir_beacon_sim-5]     subscription.destroy()
+[ir_beacon_sim-5]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/subscription.py", line 101, in destroy
+[ir_beacon_sim-5]     self.handle.destroy_when_not_in_use()
+[ir_beacon_sim-5] KeyboardInterrupt
+[robot_state_publisher-3] [INFO] [1795040080.810489500] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[parameter_bridge-2] [INFO] [1795040080.812265332] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[job_roster-11] Traceback (most recent call last):
+[job_roster-11]   File "/ws/install/oomwoo_health_kit/lib/oomwoo_health_kit/job_roster", line 33, in <module>
+[job_roster-11]     sys.exit(load_entry_point('oomwoo-health-kit==0.0.1', 'console_scripts', 'job_roster')())
+[job_roster-11]              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[job_roster-11]   File "/ws/install/oomwoo_health_kit/lib/python3.12/site-packages/oomwoo_health_kit/job_roster_node.py", line 131, in main
+[job_roster-11]     node.destroy_node()
+[job_roster-11]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py", line 1968, in destroy_node
+[job_roster-11]     self.__node.destroy_when_not_in_use()
+[job_roster-11] KeyboardInterrupt
+[dock_detector-6] Traceback (most recent call last):
+[dock_detector-6]   File "/overlay/install/oomwoo_dock/lib/oomwoo_dock/dock_detector", line 33, in <module>
+[dock_detector-6]     sys.exit(load_entry_point('oomwoo-dock==0.1.0', 'console_scripts', 'dock_detector')())
+[dock_detector-6]              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[dock_detector-6]   File "/overlay/install/oomwoo_dock/lib/python3.12/site-packages/oomwoo_dock/dock_detector_node.py", line 421, in main
+[dock_detector-6]     node.destroy_node()
+[dock_detector-6]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/node.py", line 1968, in destroy_node
+[dock_detector-6]     self.__node.destroy_when_not_in_use()
+[dock_detector-6] KeyboardInterrupt
+[ERROR] [python3-8]: process has died [pid 9432, exit code -2, cmd '/usr/bin/python3 -u /ws/src/oomwoo_health_kit/bench/fullstack/beat_relay.py'].
+[gazebo-1] [1;36m[Dbg] [Sensors.cc:551] [0m[1;36mSensorsPrivate::RenderThread stopped[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [gz.cc:434] [0m[1;36mShutting down gz-sim-server[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:654] [0m[1;36mExiting postupdate worker thread ([0m[1;36m1[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:654] [0m[1;36mExiting postupdate worker thread ([0m[1;36m3[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:654] [0m[1;36mExiting postupdate worker thread ([0m[1;36m0[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:654] [0m[1;36mExiting postupdate worker thread ([0m[1;36m6[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:654] [0m[1;36mExiting postupdate worker thread ([0m[1;36m7[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:654] [0m[1;36mExiting postupdate worker thread ([0m[1;36m4[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:654] [0m[1;36mExiting postupdate worker thread ([0m[1;36m5[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:654] [0m[1;36mExiting postupdate worker thread ([0m[1;36m2[0m[1;36m)[0m[1;36m[0m
+[ERROR] [mcu_standin_node-10]: process has died [pid 9434, exit code -2, cmd '/ws/install/oomwoo_health_kit/lib/oomwoo_health_kit/mcu_standin_node --ros-args -r __node:=mcu_standin --params-file /tmp/launch_params_6hcsvddw -r cmd_vel_in:=cmd_vel -r cmd_vel:=cmd_vel_gated'].
+[ERROR] [job_roster-11]: process has died [pid 9437, exit code -2, cmd '/ws/install/oomwoo_health_kit/lib/oomwoo_health_kit/job_roster --ros-args -r __node:=job_roster --params-file /tmp/launch_params_bbj7ya5u'].
+[INFO] [parameter_bridge-2]: process has finished cleanly [pid 9425]
+[INFO] [robot_state_publisher-3]: process has finished cleanly [pid 9427]
+[ERROR] [dock_detector-6]: process has died [pid 9430, exit code -2, cmd '/overlay/install/oomwoo_dock/lib/oomwoo_dock/dock_detector --ros-args -r __node:=dock_detector --params-file /tmp/launch_params_2f0vaxfx -r /oomwoo/health/component:=/oomwoo/health/component_node'].
+[ERROR] [health_monitor_node-9]: process has died [pid 9433, exit code -2, cmd '/ws/install/oomwoo_health_monitor/lib/oomwoo_health_monitor/health_monitor_node --ros-args -r __node:=health_monitor --params-file /tmp/launch_params_cb51mi3i'].
+[ERROR] [ir_beacon_sim-5]: process has died [pid 9429, exit code -2, cmd '/ros_ws/install/oomwoo_sim_support/lib/oomwoo_sim_support/ir_beacon_sim --ros-args -r __node:=ir_beacon_sim --params-file /tmp/launch_params_gupg_igx -r ~/bearing:=/dock_detector/beacon_bearing -r ~/visible:=/dock_drive/beacon_visible'].
+[ERROR] [topic_heartbeat-12]: process has died [pid 9438, exit code -2, cmd '/ws/install/oomwoo_health_kit/lib/oomwoo_health_kit/topic_heartbeat --ros-args -r __node:=topic_heartbeat --params-file /tmp/launch_params_ge608kei'].
+[gazebo-1] [1;36m[Dbg] [Sensors.cc:565] [0m[1;36mSensorsPrivate::Stop[0m[1;36m[0m
+[ERROR] [gazebo-1]: process has died [pid 9424, exit code -2, cmd 'ruby /opt/ros/jazzy/opt/gz_tools_vendor/bin/gz sim -s -r --headless-rendering -v 4 /ros_ws/install/oomwoo_gazebo/share/oomwoo_gazebo/worlds/kitchen_dining.world --force-version 8'].
+[INFO] [launch]: process[gazebo-1] was required: shutting down launched system

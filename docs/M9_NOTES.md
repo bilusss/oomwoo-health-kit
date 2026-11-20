@@ -27,5 +27,14 @@
   snapshots show the same), after which a stack start cannot render (gazebo "Unable to load Ogre Plugin RenderSystem_GL3Plus", SIGSEGV 139): reactive recon crashed twice in
   ohk-sim-2 (22:08, 22:39), the dock fault chain would have broken the same way. The GPU saving was 0.029 core (0.7%) anyway. Everything from here on runs on CPU rendering
   (containers recreated without GPU). Dock chain: 9 valid GPU-rendered sigkill_dock_detector trials (m9/1/faults.jsonl trials 1-9, trial 10 aborted by my SIGTERM) are kept;
-  the chain restarted on CPU 22:55 with --reps 11 so that the kill series reaches 20 valid. Chain file: results/fullstack/m9/_chains/faults_inst1_cpu.txt.
-  Reactive recon (CPU) on inst 2 started 22:53, label m9_recon_retry2, trace beat_trace_coverage_reactive_cpu.jsonl (invalid starts: m9/2/sessions.jsonl lines 2-3).
+  the chain restarted on CPU 22:49 with --reps 11 so that the kill series reaches 20 valid. Chain file: results/fullstack/m9/_chains/faults_inst1_cpu.txt.
+  Reactive recon (CPU) on inst 2 started 22:48, label m9_recon_retry2, trace beat_trace_coverage_reactive_cpu.jsonl (invalid starts: m9/2/sessions.jsonl lines 2-3).
+
+## Resume 2026-11-20 (after the usage limit); state found
+- ohk-sim-1/2 up (CPU, overlay), nothing running. Dock fault chain (inst 1) FINISHED 2026-11-18 23:19: 46 records = 9 GPU-rendered + 35 CPU kills/stops/drive
+  (sigkill_dock_detector 20 valid, sigstop_dock_detector 10, sigkill_dock_drive 10, sigstop_dock_drive 5, all valid) + 1 aborted (my SIGTERM, trial 10). No stall.
+- Reactive recon (inst 2, label m9_recon_retry2) finished 23:22 but INVALID (rtf_as_requested: RTF 0.899, it ran while the dock trials restarted stacks every minute);
+  beat period max 0.449 s there. Must be repeated alone/with only simultaneously started sessions.
+- Relay (dab4e14): refactored into the ROS-free class BeatRelay + test (cannot make a beat fresher, cannot invent one, order kept). Tests 7 passed.
+- Still to do: reactive recon (clean), roster files for coverage (nav2 0.6 s; reactive from data), coverage faults (nav2 10+5, reactive 10+5), soaks >= 6 sim h, M9_RECON.md,
+  container tests, commit. Firmware PR #3 (heartbeat loss -> motors safe, rail stays on, LiDAR up): one line in M9_RECON.md; stand-in unchanged.

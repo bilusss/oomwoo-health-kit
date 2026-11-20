@@ -71,3 +71,27 @@ def test_collect_m9_routes_by_label_and_mode():
     assert c.route({"label": "m9_recon_gpu", "task": "coverage_inode_recon"}, "soak") == "recon_sessions.jsonl"
     assert c.route({"label": "m9_smoke"}, "soak") == "other_records.jsonl"
     assert c.route({"label": "m9_soak"}, "faults") == "other_records.jsonl"
+
+
+def test_relay_cannot_make_a_beat_fresher_or_invent_one():
+    import json
+    import beat_relay as br
+    r = br.BeatRelay()
+    sim0, wall0 = 500.0, 1.8e9
+    msgs = [json.dumps({"component_id": "x", "health": "ok", "stamp_sec": sim0 + 0.2 * k, "sequence": k + 1, "detail": ""}) for k in range(10)]
+    outs = []
+    for k, m in enumerate(msgs):
+        sim_now, wall_now = sim0 + 0.2 * k + 0.013 * (k % 3), wall0 + 0.2 * k + 0.013 * (k % 3)
+        o = r.on_beat(m, sim_now, wall_now)
+        assert o is not None
+        j, p = json.loads(o), json.loads(m)
+        # age the aggregator can compute from the output never undercuts the node's own age at receipt (wall = sim at RTF 1.0), and is >= 0
+        assert wall_now - j["stamp_sec"] >= sim_now - p["stamp_sec"] - 1e-9 and wall_now - j["stamp_sec"] >= 0
+        assert j["sequence"] == p["sequence"] and j["component_id"] == "x"
+        outs.append(j["stamp_sec"])
+    assert outs == sorted(outs) and len(set(outs)) == 10         # order kept, nothing duplicated
+    assert r.n == 10 and r.bad == 0
+    # a node that stopped: with no input there is no output at all (the class has no timer or stored beat); the aggregator's age only grows
+    ages = [(wall0 + 5.0 + t) - outs[-1] for t in (0.0, 1.0, 2.0)]
+    assert ages == sorted(ages) and ages[-1] > 5.0
+    assert r.on_beat("not json", 1.0, 2.0) is None and r.on_beat('{"stamp_sec": "x"}', 1.0, 2.0) is None and r.bad == 2 and r.n == 10
