@@ -1,0 +1,703 @@
+[INFO] [launch]: All log files can be found below /tmp/.ros/log/2026-11-20-23-39-10-075237-48b8067f0116-21996
+[INFO] [launch]: Default logging verbosity is set to INFO
+/opt/ros/jazzy/lib/python3.12/site-packages/launch/conditions/launch_configuration_equals.py:53: UserWarning: The 'LaunchConfigurationEquals' and 'LaunchConfigurationNotEquals' Conditions are  deprecated. Use the 'EqualsSubstitution' and 'NotEqualsSubstitution' substitutions instead! E.g.:
+  IfCondition(
+  	EqualsSubstitution(LaunchConfiguration('some_launch_arg'), "some_equality_check")
+  )
+  warnings.warn(
+URDF  file name : /ros_ws/install/oomwoo_one/share/oomwoo_one/urdf/robot.urdf.xacro
+World file name : /ros_ws/install/oomwoo_gazebo/share/oomwoo_gazebo/worlds/living_room.world
+[INFO] [gazebo-1]: process started with pid [22044]
+[INFO] [parameter_bridge-2]: process started with pid [22045]
+[INFO] [robot_state_publisher-3]: process started with pid [22046]
+[INFO] [create-4]: process started with pid [22047]
+[INFO] [component_container_isolated-5]: process started with pid [22049]
+[INFO] [initialpose_pub-6]: process started with pid [22050]
+[INFO] [coverage_meter-7]: process started with pid [22051]
+[INFO] [ground_truth-8]: process started with pid [22052]
+[INFO] [python3-9]: process started with pid [22053]
+[INFO] [health_monitor_node-10]: process started with pid [22054]
+[INFO] [mcu_standin_node-11]: process started with pid [22055]
+[INFO] [job_roster-12]: process started with pid [22056]
+[INFO] [topic_heartbeat-13]: process started with pid [22059]
+[robot_state_publisher-3] [INFO] [1795214351.177830214] [robot_state_publisher]: Robot initialized
+[create-4] [INFO] [1795214351.247917143] [ros_gz_sim]: Requesting list of world names.
+[gazebo-1] [1;32m[Msg] [0m[1;32mGazebo Sim Server v[0m[1;32m8.15.0[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mLoading SDF world file[[0m[1;32m/ros_ws/install/oomwoo_gazebo/share/oomwoo_gazebo/worlds/living_room.world[0m[1;32m].[0m
+[component_container_isolated-5] [INFO] [1795214351.370946377] [nav2_container]: Load Library: /opt/ros/jazzy/lib/libcontroller_server_core.so
+[component_container_isolated-5] [INFO] [1795214351.389378832] [nav2_container]: Found class: rclcpp_components::NodeFactoryTemplate<nav2_controller::ControllerServer>
+[component_container_isolated-5] [INFO] [1795214351.389484652] [nav2_container]: Instantiate class: rclcpp_components::NodeFactoryTemplate<nav2_controller::ControllerServer>
+[component_container_isolated-5] [INFO] [1795214351.421365848] [controller_server]: 
+[component_container_isolated-5] 	controller_server lifecycle node launched. 
+[component_container_isolated-5] 	Waiting on external lifecycle transitions to activate
+[component_container_isolated-5] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[component_container_isolated-5] [INFO] [1795214351.436245034] [controller_server]: Creating controller server
+[component_container_isolated-5] [INFO] [1795214351.459241739] [local_costmap.local_costmap]: 
+[component_container_isolated-5] 	local_costmap lifecycle node launched. 
+[component_container_isolated-5] 	Waiting on external lifecycle transitions to activate
+[component_container_isolated-5] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[component_container_isolated-5] [INFO] [1795214351.461199314] [local_costmap.local_costmap]: Creating Costmap
+[INFO] [launch_ros.actions.load_composable_nodes]: Loaded node '/controller_server' in container '/nav2_container'
+[component_container_isolated-5] [INFO] [1795214351.465158723] [nav2_container]: Load Library: /opt/ros/jazzy/lib/libmap_server_core.so
+[component_container_isolated-5] [INFO] [1795214351.477824223] [nav2_container]: Found class: rclcpp_components::NodeFactoryTemplate<nav2_map_server::CostmapFilterInfoServer>
+[component_container_isolated-5] [INFO] [1795214351.478615965] [nav2_container]: Found class: rclcpp_components::NodeFactoryTemplate<nav2_map_server::MapSaver>
+[component_container_isolated-5] [INFO] [1795214351.478819366] [nav2_container]: Found class: rclcpp_components::NodeFactoryTemplate<nav2_map_server::MapServer>
+[component_container_isolated-5] [INFO] [1795214351.478826296] [nav2_container]: Instantiate class: rclcpp_components::NodeFactoryTemplate<nav2_map_server::MapServer>
+[component_container_isolated-5] [INFO] [1795214351.502300052] [map_server]: 
+[component_container_isolated-5] 	map_server lifecycle node launched. 
+[component_container_isolated-5] 	Waiting on external lifecycle transitions to activate
+[component_container_isolated-5] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[component_container_isolated-5] [INFO] [1795214351.502353102] [map_server]: Creating
+[INFO] [launch_ros.actions.load_composable_nodes]: Loaded node '/map_server' in container '/nav2_container'
+[component_container_isolated-5] [INFO] [1795214351.502989063] [nav2_container]: Load Library: /opt/ros/jazzy/lib/libamcl_core.so
+[component_container_isolated-5] [INFO] [1795214351.506443652] [nav2_container]: Found class: rclcpp_components::NodeFactoryTemplate<nav2_amcl::AmclNode>
+[component_container_isolated-5] [INFO] [1795214351.506468532] [nav2_container]: Instantiate class: rclcpp_components::NodeFactoryTemplate<nav2_amcl::AmclNode>
+[component_container_isolated-5] [INFO] [1795214351.542325018] [amcl]: 
+[component_container_isolated-5] 	amcl lifecycle node launched. 
+[component_container_isolated-5] 	Waiting on external lifecycle transitions to activate
+[component_container_isolated-5] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[component_container_isolated-5] [INFO] [1795214351.544963424] [amcl]: Creating
+[component_container_isolated-5] [INFO] [1795214351.552891173] [nav2_container]: Load Library: /opt/ros/jazzy/lib/libsmoother_server_core.so
+[INFO] [launch_ros.actions.load_composable_nodes]: Loaded node '/amcl' in container '/nav2_container'
+[component_container_isolated-5] [INFO] [1795214351.555830371] [nav2_container]: Found class: rclcpp_components::NodeFactoryTemplate<nav2_smoother::SmootherServer>
+[component_container_isolated-5] [INFO] [1795214351.555852671] [nav2_container]: Instantiate class: rclcpp_components::NodeFactoryTemplate<nav2_smoother::SmootherServer>
+[component_container_isolated-5] [INFO] [1795214351.581158251] [smoother_server]: 
+[component_container_isolated-5] 	smoother_server lifecycle node launched. 
+[component_container_isolated-5] 	Waiting on external lifecycle transitions to activate
+[component_container_isolated-5] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[component_container_isolated-5] [INFO] [1795214351.586244474] [smoother_server]: Creating smoother server
+[INFO] [launch_ros.actions.load_composable_nodes]: Loaded node '/smoother_server' in container '/nav2_container'
+[component_container_isolated-5] [INFO] [1795214351.590150463] [nav2_container]: Load Library: /opt/ros/jazzy/lib/libnav2_lifecycle_manager_core.so
+[python3-9] [INFO] [1795214351.590344923] [beat_relay]: beat_relay: /oomwoo/health/component_node -> /oomwoo/health/component (sim age moved onto the wall clock)
+[component_container_isolated-5] [INFO] [1795214351.591762517] [nav2_container]: Found class: rclcpp_components::NodeFactoryTemplate<nav2_lifecycle_manager::LifecycleManager>
+[component_container_isolated-5] [INFO] [1795214351.591943097] [nav2_container]: Instantiate class: rclcpp_components::NodeFactoryTemplate<nav2_lifecycle_manager::LifecycleManager>
+[component_container_isolated-5] [INFO] [1795214351.608671287] [lifecycle_manager_localization]: Creating
+[component_container_isolated-5] [INFO] [1795214351.614980962] [lifecycle_manager_localization]: [34m[1mCreating and initializing lifecycle service clients[0m[0m
+[INFO] [launch_ros.actions.load_composable_nodes]: Loaded node '/lifecycle_manager_localization' in container '/nav2_container'
+[component_container_isolated-5] [INFO] [1795214351.618697651] [nav2_container]: Load Library: /opt/ros/jazzy/lib/libplanner_server_core.so
+[component_container_isolated-5] [INFO] [1795214351.619709984] [nav2_container]: Found class: rclcpp_components::NodeFactoryTemplate<nav2_planner::PlannerServer>
+[component_container_isolated-5] [INFO] [1795214351.619724704] [nav2_container]: Instantiate class: rclcpp_components::NodeFactoryTemplate<nav2_planner::PlannerServer>
+[component_container_isolated-5] [INFO] [1795214351.626802170] [lifecycle_manager_localization]: [34m[1mStarting managed nodes bringup...[0m[0m
+[component_container_isolated-5] [INFO] [1795214351.626837831] [lifecycle_manager_localization]: [34m[1mConfiguring map_server[0m[0m
+[component_container_isolated-5] [INFO] [1795214351.627003661] [map_server]: Configuring
+[component_container_isolated-5] [INFO] [1795214351.627051211] [map_io]: Loading yaml file: /ros_ws/install/oomwoo_gazebo/share/oomwoo_gazebo/maps/living_room.yaml
+[component_container_isolated-5] [INFO] [1795214351.627253622] [map_io]: resolution: 0.05
+[component_container_isolated-5] [INFO] [1795214351.627290002] [map_io]: origin[0]: -2.497
+[component_container_isolated-5] [INFO] [1795214351.627295122] [map_io]: origin[1]: -2.434
+[component_container_isolated-5] [INFO] [1795214351.627298522] [map_io]: origin[2]: 0
+[component_container_isolated-5] [INFO] [1795214351.627302152] [map_io]: free_thresh: 0.196
+[component_container_isolated-5] [INFO] [1795214351.627305482] [map_io]: occupied_thresh: 0.65
+[component_container_isolated-5] [INFO] [1795214351.627310332] [map_io]: mode: trinary
+[component_container_isolated-5] [INFO] [1795214351.627314262] [map_io]: negate: 0
+[component_container_isolated-5] [INFO] [1795214351.627462762] [map_io]: Loading image_file: /ros_ws/install/oomwoo_gazebo/share/oomwoo_gazebo/maps/living_room.pgm
+[component_container_isolated-5] [INFO] [1795214351.628202644] [map_io]: Read map /ros_ws/install/oomwoo_gazebo/share/oomwoo_gazebo/maps/living_room.pgm: 99 X 98 map @ 0.05 m/cell
+[component_container_isolated-5] [INFO] [1795214351.639042980] [lifecycle_manager_localization]: [34m[1mConfiguring amcl[0m[0m
+[component_container_isolated-5] [INFO] [1795214351.639961012] [amcl]: Configuring
+[component_container_isolated-5] [INFO] [1795214351.640035173] [amcl]: initTransforms
+[job_roster-12] [INFO] [1795214351.670545866] [job_roster]: roster 'nav' (task_id nav) posted
+[component_container_isolated-5] [INFO] [1795214351.675028566] [planner_server]: 
+[component_container_isolated-5] 	planner_server lifecycle node launched. 
+[component_container_isolated-5] 	Waiting on external lifecycle transitions to activate
+[component_container_isolated-5] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[component_container_isolated-5] [INFO] [1795214351.677232392] [amcl]: initPubSub
+[component_container_isolated-5] [INFO] [1795214351.685941172] [planner_server]: Creating
+[component_container_isolated-5] [INFO] [1795214351.691123744] [amcl]: Subscribed to map topic.
+[component_container_isolated-5] [INFO] [1795214351.706534132] [lifecycle_manager_localization]: [34m[1mActivating map_server[0m[0m
+[component_container_isolated-5] [INFO] [1795214351.706619962] [map_server]: Activating
+[component_container_isolated-5] [INFO] [1795214351.706692892] [map_server]: Creating bond (map_server) to lifecycle manager.
+[component_container_isolated-5] [INFO] [1795214351.707566274] [amcl]: Received a 99 X 98 map @ 0.050 m/pix
+[component_container_isolated-5] [INFO] [1795214351.724714496] [global_costmap.global_costmap]: 
+[component_container_isolated-5] 	global_costmap lifecycle node launched. 
+[component_container_isolated-5] 	Waiting on external lifecycle transitions to activate
+[component_container_isolated-5] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[component_container_isolated-5] [INFO] [1795214351.726084149] [global_costmap.global_costmap]: Creating Costmap
+[INFO] [launch_ros.actions.load_composable_nodes]: Loaded node '/planner_server' in container '/nav2_container'
+[component_container_isolated-5] [INFO] [1795214351.728657814] [nav2_container]: Load Library: /opt/ros/jazzy/lib/libroute_server_core.so
+[component_container_isolated-5] [INFO] [1795214351.729947558] [nav2_container]: Found class: rclcpp_components::NodeFactoryTemplate<nav2_route::RouteServer>
+[component_container_isolated-5] [INFO] [1795214351.729961028] [nav2_container]: Instantiate class: rclcpp_components::NodeFactoryTemplate<nav2_route::RouteServer>
+[component_container_isolated-5] [INFO] [1795214351.743720181] [route_server]: 
+[component_container_isolated-5] 	route_server lifecycle node launched. 
+[component_container_isolated-5] 	Waiting on external lifecycle transitions to activate
+[component_container_isolated-5] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[INFO] [launch_ros.actions.load_composable_nodes]: Loaded node '/route_server' in container '/nav2_container'
+[component_container_isolated-5] [INFO] [1795214351.746148837] [nav2_container]: Load Library: /opt/ros/jazzy/lib/libbehavior_server_core.so
+[component_container_isolated-5] [INFO] [1795214351.747040329] [nav2_container]: Found class: rclcpp_components::NodeFactoryTemplate<behavior_server::BehaviorServer>
+[component_container_isolated-5] [INFO] [1795214351.747054949] [nav2_container]: Instantiate class: rclcpp_components::NodeFactoryTemplate<behavior_server::BehaviorServer>
+[component_container_isolated-5] [INFO] [1795214351.760545511] [behavior_server]: 
+[component_container_isolated-5] 	behavior_server lifecycle node launched. 
+[component_container_isolated-5] 	Waiting on external lifecycle transitions to activate
+[component_container_isolated-5] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[INFO] [launch_ros.actions.load_composable_nodes]: Loaded node '/behavior_server' in container '/nav2_container'
+[component_container_isolated-5] [INFO] [1795214351.769650503] [nav2_container]: Load Library: /opt/ros/jazzy/lib/libbt_navigator_core.so
+[component_container_isolated-5] [INFO] [1795214351.773010231] [nav2_container]: Found class: rclcpp_components::NodeFactoryTemplate<nav2_bt_navigator::BtNavigator>
+[component_container_isolated-5] [INFO] [1795214351.773032951] [nav2_container]: Instantiate class: rclcpp_components::NodeFactoryTemplate<nav2_bt_navigator::BtNavigator>
+[topic_heartbeat-13] [INFO] [1795214351.793160139] [topic_heartbeat]: watching lidar<-/scan, odom<-/odom, localization<-/tf, drive_supervision<-/odom, local_costmap<-/local_costmap/published_footprint, global_costmap<-/global_costmap/published_footprint
+[component_container_isolated-5] [INFO] [1795214351.807995795] [bt_navigator]: 
+[component_container_isolated-5] 	bt_navigator lifecycle node launched. 
+[component_container_isolated-5] 	Waiting on external lifecycle transitions to activate
+[component_container_isolated-5] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[component_container_isolated-5] [INFO] [1795214351.812574086] [bt_navigator]: Creating
+[INFO] [launch_ros.actions.load_composable_nodes]: Loaded node '/bt_navigator' in container '/nav2_container'
+[component_container_isolated-5] [INFO] [1795214351.815817084] [nav2_container]: Load Library: /opt/ros/jazzy/lib/libwaypoint_follower_core.so
+[component_container_isolated-5] [INFO] [1795214351.816992327] [nav2_container]: Found class: rclcpp_components::NodeFactoryTemplate<nav2_waypoint_follower::WaypointFollower>
+[component_container_isolated-5] [INFO] [1795214351.817015617] [nav2_container]: Instantiate class: rclcpp_components::NodeFactoryTemplate<nav2_waypoint_follower::WaypointFollower>
+[component_container_isolated-5] [INFO] [1795214351.831482111] [waypoint_follower]: 
+[component_container_isolated-5] 	waypoint_follower lifecycle node launched. 
+[component_container_isolated-5] 	Waiting on external lifecycle transitions to activate
+[component_container_isolated-5] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[component_container_isolated-5] [INFO] [1795214351.833069895] [waypoint_follower]: Creating
+[INFO] [launch_ros.actions.load_composable_nodes]: Loaded node '/waypoint_follower' in container '/nav2_container'
+[component_container_isolated-5] [INFO] [1795214351.836309033] [nav2_container]: Load Library: /opt/ros/jazzy/lib/libvelocity_smoother_core.so
+[component_container_isolated-5] [INFO] [1795214351.837068465] [nav2_container]: Found class: rclcpp_components::NodeFactoryTemplate<nav2_velocity_smoother::VelocitySmoother>
+[component_container_isolated-5] [INFO] [1795214351.837081145] [nav2_container]: Instantiate class: rclcpp_components::NodeFactoryTemplate<nav2_velocity_smoother::VelocitySmoother>
+[component_container_isolated-5] [INFO] [1795214351.851511749] [velocity_smoother]: 
+[INFO] [launch_ros.actions.load_composable_nodes]: Loaded node '/velocity_smoother' in container '/nav2_container'
+[component_container_isolated-5] 	velocity_smoother lifecycle node launched. 
+[component_container_isolated-5] 	Waiting on external lifecycle transitions to activate
+[component_container_isolated-5] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[component_container_isolated-5] [INFO] [1795214351.854340086] [nav2_container]: Load Library: /opt/ros/jazzy/lib/libcollision_monitor_core.so
+[component_container_isolated-5] [INFO] [1795214351.856586012] [nav2_container]: Found class: rclcpp_components::NodeFactoryTemplate<nav2_collision_monitor::CollisionMonitor>
+[component_container_isolated-5] [INFO] [1795214351.856604382] [nav2_container]: Instantiate class: rclcpp_components::NodeFactoryTemplate<nav2_collision_monitor::CollisionMonitor>
+[component_container_isolated-5] [INFO] [1795214351.867209087] [collision_monitor]: 
+[INFO] [launch_ros.actions.load_composable_nodes]: Loaded node '/collision_monitor' in container '/nav2_container'
+[component_container_isolated-5] 	collision_monitor lifecycle node launched. 
+[component_container_isolated-5] 	Waiting on external lifecycle transitions to activate
+[component_container_isolated-5] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[component_container_isolated-5] [INFO] [1795214351.869248962] [nav2_container]: Load Library: /opt/ros/jazzy/lib/libopennav_docking_core.so
+[component_container_isolated-5] [INFO] [1795214351.870629355] [nav2_container]: Found class: rclcpp_components::NodeFactoryTemplate<opennav_docking::DockingServer>
+[component_container_isolated-5] [INFO] [1795214351.870648325] [nav2_container]: Instantiate class: rclcpp_components::NodeFactoryTemplate<opennav_docking::DockingServer>
+[component_container_isolated-5] [INFO] [1795214351.881456221] [docking_server]: 
+[component_container_isolated-5] 	docking_server lifecycle node launched. 
+[component_container_isolated-5] 	Waiting on external lifecycle transitions to activate
+[component_container_isolated-5] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[component_container_isolated-5] [INFO] [1795214351.881493531] [docking_server]: Creating docking_server
+[INFO] [launch_ros.actions.load_composable_nodes]: Loaded node '/docking_server' in container '/nav2_container'
+[component_container_isolated-5] [INFO] [1795214351.883732157] [nav2_container]: Found class: rclcpp_components::NodeFactoryTemplate<nav2_lifecycle_manager::LifecycleManager>
+[component_container_isolated-5] [INFO] [1795214351.883751757] [nav2_container]: Instantiate class: rclcpp_components::NodeFactoryTemplate<nav2_lifecycle_manager::LifecycleManager>
+[component_container_isolated-5] [INFO] [1795214351.898193181] [lifecycle_manager_navigation]: Creating
+[component_container_isolated-5] [INFO] [1795214351.900406577] [lifecycle_manager_navigation]: [34m[1mCreating and initializing lifecycle service clients[0m[0m
+[INFO] [launch_ros.actions.load_composable_nodes]: Loaded node '/lifecycle_manager_navigation' in container '/nav2_container'
+[component_container_isolated-5] [INFO] [1795214351.915476962] [lifecycle_manager_navigation]: [34m[1mStarting managed nodes bringup...[0m[0m
+[component_container_isolated-5] [INFO] [1795214351.915503982] [lifecycle_manager_navigation]: [34m[1mConfiguring controller_server[0m[0m
+[component_container_isolated-5] [INFO] [1795214351.915591013] [controller_server]: Configuring controller interface
+[component_container_isolated-5] [INFO] [1795214351.915610543] [controller_server]: getting progress checker plugins..
+[component_container_isolated-5] [INFO] [1795214351.915891463] [controller_server]: getting goal checker plugins..
+[component_container_isolated-5] [INFO] [1795214351.916347424] [controller_server]: Controller frequency set to 5.0000Hz
+[component_container_isolated-5] [INFO] [1795214351.916380375] [local_costmap.local_costmap]: Configuring
+[component_container_isolated-5] [INFO] [1795214351.922185529] [local_costmap.local_costmap]: Using plugin "obstacle_layer"
+[component_container_isolated-5] [INFO] [1795214351.925496996] [local_costmap.local_costmap]: Subscribed to Topics: scan
+[component_container_isolated-5] [INFO] [1795214351.952742642] [local_costmap.local_costmap]: Initialized plugin "obstacle_layer"
+[component_container_isolated-5] [INFO] [1795214351.952770702] [local_costmap.local_costmap]: Using plugin "inflation_layer"
+[component_container_isolated-5] [INFO] [1795214351.953369643] [local_costmap.local_costmap]: Initialized plugin "inflation_layer"
+[component_container_isolated-5] [INFO] [1795214351.967202287] [controller_server]: Created progress_checker : progress_checker of type nav2_controller::SimpleProgressChecker
+[component_container_isolated-5] [INFO] [1795214351.967469617] [controller_server]: Controller Server has progress_checker  progress checkers available.
+[component_container_isolated-5] [INFO] [1795214351.968034589] [controller_server]: Created goal checker : goal_checker of type nav2_controller::SimpleGoalChecker
+[component_container_isolated-5] [INFO] [1795214351.968519770] [controller_server]: Controller Server has goal_checker  goal checkers available.
+[component_container_isolated-5] [INFO] [1795214351.969309602] [controller_server]: Created controller : FollowPath of type nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController
+[component_container_isolated-5] [INFO] [1795214351.974387204] [controller_server]: Controller Server has FollowPath  controllers available.
+[component_container_isolated-5] [INFO] [1795214351.980400708] [lifecycle_manager_navigation]: [34m[1mConfiguring smoother_server[0m[0m
+[component_container_isolated-5] [INFO] [1795214351.980599218] [smoother_server]: Configuring smoother server
+[component_container_isolated-5] [INFO] [1795214351.985972242] [smoother_server]: Created smoother : simple_smoother of type nav2_smoother::SimpleSmoother
+[component_container_isolated-5] [INFO] [1795214351.986483223] [smoother_server]: Smoother Server has simple_smoother  smoothers available.
+[component_container_isolated-5] [INFO] [1795214351.991282624] [lifecycle_manager_navigation]: [34m[1mConfiguring planner_server[0m[0m
+[component_container_isolated-5] [INFO] [1795214351.991389614] [planner_server]: Configuring
+[component_container_isolated-5] [INFO] [1795214351.991419064] [global_costmap.global_costmap]: Configuring
+[component_container_isolated-5] [INFO] [1795214351.997230029] [global_costmap.global_costmap]: Using plugin "static_layer"
+[component_container_isolated-5] [INFO] [1795214351.998961962] [global_costmap.global_costmap]: Subscribing to the map topic (/map) with transient local durability
+[component_container_isolated-5] [INFO] [1795214351.999460914] [global_costmap.global_costmap]: Initialized plugin "static_layer"
+[component_container_isolated-5] [INFO] [1795214351.999471654] [global_costmap.global_costmap]: Using plugin "obstacle_layer"
+[component_container_isolated-5] [INFO] [1795214351.999851715] [global_costmap.global_costmap]: Subscribed to Topics: scan
+[component_container_isolated-5] [INFO] [1795214352.002347721] [global_costmap.global_costmap]: Initialized plugin "obstacle_layer"
+[component_container_isolated-5] [INFO] [1795214352.002362921] [global_costmap.global_costmap]: Using plugin "inflation_layer"
+[component_container_isolated-5] [INFO] [1795214352.002784472] [global_costmap.global_costmap]: Initialized plugin "inflation_layer"
+[component_container_isolated-5] [INFO] [1795214352.039722230] [planner_server]: Created global planner plugin GridBased of type nav2_navfn_planner::NavfnPlanner
+[component_container_isolated-5] [INFO] [1795214352.039754640] [planner_server]: Configuring plugin GridBased of type NavfnPlanner
+[component_container_isolated-5] [INFO] [1795214352.042508467] [planner_server]: Planner Server has GridBased  planners available.
+[component_container_isolated-5] [INFO] [1795214352.052338710] [lifecycle_manager_navigation]: [34m[1mConfiguring route_server[0m[0m
+[component_container_isolated-5] [INFO] [1795214352.052526291] [route_server]: Configuring
+[component_container_isolated-5] [INFO] [1795214352.070168613] [global_costmap.global_costmap]: StaticLayer: Resizing costmap to 99 X 98 at 0.050000 m/pix
+[component_container_isolated-5] [INFO] [1795214352.081116709] [route_server]: Created GraphFileLoader GeoJsonGraphFileLoader of type nav2_route::GeoJsonGraphFileLoader
+[component_container_isolated-5] [INFO] [1795214352.081142669] [route_server]: Configuring geojson graph file loader
+[component_container_isolated-5] [INFO] [1795214352.081150679] [route_server]: No graph file provided to load yet.
+[component_container_isolated-5] [INFO] [1795214352.089795570] [route_server]: Created edge cost function plugin DistanceScorer of type nav2_route::DistanceScorer
+[component_container_isolated-5] [INFO] [1795214352.089826750] [route_server]: Configuring distance scorer.
+[component_container_isolated-5] [INFO] [1795214352.091192223] [route_server]: Created edge cost function plugin DynamicEdgesScorer of type nav2_route::DynamicEdgesScorer
+[component_container_isolated-5] [INFO] [1795214352.091206753] [route_server]: Configuring adjust edges scorer.
+[component_container_isolated-5] [INFO] [1795214352.098962332] [route_server]: Created route operation AdjustSpeedLimit of type nav2_route::AdjustSpeedLimit
+[component_container_isolated-5] [INFO] [1795214352.098991812] [route_server]: Configuring Adjust speed limit operation.
+[component_container_isolated-5] [INFO] [1795214352.100921807] [route_server]: Created route operation ReroutingService of type nav2_route::ReroutingService
+[component_container_isolated-5] [INFO] [1795214352.100940747] [route_server]: Configuring Rerouting service operation.
+[component_container_isolated-5] [INFO] [1795214352.104827566] [lifecycle_manager_navigation]: [34m[1mConfiguring behavior_server[0m[0m
+[component_container_isolated-5] [INFO] [1795214352.104996786] [behavior_server]: Configuring
+[component_container_isolated-5] [INFO] [1795214352.111010031] [behavior_server]: Creating behavior plugin spin of type nav2_behaviors::Spin
+[component_container_isolated-5] [INFO] [1795214352.113110765] [behavior_server]: Creating behavior plugin backup of type nav2_behaviors::BackUp
+[component_container_isolated-5] [INFO] [1795214352.114372928] [behavior_server]: Creating behavior plugin drive_on_heading of type nav2_behaviors::DriveOnHeading
+[component_container_isolated-5] [INFO] [1795214352.116445834] [behavior_server]: Creating behavior plugin wait of type nav2_behaviors::Wait
+[component_container_isolated-5] [INFO] [1795214352.118083228] [behavior_server]: Creating behavior plugin assisted_teleop of type nav2_behaviors::AssistedTeleop
+[component_container_isolated-5] [INFO] [1795214352.129698495] [behavior_server]: Configuring spin
+[ground_truth-8] [INFO] [1795214352.131644830] [ground_truth]: ground_truth up (teleport-aware odom truth)
+[coverage_meter-7] [INFO] [1795214352.138163125] [coverage_meter]: coverage_meter up; waiting for /map + truth
+[component_container_isolated-5] [INFO] [1795214352.148803201] [behavior_server]: Configuring backup
+[component_container_isolated-5] [INFO] [1795214352.153180002] [behavior_server]: Configuring drive_on_heading
+[component_container_isolated-5] [INFO] [1795214352.157058310] [behavior_server]: Configuring wait
+[component_container_isolated-5] [INFO] [1795214352.160422019] [behavior_server]: Configuring assisted_teleop
+[component_container_isolated-5] [INFO] [1795214352.165830131] [lifecycle_manager_navigation]: [34m[1mConfiguring velocity_smoother[0m[0m
+[component_container_isolated-5] [INFO] [1795214352.165942592] [velocity_smoother]: Configuring velocity smoother
+[component_container_isolated-5] [INFO] [1795214352.169414760] [lifecycle_manager_navigation]: [34m[1mConfiguring collision_monitor[0m[0m
+[component_container_isolated-5] [INFO] [1795214352.169472260] [collision_monitor]: Configuring
+[component_container_isolated-5] [INFO] [1795214352.172334127] [collision_monitor]: [scan]: Creating Scan
+[component_container_isolated-5] [INFO] [1795214352.173676490] [collision_monitor]: [PolygonStop]: Creating Polygon
+[component_container_isolated-5] [INFO] [1795214352.173688800] [collision_monitor]: [PolygonStop]: Creating Circle
+[component_container_isolated-5] [INFO] [1795214352.175244294] [collision_monitor]: [PolygonSlow]: Creating Polygon
+[component_container_isolated-5] [INFO] [1795214352.176613707] [collision_monitor]: [FootprintApproach]: Creating Polygon
+[component_container_isolated-5] [INFO] [1795214352.176700898] [collision_monitor]: [FootprintApproach]: Polygon points are not defined. Using dynamic subscription instead.
+[component_container_isolated-5] [INFO] [1795214352.177592490] [collision_monitor]: [FootprintApproach]: Making footprint subscriber on /local_costmap/published_footprint topic
+[component_container_isolated-5] [INFO] [1795214352.181735839] [lifecycle_manager_navigation]: [34m[1mConfiguring bt_navigator[0m[0m
+[component_container_isolated-5] [INFO] [1795214352.181818359] [bt_navigator]: Configuring
+[component_container_isolated-5] [INFO] [1795214352.184599046] [bt_navigator]: Creating navigator id navigate_to_pose of type nav2_bt_navigator::NavigateToPoseNavigator
+[component_container_isolated-5] [WARN] [1795214352.186668342] [bt_navigator]: Error_code parameters were not set. Using default values of: follow_path_error_code compute_path_error_code
+[component_container_isolated-5] Make sure these match your BT and there are not other sources of error codes youreported to your application
+[gazebo-1] [1;32m[Msg] [0m[1;32mServing entity system service on [[0m[1;32m/[0m[1;32mentity/system/add[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;36m[Dbg] [Physics.cc:1004] [0m[1;36mLoaded [[0m[1;36mgz::physics::dartsim::Plugin[0m[1;36m] from library [[0m[1;36m/opt/ros/jazzy/opt/gz_physics_vendor/lib/gz-physics-7/engine-plugins/libgz-physics-dartsim-plugin.so[0m[1;36m][0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SystemManager.cc:80] [0m[1;36mLoaded system [[0m[1;36mgz::sim::systems::Physics[0m[1;36m] for entity [[0m[1;36m1[0m[1;36m][0m[1;36m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mCreate[0m[1;32m service on [[0m[1;32m/world/default/create_multiple[0m[1;32m] (async)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mCreate[0m[1;32m service on [[0m[1;32m/world/default/create_multiple/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mRemove[0m[1;32m service on [[0m[1;32m/world/default/remove[0m[1;32m] (async)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mRemove[0m[1;32m service on [[0m[1;32m/world/default/remove/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mPose[0m[1;32m service on [[0m[1;32m/world/default/set_pose[0m[1;32m] (async)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mPose[0m[1;32m service on [[0m[1;32m/world/default/set_pose/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mPose[0m[1;32m service on [[0m[1;32m/world/default/set_pose_vector[0m[1;32m] (async)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mPose[0m[1;32m service on [[0m[1;32m/world/default/set_pose_vector/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mLight configuration[0m[1;32m service on [[0m[1;32m/world/default/light_config[0m[1;32m] (async)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mLight configuration[0m[1;32m service on [[0m[1;32m/world/default/light_config/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mPhysics[0m[1;32m service on [[0m[1;32m/world/default/set_physics[0m[1;32m] (async)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mPhysics[0m[1;32m service on [[0m[1;32m/world/default/set_physics/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mSphericalCoordinates[0m[1;32m service on [[0m[1;32m/world/default/set_spherical_coordinates[0m[1;32m] (async)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mSphericalCoordinates[0m[1;32m service on [[0m[1;32m/world/default/set_spherical_coordinates/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mEnable collision[0m[1;32m service on [[0m[1;32m/world/default/enable_collision[0m[1;32m] (async)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mEnable collision[0m[1;32m service on [[0m[1;32m/world/default/enable_collision/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mDisable collision[0m[1;32m service on [[0m[1;32m/world/default/disable_collision[0m[1;32m] (async)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mDisable collision[0m[1;32m service on [[0m[1;32m/world/default/disable_collision/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mMaterial[0m[1;32m service on [[0m[1;32m/world/default/visual_config[0m[1;32m] (async)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mMaterial[0m[1;32m service on [[0m[1;32m/world/default/visual_config/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mMaterial[0m[1;32m service on [[0m[1;32m/world/default/wheel_slip[0m[1;32m] (async)[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mMaterial[0m[1;32m service on [[0m[1;32m/world/default/wheel_slip/blocking[0m[1;32m] (blocking)[0m[1;32m[0m
+[gazebo-1] [1;36m[Dbg] [SystemManager.cc:80] [0m[1;36mLoaded system [[0m[1;36mgz::sim::systems::UserCommands[0m[1;36m] for entity [[0m[1;36m1[0m[1;36m][0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SystemManager.cc:80] [0m[1;36mLoaded system [[0m[1;36mgz::sim::systems::SceneBroadcaster[0m[1;36m] for entity [[0m[1;36m1[0m[1;36m][0m[1;36m[0m
+[component_container_isolated-5] [INFO] [1795214352.250733945] [bt_navigator]: Creating navigator id navigate_through_poses of type nav2_bt_navigator::NavigateThroughPosesNavigator
+[gazebo-1] [1;36m[Dbg] [Sensors.cc:697] [0m[1;36mConfiguring Sensors system[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [Sensors.cc:557] [0m[1;36mSensorsPrivate::Run[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SystemManager.cc:80] [0m[1;36mLoaded system [[0m[1;36mgz::sim::systems::Sensors[0m[1;36m] for entity [[0m[1;36m1[0m[1;36m][0m[1;36m[0m
+[gazebo-1] [1;36m[0m
+[gazebo-1] [1;36mSensorsPrivate::RenderThread started[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [Sensors.cc:337] [0m[1;36mWaiting for init[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SystemManager.cc:80] [0m[1;36mLoaded system [[0m[1;36mgz::sim::systems::Imu[0m[1;36m] for entity [[0m[1;36m1[0m[1;36m][0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SystemManager.cc:80] [0m[1;36mLoaded system [[0m[1;36mgz::sim::systems::Contact[0m[1;36m] for entity [[0m[1;36m1[0m[1;36m][0m[1;36m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mLoaded level [[0m[1;32mdefault[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;33m[Wrn] [Conversions.cc:735] [0m[1;33m<gui><camera> can't be converted yet[0m[1;33m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mServing world controls on [[0m[1;32m/world/default[0m[1;32m/control], [[0m[1;32m/world/default[0m[1;32m/control/state] and [[0m[1;32m/world/default[0m[1;32m/playback/control][0m[1;32m[0m
+[gazebo-1] [1;33m[Wrn] [Conversions.cc:735] [0m[1;33m<gui><camera> can't be converted yet[0m[1;33m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mServing GUI information on [[0m[1;32m/world/default[0m[1;32m/[0m[1;32mgui/info[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mWorld [[0m[1;32mdefault[0m[1;32m] initialized with [[0m[1;32mdefault_physics[0m[1;32m] physics profile.[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mServing world SDF generation service on [[0m[1;32m/world/default[0m[1;32m/[0m[1;32mgenerate_world_sdf[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mServing world names on [[0m[1;32m/gazebo/worlds[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mResource path add service on [[0m[1;32m/gazebo/resource_paths/add[0m[1;32m].[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mResource path get service on [[0m[1;32m/gazebo/resource_paths/get[0m[1;32m].[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mResource path resolve service on [[0m[1;32m/gazebo/resource_paths/resolve[0m[1;32m].[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mResource paths published on [[0m[1;32m/gazebo/resource_paths[0m[1;32m].[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mServer control service on [[0m[1;32m/server_control[0m[1;32m].[0m[1;32m[0m
+[component_container_isolated-5] [INFO] [1795214352.267120184] [lifecycle_manager_navigation]: [34m[1mConfiguring waypoint_follower[0m[0m
+[component_container_isolated-5] [INFO] [1795214352.267197544] [waypoint_follower]: Configuring
+[component_container_isolated-5] [INFO] [1795214352.278597791] [waypoint_follower]: Created waypoint_task_executor : wait_at_waypoint of type nav2_waypoint_follower::WaitAtWaypoint
+[component_container_isolated-5] [INFO] [1795214352.279108062] [lifecycle_manager_navigation]: [34m[1mConfiguring docking_server[0m[0m
+[component_container_isolated-5] [INFO] [1795214352.279175662] [docking_server]: Configuring docking_server
+[component_container_isolated-5] [INFO] [1795214352.279206942] [docking_server]: Controller frequency set to 50.0000Hz
+[component_container_isolated-5] [INFO] [1795214352.292520915] [docking_server]: Created charging dock plugin nova_carter_dock of type opennav_docking::SimpleChargingDock
+[component_container_isolated-5] [INFO] [1795214352.296274523] [docking_server]: Loading docks from parameter file.
+[component_container_isolated-5] [INFO] [1795214352.297071815] [docking_server]: Docking Server has 1 dock types and 3 dock instances available.
+[component_container_isolated-5] [INFO] [1795214352.298170918] [lifecycle_manager_navigation]: [34m[1mActivating controller_server[0m[0m
+[component_container_isolated-5] [INFO] [1795214352.298250948] [controller_server]: Activating
+[component_container_isolated-5] [INFO] [1795214352.298268348] [local_costmap.local_costmap]: Activating
+[component_container_isolated-5] [INFO] [1795214352.298273528] [local_costmap.local_costmap]: Checking transform
+[component_container_isolated-5] [INFO] [1795214352.298292968] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[parameter_bridge-2] [INFO] [1795214352.310421987] [ros_gz_bridge]: Creating GZ->ROS Bridge: [clock (gz.msgs.Clock) -> clock (rosgraph_msgs/msg/Clock)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1795214352.312584622] [ros_gz_bridge]: Creating GZ->ROS Bridge: [joint_states (gz.msgs.Model) -> joint_states (sensor_msgs/msg/JointState)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1795214352.316817913] [ros_gz_bridge]: Creating GZ->ROS Bridge: [imu (gz.msgs.IMU) -> imu (sensor_msgs/msg/Imu)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1795214352.318275686] [ros_gz_bridge]: Creating GZ->ROS Bridge: [odom (gz.msgs.Odometry) -> odom (nav_msgs/msg/Odometry)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1795214352.319875150] [ros_gz_bridge]: Creating GZ->ROS Bridge: [odom_wheel (gz.msgs.Odometry) -> odom_wheel (nav_msgs/msg/Odometry)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1795214352.320334041] [ros_gz_bridge]: Creating GZ->ROS Bridge: [odom_truth (gz.msgs.Odometry) -> odom_truth (nav_msgs/msg/Odometry)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1795214352.320752262] [ros_gz_bridge]: Creating GZ->ROS Bridge: [tf (gz.msgs.Pose_V) -> tf (tf2_msgs/msg/TFMessage)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1795214352.323047087] [ros_gz_bridge]: Creating ROS->GZ Bridge: [cmd_vel (geometry_msgs/msg/Twist) -> cmd_vel (gz.msgs.Twist)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1795214352.323983860] [ros_gz_bridge]: Creating GZ->ROS Bridge: [scan (gz.msgs.LaserScan) -> scan (sensor_msgs/msg/LaserScan)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1795214352.324572751] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/world/default/model/oomwoo_one/link/base_footprint/sensor/bumper_left/contact (gz.msgs.Contacts) -> bumper_left/contact (ros_gz_interfaces/msg/Contacts)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1795214352.326527106] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/world/default/model/oomwoo_one/link/base_footprint/sensor/bumper_right/contact (gz.msgs.Contacts) -> bumper_right/contact (ros_gz_interfaces/msg/Contacts)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1795214352.327436688] [ros_gz_bridge]: Creating GZ->ROS Bridge: [range_left (gz.msgs.LaserScan) -> range_left (sensor_msgs/msg/LaserScan)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1795214352.328215240] [ros_gz_bridge]: Creating GZ->ROS Bridge: [range_right (gz.msgs.LaserScan) -> range_right (sensor_msgs/msg/LaserScan)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1795214352.328872061] [ros_gz_bridge]: Creating GZ->ROS Bridge: [tof_front/points (gz.msgs.PointCloudPacked) -> tof_front/points (sensor_msgs/msg/PointCloud2)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1795214352.329765603] [ros_gz_bridge]: Creating GZ->ROS Bridge: [camera/image (gz.msgs.Image) -> camera/image (sensor_msgs/msg/Image)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1795214352.330600775] [ros_gz_bridge]: Creating GZ->ROS Bridge: [camera/camera_info (gz.msgs.CameraInfo) -> camera/camera_info (sensor_msgs/msg/CameraInfo)] (Lazy 0)
+[create-4] [INFO] [1795214352.409751864] [ros_gz_sim]: Waiting messages on topic [robot_description].
+[create-4] [INFO] [1795214352.421280802] [ros_gz_sim]: Entity creation successful.
+[INFO] [create-4]: process has finished cleanly [pid 22047]
+[component_container_isolated-5] [INFO] [1795214352.717015199] [lifecycle_manager_localization]: Server map_server connected with bond.
+[component_container_isolated-5] [INFO] [1795214352.717046739] [lifecycle_manager_localization]: [34m[1mActivating amcl[0m[0m
+[component_container_isolated-5] [INFO] [1795214352.717292880] [amcl]: Activating
+[component_container_isolated-5] [INFO] [1795214352.717322470] [amcl]: Creating bond (amcl) to lifecycle manager.
+[component_container_isolated-5] [INFO] [1795214352.798347064] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[gazebo-1] [1;32m[Msg] [0m[1;32mFound no publishers on /stats, adding root stats topic[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mFound no publishers on /clock, adding root clock topic[0m[1;32m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:627] [0m[1;36mCreating PostUpdate worker threads: [0m[1;36m5[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:638] [0m[1;36mCreating postupdate worker thread ([0m[1;36m0[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:638] [0m[1;36mCreating postupdate worker thread ([0m[1;36m1[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:638] [0m[1;36mCreating postupdate worker thread ([0m[1;36m2[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:638] [0m[1;36mCreating postupdate worker thread ([0m[1;36m3[0m[1;36m)[0m[1;36m[0m
+[component_container_isolated-5] [INFO] [1795214353.298391547] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[gazebo-1] [1;33mWarning [Utils.cc:132][0m [/sdf/model[@name="oomwoo_one"]/link[@name="base_footprint"]/sensor[@name="laser_scan_sensor"]/gz_frame_id:<urdf-string>:L0]: XML Element[gz_frame_id], child of element[sensor], not defined in SDF. Copying[gz_frame_id] as children of [sensor].
+[gazebo-1] [1;32m[Msg] [0m[1;32mDiffDrive subscribing to twist messages on [[0m[1;32mcmd_vel[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;36m[Dbg] [SystemManager.cc:80] [0m[1;36mLoaded system [[0m[1;36mgz::sim::systems::DiffDrive[0m[1;36m] for entity [[0m[1;36m157[0m[1;36m][0m[1;36m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mOdometryPublisher publishing odometry on [[0m[1;32m/odom[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mOdometryPublisher publishing odometry with covariance on [[0m[1;32m/model/oomwoo_one/odometry_with_covariance[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mOdometryPublisher publishing Pose_V (TF) on [[0m[1;32m/tf[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;36m[Dbg] [SystemManager.cc:80] [0m[1;36mLoaded system [[0m[1;36mgz::sim::systems::OdometryPublisher[0m[1;36m] for entity [[0m[1;36m157[0m[1;36m][0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SystemManager.cc:80] [0m[1;36mLoaded system [[0m[1;36mgz::sim::systems::JointStatePublisher[0m[1;36m] for entity [[0m[1;36m157[0m[1;36m][0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SystemManager.cc:80] [0m[1;36mLoaded system [[0m[1;36mgz::sim::systems::Contact[0m[1;36m] for entity [[0m[1;36m157[0m[1;36m][0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [UserCommands.cc:1093] [0m[1;36mCreated entity [[0m[1;36m157[0m[1;36m] named [[0m[1;36moomwoo_one[0m[1;36m][0m[1;36m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mContact system publishing on [0m[1;32mworld/default/model/oomwoo_one/link/base_footprint/sensor/bumper_left/contact[0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mContact system publishing on [0m[1;32mworld/default/model/oomwoo_one/link/base_footprint/sensor/bumper_right/contact[0m[1;32m[0m
+[gazebo-1] [1;36m[Dbg] [SDFFeatures.cc:333] [0m[1;36mMesh construction from an SDF has not been implemented yet for [0m[1;36mdartsim. Use AttachMeshShapeFeature to use mesh shapes.[0m
+[gazebo-1] [1;36m[Dbg] [SDFFeatures.cc:865] [0m[1;36mThe geometry element of collision [[0m[1;36mcollision[0m[1;36m] [0m[1;36mcouldn't be created[0m
+[gazebo-1] [1;36m[Dbg] [SDFFeatures.cc:333] [0m[1;36mMesh construction from an SDF has not been implemented yet for [0m[1;36mdartsim. Use AttachMeshShapeFeature to use mesh shapes.[0m
+[gazebo-1] [1;36m[Dbg] [SDFFeatures.cc:865] [0m[1;36mThe geometry element of collision [[0m[1;36mcollision_0[0m[1;36m] [0m[1;36mcouldn't be created[0m
+[gazebo-1] [1;36m[Dbg] [SDFFeatures.cc:333] [0m[1;36mMesh construction from an SDF has not been implemented yet for [0m[1;36mdartsim. Use AttachMeshShapeFeature to use mesh shapes.[0m
+[gazebo-1] [1;36m[Dbg] [SDFFeatures.cc:865] [0m[1;36mThe geometry element of collision [[0m[1;36mcollision[0m[1;36m] [0m[1;36mcouldn't be created[0m
+[gazebo-1] [1;36m[Dbg] [SDFFeatures.cc:333] [0m[1;36mMesh construction from an SDF has not been implemented yet for [0m[1;36mdartsim. Use AttachMeshShapeFeature to use mesh shapes.[0m
+[gazebo-1] [1;36m[Dbg] [SDFFeatures.cc:865] [0m[1;36mThe geometry element of collision [[0m[1;36mcollision[0m[1;36m] [0m[1;36mcouldn't be created[0m
+[gazebo-1] [1;36m[Dbg] [SDFFeatures.cc:333] [0m[1;36mMesh construction from an SDF has not been implemented yet for [0m[1;36mdartsim. Use AttachMeshShapeFeature to use mesh shapes.[0m
+[gazebo-1] [1;36m[Dbg] [SDFFeatures.cc:865] [0m[1;36mThe geometry element of collision [[0m[1;36mcollision[0m[1;36m] [0m[1;36mcouldn't be created[0m
+[gazebo-1] [1;36m[Dbg] [SDFFeatures.cc:333] [0m[1;36mMesh construction from an SDF has not been implemented yet for [0m[1;36mdartsim. Use AttachMeshShapeFeature to use mesh shapes.[0m
+[gazebo-1] [1;36m[Dbg] [SDFFeatures.cc:865] [0m[1;36mThe geometry element of collision [[0m[1;36mcollision[0m[1;36m] [0m[1;36mcouldn't be created[0m
+[gazebo-1] [1;36m[Dbg] [SDFFeatures.cc:333] [0m[1;36mMesh construction from an SDF has not been implemented yet for [0m[1;36mdartsim. Use AttachMeshShapeFeature to use mesh shapes.[0m
+[gazebo-1] [1;36m[Dbg] [SDFFeatures.cc:865] [0m[1;36mThe geometry element of collision [[0m[1;36mcollision[0m[1;36m] [0m[1;36mcouldn't be created[0m
+[gazebo-1] [1;36m[Dbg] [SDFFeatures.cc:333] [0m[1;36mMesh construction from an SDF has not been implemented yet for [0m[1;36mdartsim. Use AttachMeshShapeFeature to use mesh shapes.[0m
+[gazebo-1] [1;36m[Dbg] [SDFFeatures.cc:865] [0m[1;36mThe geometry element of collision [[0m[1;36mcollision[0m[1;36m] [0m[1;36mcouldn't be created[0m
+[gazebo-1] [1;36m[Dbg] [SDFFeatures.cc:333] [0m[1;36mMesh construction from an SDF has not been implemented yet for [0m[1;36mdartsim. Use AttachMeshShapeFeature to use mesh shapes.[0m
+[gazebo-1] [1;36m[Dbg] [SDFFeatures.cc:865] [0m[1;36mThe geometry element of collision [[0m[1;36mcollision[0m[1;36m] [0m[1;36mcouldn't be created[0m
+[gazebo-1] [1;33m[Wrn] [OBJLoader.cc:91] [0m[1;33mBoth `d` and `Tr` parameters defined for "Chair". Use the value of `d` for dissolve (line 8 in .mtl.)[0m
+[gazebo-1] [1;33m[0m
+[gazebo-1] [1;36m[Dbg] [Sensors.cc:953] [0m[1;36mInitialization needed[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [Sensors.cc:349] [0m[1;36mInitializing render context[0m[1;36m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mLoading plugin [[0m[1;32mgz-rendering-ogre2[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mServing scene information on [[0m[1;32m/world/default[0m[1;32m/[0m[1;32mscene/info[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mServing graph information on [[0m[1;32m/world/default[0m[1;32m/[0m[1;32mscene/graph[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mServing full state on [[0m[1;32m/world/default[0m[1;32m/[0m[1;32mstate[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mServing full state (async) on [[0m[1;32m/world/default[0m[1;32m/[0m[1;32mstate_async[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mPublishing scene information on [[0m[1;32m/world/default/scene/info[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mPublishing entity deletions on [[0m[1;32m/world/default/scene/deletion[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mPublishing state changes on [[0m[1;32m/world/default/state[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mPublishing pose messages on [[0m[1;32m/world/default[0m[1;32m/[0m[1;32mpose/info[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;32m[Msg] [0m[1;32mPublishing dynamic pose messages on [[0m[1;32m/world/default[0m[1;32m/[0m[1;32mdynamic_pose/info[0m[1;32m][0m[1;32m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:654] [0m[1;36mExiting postupdate worker thread ([0m[1;36m0[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:654] [0m[1;36mExiting postupdate worker thread ([0m[1;36m2[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:654] [0m[1;36mExiting postupdate worker thread ([0m[1;36m1[0m[1;36m)[0m[1;36m)[Dbg] [SimulationRunner.cc:654] [0m[1;36m[0m
+[gazebo-1] [1;36m3[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:627] [0m[1;36mCreating PostUpdate worker threads: [0m[1;36m9[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:638] [0m[1;36mCreating postupdate worker thread ([0m[1;36m0[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:638] [0m[1;36mCreating postupdate worker thread ([0m[1;36m1[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:638] [0m[1;36mCreating postupdate worker thread ([0m[1;36m2[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:638] [0m[1;36mCreating postupdate worker thread ([0m[1;36m3[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:638] [0m[1;36mCreating postupdate worker thread ([0m[1;36m4[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:638] [0m[1;36mCreating postupdate worker thread ([0m[1;36m5[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:638] [0m[1;36mCreating postupdate worker thread ([0m[1;36m6[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:638] [0m[1;36mCreating postupdate worker thread ([0m[1;36m7[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [RenderUtil.cc:2646] [0m[1;36mCreate scene [[0m[1;36mscene[0m[1;36m][0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [Sensors.cc:953] [0m[1;36mInitialization needed[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [Sensors.cc:391] [0m[1;36mRendering Thread initialized[0m[1;36m[0m
+[component_container_isolated-5] [INFO] [1795214353.721307374] [lifecycle_manager_localization]: Server amcl connected with bond.
+[component_container_isolated-5] [INFO] [1795214353.721338635] [lifecycle_manager_localization]: [34m[1mManaged nodes are active[0m[0m
+[component_container_isolated-5] [INFO] [1795214353.721361005] [lifecycle_manager_localization]: [34m[1mCreating bond timer...[0m[0m
+[component_container_isolated-5] [INFO] [1795214353.798350088] [local_costmap.local_costmap]: Timed out waiting for transform from base_link to odom to become available, tf error: Invalid frame ID "odom" passed to canTransform argument target_frame - frame does not exist
+[gazebo-1] [1;36m[Dbg] [Lidar.cc:139] [0m[1;36mLaser scans for [[0m[1;36moomwoo_one::base_footprint::laser_scan_sensor[0m[1;36m] advertised on [[0m[1;36mscan[0m[1;36m][0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [GpuLidarSensor.cc:164] [0m[1;36mLidar points for [[0m[1;36moomwoo_one::base_footprint::laser_scan_sensor[0m[1;36m] advertised on [[0m[1;36mscan/points[0m[1;36m][0m[1;36m[0m
+[topic_heartbeat-13] [WARN] [1795214354.087475516] [topic_heartbeat]: drive_supervision: no heartbeat, robot moving or not yet settled with a zero or unknown setpoint
+[component_container_isolated-5] [INFO] [1795214354.279832303] [amcl]: createLaserObject
+[component_container_isolated-5] [INFO] [1795214354.300967833] [local_costmap.local_costmap]: start
+[component_container_isolated-5] [INFO] [1795214354.505760900] [controller_server]: Activating controller: FollowPath of type regulated_pure_pursuit_controller::RegulatedPurePursuitController
+[component_container_isolated-5] [INFO] [1795214354.505790970] [controller_server]: Creating bond (controller_server) to lifecycle manager.
+[coverage_meter-7] [INFO] [1795214354.938297107] [coverage_meter]: map 99x98 @ 0.050m, 7729 free cells (reachable set computed at first truth pose)
+[coverage_meter-7] [INFO] [1795214354.962394775] [coverage_meter]: serviceable cells from start (38, 9): 5416 (raw reachable 7728, edge_margin 0.15m deferred to floor-care)
+[coverage_meter-7] [INFO] [1795214355.077651508] [coverage_meter]: COVERAGE_REPORT coverage=0.0090 efficiency=0.0000 revisit_ratio=0.0000 path_m=0.00 ideal_m=33.85 reachable_cells=5416 sim_t=0.1 target_hit=False t_target=None pose_jumps=0 sim_unstable=False
+[component_container_isolated-5] [INFO] [1795214355.511502696] [lifecycle_manager_navigation]: Server controller_server connected with bond.
+[component_container_isolated-5] [INFO] [1795214355.511535316] [lifecycle_manager_navigation]: [34m[1mActivating smoother_server[0m[0m
+[component_container_isolated-5] [INFO] [1795214355.511745116] [smoother_server]: Activating
+[component_container_isolated-5] [INFO] [1795214355.511768536] [smoother_server]: Creating bond (smoother_server) to lifecycle manager.
+[component_container_isolated-5] [INFO] [1795214355.580475860] [amcl]: initialPoseReceived
+[component_container_isolated-5] [INFO] [1795214355.580533920] [amcl]: Setting pose (1.500000): -2.000 -0.500 0.000
+[initialpose_pub-6] [WARN] [1795214355.599670595] [initialpose_pub]: AMCL not localized after 1.0s; re-seeding /initialpose (1)
+[initialpose_pub-6] [INFO] [1795214356.083924121] [initialpose_pub]: AMCL localized after 1.5s (1 backstop seed(s)) — releasing navigation
+[coverage_meter-7] [INFO] [1795214356.084699763] [coverage_meter]: COVERAGE_REPORT coverage=0.0090 efficiency=0.0000 revisit_ratio=0.0000 path_m=0.00 ideal_m=33.85 reachable_cells=5416 sim_t=1.1 target_hit=False t_target=None pose_jumps=0 sim_unstable=False
+[INFO] [initialpose_pub-6]: process has finished cleanly [pid 22050]
+[component_container_isolated-5] [INFO] [1795214356.517053334] [lifecycle_manager_navigation]: Server smoother_server connected with bond.
+[component_container_isolated-5] [INFO] [1795214356.517078524] [lifecycle_manager_navigation]: [34m[1mActivating planner_server[0m[0m
+[component_container_isolated-5] [INFO] [1795214356.517263694] [planner_server]: Activating
+[component_container_isolated-5] [INFO] [1795214356.517297074] [global_costmap.global_costmap]: Activating
+[component_container_isolated-5] [INFO] [1795214356.517304575] [global_costmap.global_costmap]: Checking transform
+[component_container_isolated-5] [INFO] [1795214356.517327685] [global_costmap.global_costmap]: Timed out waiting for transform from base_link to map to become available, tf error: Lookup would require extrapolation into the past.  Requested time 2.420000 but the earliest data is at time 2.600000, when looking up transform from frame [base_link] to frame [map]
+[component_container_isolated-5] [INFO] [1795214357.017458966] [global_costmap.global_costmap]: start
+[coverage_meter-7] [INFO] [1795214357.084468723] [coverage_meter]: COVERAGE_REPORT coverage=0.0090 efficiency=0.0000 revisit_ratio=0.0000 path_m=0.00 ideal_m=33.85 reachable_cells=5416 sim_t=2.1 target_hit=False t_target=None pose_jumps=0 sim_unstable=False
+[component_container_isolated-5] [INFO] [1795214357.519244128] [planner_server]: Activating plugin GridBased of type NavfnPlanner
+[component_container_isolated-5] [INFO] [1795214357.520837502] [planner_server]: Creating bond (planner_server) to lifecycle manager.
+[coverage_meter-7] [INFO] [1795214358.084556098] [coverage_meter]: COVERAGE_REPORT coverage=0.0090 efficiency=0.0000 revisit_ratio=0.0000 path_m=0.00 ideal_m=33.85 reachable_cells=5416 sim_t=3.1 target_hit=False t_target=None pose_jumps=0 sim_unstable=False
+[component_container_isolated-5] [INFO] [1795214358.526510156] [lifecycle_manager_navigation]: Server planner_server connected with bond.
+[component_container_isolated-5] [INFO] [1795214358.526543386] [lifecycle_manager_navigation]: [34m[1mActivating route_server[0m[0m
+[component_container_isolated-5] [INFO] [1795214358.526754616] [route_server]: Activating
+[component_container_isolated-5] [INFO] [1795214358.526872206] [route_server]: Creating bond (route_server) to lifecycle manager.
+[coverage_meter-7] [INFO] [1795214359.084587075] [coverage_meter]: COVERAGE_REPORT coverage=0.0090 efficiency=0.0000 revisit_ratio=0.0000 path_m=0.00 ideal_m=33.85 reachable_cells=5416 sim_t=4.1 target_hit=False t_target=None pose_jumps=0 sim_unstable=False
+[component_container_isolated-5] [INFO] [1795214359.532209233] [lifecycle_manager_navigation]: Server route_server connected with bond.
+[component_container_isolated-5] [INFO] [1795214359.532238893] [lifecycle_manager_navigation]: [34m[1mActivating behavior_server[0m[0m
+[component_container_isolated-5] [INFO] [1795214359.532981854] [behavior_server]: Activating
+[component_container_isolated-5] [INFO] [1795214359.532997725] [behavior_server]: Activating spin
+[component_container_isolated-5] [INFO] [1795214359.533017265] [behavior_server]: Activating backup
+[component_container_isolated-5] [INFO] [1795214359.533024475] [behavior_server]: Activating drive_on_heading
+[component_container_isolated-5] [INFO] [1795214359.533031755] [behavior_server]: Activating wait
+[component_container_isolated-5] [INFO] [1795214359.533038595] [behavior_server]: Activating assisted_teleop
+[component_container_isolated-5] [INFO] [1795214359.533049215] [behavior_server]: Creating bond (behavior_server) to lifecycle manager.
+[coverage_meter-7] [INFO] [1795214360.084599305] [coverage_meter]: COVERAGE_REPORT coverage=0.0090 efficiency=0.0000 revisit_ratio=0.0000 path_m=0.00 ideal_m=33.85 reachable_cells=5416 sim_t=5.1 target_hit=False t_target=None pose_jumps=0 sim_unstable=False
+[component_container_isolated-5] [INFO] [1795214360.540001688] [lifecycle_manager_navigation]: Server behavior_server connected with bond.
+[component_container_isolated-5] [INFO] [1795214360.540031538] [lifecycle_manager_navigation]: [34m[1mActivating velocity_smoother[0m[0m
+[component_container_isolated-5] [INFO] [1795214360.540223619] [velocity_smoother]: Activating
+[component_container_isolated-5] [INFO] [1795214360.540260209] [velocity_smoother]: Creating bond (velocity_smoother) to lifecycle manager.
+[coverage_meter-7] [INFO] [1795214361.101977339] [coverage_meter]: COVERAGE_REPORT coverage=0.0090 efficiency=0.0000 revisit_ratio=0.0000 path_m=0.00 ideal_m=33.85 reachable_cells=5416 sim_t=6.1 target_hit=False t_target=None pose_jumps=0 sim_unstable=False
+[component_container_isolated-5] [INFO] [1795214361.548339827] [lifecycle_manager_navigation]: Server velocity_smoother connected with bond.
+[component_container_isolated-5] [INFO] [1795214361.548370737] [lifecycle_manager_navigation]: [34m[1mActivating collision_monitor[0m[0m
+[component_container_isolated-5] [INFO] [1795214361.548579698] [collision_monitor]: Activating
+[component_container_isolated-5] [INFO] [1795214361.548622828] [collision_monitor]: Creating bond (collision_monitor) to lifecycle manager.
+[coverage_meter-7] [INFO] [1795214362.102128015] [coverage_meter]: COVERAGE_REPORT coverage=0.0090 efficiency=0.0000 revisit_ratio=0.0000 path_m=0.00 ideal_m=33.85 reachable_cells=5416 sim_t=7.1 target_hit=False t_target=None pose_jumps=0 sim_unstable=False
+[component_container_isolated-5] [INFO] [1795214362.555992138] [lifecycle_manager_navigation]: Server collision_monitor connected with bond.
+[component_container_isolated-5] [INFO] [1795214362.556023038] [lifecycle_manager_navigation]: [34m[1mActivating bt_navigator[0m[0m
+[component_container_isolated-5] [INFO] [1795214362.556229069] [bt_navigator]: Activating
+[component_container_isolated-5] [INFO] [1795214362.647088849] [bt_navigator]: Creating bond (bt_navigator) to lifecycle manager.
+[coverage_meter-7] [INFO] [1795214363.103529817] [coverage_meter]: COVERAGE_REPORT coverage=0.0090 efficiency=0.0000 revisit_ratio=0.0000 path_m=0.00 ideal_m=33.85 reachable_cells=5416 sim_t=8.1 target_hit=False t_target=None pose_jumps=0 sim_unstable=False
+[component_container_isolated-5] [INFO] [1795214363.654500392] [lifecycle_manager_navigation]: Server bt_navigator connected with bond.
+[component_container_isolated-5] [INFO] [1795214363.654593162] [lifecycle_manager_navigation]: [34m[1mActivating waypoint_follower[0m[0m
+[component_container_isolated-5] [INFO] [1795214363.654839833] [waypoint_follower]: Activating
+[component_container_isolated-5] [INFO] [1795214363.654879113] [waypoint_follower]: Creating bond (waypoint_follower) to lifecycle manager.
+[coverage_meter-7] [INFO] [1795214364.159306218] [coverage_meter]: COVERAGE_REPORT coverage=0.0090 efficiency=0.0000 revisit_ratio=0.0000 path_m=0.00 ideal_m=33.85 reachable_cells=5416 sim_t=9.1 target_hit=False t_target=None pose_jumps=0 sim_unstable=False
+[component_container_isolated-5] [INFO] [1795214364.664801414] [lifecycle_manager_navigation]: Server waypoint_follower connected with bond.
+[component_container_isolated-5] [INFO] [1795214364.664832224] [lifecycle_manager_navigation]: [34m[1mActivating docking_server[0m[0m
+[component_container_isolated-5] [INFO] [1795214364.665078385] [docking_server]: Activating docking_server
+[component_container_isolated-5] [INFO] [1795214364.672340521] [docking_server]: Creating bond (docking_server) to lifecycle manager.
+[coverage_meter-7] [INFO] [1795214365.264528904] [coverage_meter]: COVERAGE_REPORT coverage=0.0090 efficiency=0.0000 revisit_ratio=0.0000 path_m=0.00 ideal_m=33.85 reachable_cells=5416 sim_t=10.1 target_hit=False t_target=None pose_jumps=0 sim_unstable=False
+[component_container_isolated-5] [INFO] [1795214365.676874123] [lifecycle_manager_navigation]: Server docking_server connected with bond.
+[component_container_isolated-5] [INFO] [1795214365.676901073] [lifecycle_manager_navigation]: [34m[1mManaged nodes are active[0m[0m
+[component_container_isolated-5] [INFO] [1795214365.676906703] [lifecycle_manager_navigation]: [34m[1mCreating bond timer...[0m[0m
+[coverage_meter-7] [INFO] [1795214366.265814195] [coverage_meter]: COVERAGE_REPORT coverage=0.0090 efficiency=0.0000 revisit_ratio=0.0000 path_m=0.00 ideal_m=33.85 reachable_cells=5416 sim_t=11.1 target_hit=False t_target=None pose_jumps=0 sim_unstable=False
+[coverage_meter-7] [INFO] [1795214367.268611441] [coverage_meter]: COVERAGE_REPORT coverage=0.0090 efficiency=0.0000 revisit_ratio=0.0000 path_m=0.00 ideal_m=33.85 reachable_cells=5416 sim_t=12.1 target_hit=False t_target=None pose_jumps=0 sim_unstable=False
+[coverage_meter-7] [INFO] [1795214367.690031454] [coverage_meter]: cleaning job active: path/time accounting reset
+[component_container_isolated-5] [INFO] [1795214367.879454557] [bt_navigator]: Begin navigating from current location (-1.91, -0.47) to (-2.17, -1.46)
+[component_container_isolated-5] [INFO] [1795214367.900236245] [controller_server]: Received a goal, begin computing control effort.
+[component_container_isolated-5] [WARN] [1795214367.900270605] [controller_server]: No goal checker was specified in parameter 'current_goal_checker'. Server will use only plugin loaded goal_checker . This warning will appear once.
+[component_container_isolated-5] [WARN] [1795214367.900279235] [controller_server]: No progress checker was specified in parameter 'current_progress_checker'. Server will use only plugin loaded progress_checker . This warning will appear once.
+[parameter_bridge-2] [INFO] [1795214367.961805475] [ros_gz_bridge]: Passing message from ROS geometry_msgs/msg/Twist to Gazebo gz.msgs.Twist (showing msg only once per type)
+[coverage_meter-7] [INFO] [1795214368.280609282] [coverage_meter]: COVERAGE_REPORT coverage=0.0090 efficiency=0.0000 revisit_ratio=0.0000 path_m=0.00 ideal_m=33.85 reachable_cells=5416 sim_t=0.6 target_hit=False t_target=None pose_jumps=0 sim_unstable=False
+[component_container_isolated-5] [INFO] [1795214369.100384439] [controller_server]: Passing new path to controller.
+[coverage_meter-7] [INFO] [1795214369.284956858] [coverage_meter]: COVERAGE_REPORT coverage=0.0107 efficiency=0.0000 revisit_ratio=0.0000 path_m=0.00 ideal_m=33.85 reachable_cells=5416 sim_t=1.6 target_hit=False t_target=None pose_jumps=0 sim_unstable=False
+[component_container_isolated-5] [INFO] [1795214370.100496720] [controller_server]: Passing new path to controller.
+[coverage_meter-7] [INFO] [1795214370.286390220] [coverage_meter]: COVERAGE_REPORT coverage=0.0150 efficiency=0.0000 revisit_ratio=0.0000 path_m=0.15 ideal_m=33.85 reachable_cells=5416 sim_t=2.6 target_hit=False t_target=None pose_jumps=0 sim_unstable=False
+[component_container_isolated-5] [INFO] [1795214371.100368183] [controller_server]: Passing new path to controller.
+[coverage_meter-7] [INFO] [1795214371.285843542] [coverage_meter]: COVERAGE_REPORT coverage=0.0201 efficiency=0.0000 revisit_ratio=0.0000 path_m=0.35 ideal_m=33.85 reachable_cells=5416 sim_t=3.6 target_hit=False t_target=None pose_jumps=0 sim_unstable=False
+[component_container_isolated-5] [INFO] [1795214372.100368510] [controller_server]: Passing new path to controller.
+[coverage_meter-7] [INFO] [1795214372.288136482] [coverage_meter]: COVERAGE_REPORT coverage=0.0270 efficiency=61.7860 revisit_ratio=0.0000 path_m=0.55 ideal_m=33.85 reachable_cells=5416 sim_t=4.6 target_hit=False t_target=None pose_jumps=0 sim_unstable=False
+[component_container_isolated-5] [INFO] [1795214373.100368280] [controller_server]: Passing new path to controller.
+[coverage_meter-7] [INFO] [1795214373.289413985] [coverage_meter]: COVERAGE_REPORT coverage=0.0323 efficiency=48.1311 revisit_ratio=0.0000 path_m=0.70 ideal_m=33.85 reachable_cells=5416 sim_t=5.6 target_hit=False t_target=None pose_jumps=0 sim_unstable=False
+[component_container_isolated-5] [INFO] [1795214374.100429994] [controller_server]: Passing new path to controller.
+[coverage_meter-7] [INFO] [1795214374.290705509] [coverage_meter]: COVERAGE_REPORT coverage=0.0323 efficiency=48.1311 revisit_ratio=0.0000 path_m=0.70 ideal_m=33.85 reachable_cells=5416 sim_t=6.6 target_hit=False t_target=None pose_jumps=0 sim_unstable=False
+[component_container_isolated-5] [INFO] [1795214375.100544260] [controller_server]: Passing new path to controller.
+[coverage_meter-7] [INFO] [1795214375.295390155] [coverage_meter]: COVERAGE_REPORT coverage=0.0323 efficiency=48.1311 revisit_ratio=0.0000 path_m=0.70 ideal_m=33.85 reachable_cells=5416 sim_t=7.6 target_hit=False t_target=None pose_jumps=0 sim_unstable=False
+[coverage_meter-7] [INFO] [1795214376.299947194] [coverage_meter]: COVERAGE_REPORT coverage=0.0323 efficiency=48.1311 revisit_ratio=0.0000 path_m=0.70 ideal_m=33.85 reachable_cells=5416 sim_t=8.6 target_hit=False t_target=None pose_jumps=0 sim_unstable=False
+[component_container_isolated-5] [INFO] [1795214376.300384924] [controller_server]: Passing new path to controller.
+[component_container_isolated-5] [INFO] [1795214377.300369666] [controller_server]: Passing new path to controller.
+[coverage_meter-7] [INFO] [1795214377.300715667] [coverage_meter]: COVERAGE_REPORT coverage=0.0323 efficiency=48.1311 revisit_ratio=0.0000 path_m=0.70 ideal_m=33.85 reachable_cells=5416 sim_t=9.6 target_hit=False t_target=None pose_jumps=0 sim_unstable=False
+[component_container_isolated-5] [INFO] [1795214378.300370351] [controller_server]: Passing new path to controller.
+[coverage_meter-7] [INFO] [1795214378.302772965] [coverage_meter]: COVERAGE_REPORT coverage=0.0323 efficiency=48.1311 revisit_ratio=0.0000 path_m=0.70 ideal_m=33.85 reachable_cells=5416 sim_t=10.6 target_hit=False t_target=None pose_jumps=0 sim_unstable=False
+[component_container_isolated-5] [INFO] [1795214379.300369789] [controller_server]: Passing new path to controller.
+[coverage_meter-7] [INFO] [1795214379.312608746] [coverage_meter]: COVERAGE_REPORT coverage=0.0323 efficiency=48.1311 revisit_ratio=0.0000 path_m=0.70 ideal_m=33.85 reachable_cells=5416 sim_t=11.6 target_hit=False t_target=None pose_jumps=0 sim_unstable=False
+[component_container_isolated-5] [INFO] [1795214380.300373480] [controller_server]: Passing new path to controller.
+[coverage_meter-7] [INFO] [1795214380.317295147] [coverage_meter]: COVERAGE_REPORT coverage=0.0323 efficiency=48.1311 revisit_ratio=0.0000 path_m=0.70 ideal_m=33.85 reachable_cells=5416 sim_t=12.6 target_hit=False t_target=None pose_jumps=0 sim_unstable=False
+[component_container_isolated-5] [INFO] [1795214381.300371374] [controller_server]: Passing new path to controller.
+[coverage_meter-7] [INFO] [1795214381.324340627] [coverage_meter]: COVERAGE_REPORT coverage=0.0323 efficiency=48.1311 revisit_ratio=0.0000 path_m=0.70 ideal_m=33.85 reachable_cells=5416 sim_t=13.6 target_hit=False t_target=None pose_jumps=0 sim_unstable=False
+[component_container_isolated-5] [INFO] [1795214382.300370262] [controller_server]: Passing new path to controller.
+[coverage_meter-7] [INFO] [1795214382.327454451] [coverage_meter]: COVERAGE_REPORT coverage=0.0323 efficiency=48.1311 revisit_ratio=0.0000 path_m=0.70 ideal_m=33.85 reachable_cells=5416 sim_t=14.6 target_hit=False t_target=None pose_jumps=0 sim_unstable=False
+[component_container_isolated-5] [INFO] [1795214383.300367123] [controller_server]: Passing new path to controller.
+[component_container_isolated-5] [ERROR] [1795214383.300514304] [controller_server]: Failed to make progress
+[component_container_isolated-5] [WARN] [1795214383.300561484] [controller_server]: [follow_path] [ActionServer] Aborting handle.
+[component_container_isolated-5] [INFO] [1795214383.329920117] [local_costmap.local_costmap]: Received request to clear entirely the local_costmap
+[component_container_isolated-5] [INFO] [1795214383.330457758] [controller_server]: Received a goal, begin computing control effort.
+[coverage_meter-7] [INFO] [1795214383.335661520] [coverage_meter]: COVERAGE_REPORT coverage=0.0323 efficiency=48.1311 revisit_ratio=0.0000 path_m=0.70 ideal_m=33.85 reachable_cells=5416 sim_t=15.6 target_hit=False t_target=None pose_jumps=0 sim_unstable=False
+[component_container_isolated-5] [INFO] [1795214384.330547993] [controller_server]: Passing new path to controller.
+[coverage_meter-7] [INFO] [1795214384.339358992] [coverage_meter]: COVERAGE_REPORT coverage=0.0323 efficiency=48.1311 revisit_ratio=0.0000 path_m=0.70 ideal_m=33.85 reachable_cells=5416 sim_t=16.6 target_hit=False t_target=None pose_jumps=0 sim_unstable=False
+[component_container_isolated-5] [INFO] [1795214385.330546961] [controller_server]: Passing new path to controller.
+[coverage_meter-7] [INFO] [1795214385.353492730] [coverage_meter]: COVERAGE_REPORT coverage=0.0323 efficiency=48.1311 revisit_ratio=0.0000 path_m=0.70 ideal_m=33.85 reachable_cells=5416 sim_t=17.6 target_hit=False t_target=None pose_jumps=0 sim_unstable=False
+[component_container_isolated-5] [INFO] [1795214386.330563151] [controller_server]: Passing new path to controller.
+[coverage_meter-7] [INFO] [1795214386.360747087] [coverage_meter]: COVERAGE_REPORT coverage=0.0323 efficiency=48.1311 revisit_ratio=0.0000 path_m=0.70 ideal_m=33.85 reachable_cells=5416 sim_t=18.6 target_hit=False t_target=None pose_jumps=0 sim_unstable=False
+[coverage_meter-7] [INFO] [1795214387.363557527] [coverage_meter]: COVERAGE_REPORT coverage=0.0323 efficiency=48.1311 revisit_ratio=0.0000 path_m=0.70 ideal_m=33.85 reachable_cells=5416 sim_t=19.6 target_hit=False t_target=None pose_jumps=0 sim_unstable=False
+[component_container_isolated-5] [INFO] [1795214387.530800096] [controller_server]: Passing new path to controller.
+[coverage_meter-7] [INFO] [1795214388.369144036] [coverage_meter]: COVERAGE_REPORT coverage=0.0323 efficiency=48.1311 revisit_ratio=0.0000 path_m=0.70 ideal_m=33.85 reachable_cells=5416 sim_t=20.6 target_hit=False t_target=None pose_jumps=0 sim_unstable=False
+[component_container_isolated-5] [INFO] [1795214388.530567202] [controller_server]: Passing new path to controller.
+[coverage_meter-7] [INFO] [1795214389.370719960] [coverage_meter]: COVERAGE_REPORT coverage=0.0323 efficiency=48.1311 revisit_ratio=0.0000 path_m=0.70 ideal_m=33.85 reachable_cells=5416 sim_t=21.6 target_hit=False t_target=None pose_jumps=0 sim_unstable=False
+[component_container_isolated-5] [INFO] [1795214389.530546652] [controller_server]: Passing new path to controller.
+[coverage_meter-7] [INFO] [1795214390.378399131] [coverage_meter]: COVERAGE_REPORT coverage=0.0323 efficiency=48.1311 revisit_ratio=0.0000 path_m=0.70 ideal_m=33.85 reachable_cells=5416 sim_t=22.6 target_hit=False t_target=None pose_jumps=0 sim_unstable=False
+[component_container_isolated-5] [INFO] [1795214390.530548865] [controller_server]: Passing new path to controller.
+[coverage_meter-7] [INFO] [1795214391.383194248] [coverage_meter]: COVERAGE_REPORT coverage=0.0323 efficiency=48.1311 revisit_ratio=0.0000 path_m=0.70 ideal_m=33.85 reachable_cells=5416 sim_t=23.6 target_hit=False t_target=None pose_jumps=0 sim_unstable=False
+[component_container_isolated-5] [INFO] [1795214391.530550421] [controller_server]: Passing new path to controller.
+[coverage_meter-7] [INFO] [1795214392.387263568] [coverage_meter]: COVERAGE_REPORT coverage=0.0323 efficiency=48.1311 revisit_ratio=0.0000 path_m=0.70 ideal_m=33.85 reachable_cells=5416 sim_t=24.6 target_hit=False t_target=None pose_jumps=0 sim_unstable=False
+[component_container_isolated-5] [INFO] [1795214392.530548191] [controller_server]: Passing new path to controller.
+[coverage_meter-7] [INFO] [1795214393.389926287] [coverage_meter]: COVERAGE_REPORT coverage=0.0323 efficiency=48.1311 revisit_ratio=0.0000 path_m=0.70 ideal_m=33.85 reachable_cells=5416 sim_t=25.6 target_hit=False t_target=None pose_jumps=0 sim_unstable=False
+[component_container_isolated-5] [INFO] [1795214393.530552324] [controller_server]: Passing new path to controller.
+[component_container_isolated-5] [ERROR] [1795214393.730595326] [controller_server]: Failed to make progress
+[component_container_isolated-5] [WARN] [1795214393.730667436] [controller_server]: [follow_path] [ActionServer] Aborting handle.
+[component_container_isolated-5] [INFO] [1795214393.750055397] [local_costmap.local_costmap]: Received request to clear entirely the local_costmap
+[component_container_isolated-5] [INFO] [1795214393.750293058] [global_costmap.global_costmap]: Received request to clear entirely the global_costmap
+[component_container_isolated-5] [WARN] [1795214394.021654290] [planner_server]: Planner loop missed its desired rate of 10.0000 Hz. Current loop rate is 3.7175 Hz
+[component_container_isolated-5] [INFO] [1795214394.039999009] [controller_server]: Received a goal, begin computing control effort.
+[coverage_meter-7] [INFO] [1795214394.396961680] [coverage_meter]: COVERAGE_REPORT coverage=0.0323 efficiency=48.1311 revisit_ratio=0.0000 path_m=0.70 ideal_m=33.85 reachable_cells=5416 sim_t=26.6 target_hit=False t_target=None pose_jumps=0 sim_unstable=False
+[component_container_isolated-5] [INFO] [1795214395.240117032] [controller_server]: Passing new path to controller.
+[coverage_meter-7] [INFO] [1795214395.416582162] [coverage_meter]: COVERAGE_REPORT coverage=0.0323 efficiency=48.1311 revisit_ratio=0.0000 path_m=0.70 ideal_m=33.85 reachable_cells=5416 sim_t=27.6 target_hit=False t_target=None pose_jumps=0 sim_unstable=False
+[component_container_isolated-5] [INFO] [1795214396.240133847] [controller_server]: Passing new path to controller.
+[coverage_meter-7] [INFO] [1795214396.420136834] [coverage_meter]: COVERAGE_REPORT coverage=0.0323 efficiency=48.1311 revisit_ratio=0.0000 path_m=0.70 ideal_m=33.85 reachable_cells=5416 sim_t=28.6 target_hit=False t_target=None pose_jumps=0 sim_unstable=False
+[component_container_isolated-5] [INFO] [1795214397.240291127] [controller_server]: Passing new path to controller.
+[coverage_meter-7] [INFO] [1795214397.422932218] [coverage_meter]: COVERAGE_REPORT coverage=0.0323 efficiency=48.1311 revisit_ratio=0.0000 path_m=0.70 ideal_m=33.85 reachable_cells=5416 sim_t=29.6 target_hit=False t_target=None pose_jumps=0 sim_unstable=False
+[component_container_isolated-5] [INFO] [1795214398.240328530] [controller_server]: Passing new path to controller.
+[coverage_meter-7] [INFO] [1795214398.425158033] [coverage_meter]: COVERAGE_REPORT coverage=0.0323 efficiency=48.1311 revisit_ratio=0.0000 path_m=0.70 ideal_m=33.85 reachable_cells=5416 sim_t=30.6 target_hit=False t_target=None pose_jumps=0 sim_unstable=False
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[INFO] [topic_heartbeat-13]: sending signal 'SIGINT' to process[topic_heartbeat-13]
+[INFO] [job_roster-12]: sending signal 'SIGINT' to process[job_roster-12]
+[INFO] [mcu_standin_node-11]: sending signal 'SIGINT' to process[mcu_standin_node-11]
+[INFO] [health_monitor_node-10]: sending signal 'SIGINT' to process[health_monitor_node-10]
+[INFO] [python3-9]: sending signal 'SIGINT' to process[python3-9]
+[INFO] [ground_truth-8]: sending signal 'SIGINT' to process[ground_truth-8]
+[INFO] [coverage_meter-7]: sending signal 'SIGINT' to process[coverage_meter-7]
+[INFO] [component_container_isolated-5]: sending signal 'SIGINT' to process[component_container_isolated-5]
+[ERROR] [topic_heartbeat-13]: process has died [pid 22059, exit code -2, cmd '/ws/install/oomwoo_health_kit/lib/oomwoo_health_kit/topic_heartbeat --ros-args -r __node:=topic_heartbeat --params-file /tmp/launch_params_df5j7_3u'].
+[ERROR] [mcu_standin_node-11]: process has died [pid 22055, exit code -2, cmd '/ws/install/oomwoo_health_kit/lib/oomwoo_health_kit/mcu_standin_node --ros-args -r __node:=mcu_standin --params-file /tmp/launch_params_ceci45tt -r cmd_vel_in:=cmd_vel -r cmd_vel:=cmd_vel_gated'].
+[ERROR] [job_roster-12]: process has died [pid 22056, exit code -2, cmd '/ws/install/oomwoo_health_kit/lib/oomwoo_health_kit/job_roster --ros-args -r __node:=job_roster --params-file /tmp/launch_params_xgcfb9us'].
+[INFO] [robot_state_publisher-3]: sending signal 'SIGINT' to process[robot_state_publisher-3]
+[ERROR] [python3-9]: process has died [pid 22053, exit code -2, cmd '/usr/bin/python3 -u /ws/src/oomwoo_health_kit/bench/fullstack/beat_relay.py'].
+[ERROR] [health_monitor_node-10]: process has died [pid 22054, exit code -2, cmd '/ws/install/oomwoo_health_monitor/lib/oomwoo_health_monitor/health_monitor_node --ros-args -r __node:=health_monitor --params-file /tmp/launch_params_jffirs0j'].
+[INFO] [parameter_bridge-2]: sending signal 'SIGINT' to process[parameter_bridge-2]
+[INFO] [parameter_bridge-2]: process has finished cleanly [pid 22045]
+[INFO] [gazebo-1]: sending signal 'SIGINT' to process[gazebo-1]
+[component_container_isolated-5] [INFO] [1795214398.824354423] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[component_container_isolated-5] [INFO] [1795214398.824398633] [controller_server]: Running Nav2 LifecycleNode rcl preshutdown (controller_server)
+[component_container_isolated-5] [INFO] [1795214398.824444133] [controller_server]: Deactivating
+[component_container_isolated-5] [WARN] [1795214398.824454723] [controller_server]: [follow_path] [ActionServer] Requested to deactivate server but goal is still executing. Should check if action server is running before deactivating.
+[robot_state_publisher-3] [INFO] [1795214398.824365323] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[gazebo-1] [1;36m[Dbg] [SignalHandler.cc:142] [0m[1;36mReceived signal[[0m[1;36m2[0m[1;36m].[0m
+[gazebo-1] [1;36m[Dbg] [ServerPrivate.cc:122] [0m[1;36mServer received signal[[0m[1;36m2[0m[1;36m][0m
+[gazebo-1] [1;36m[Dbg] [Sensors.cc:565] [0m[1;36mSensorsPrivate::Stop[0m[1;36m[0m
+[parameter_bridge-2] [INFO] [1795214398.824586663] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[component_container_isolated-5] [WARN] [1795214398.840290066] [controller_server]: [follow_path] [ActionServer] Stopping the thread per request.
+[component_container_isolated-5] [WARN] [1795214398.840314206] [controller_server]: [follow_path] [ActionServer] Aborting handle.
+[component_container_isolated-5] [INFO] [1795214398.840568087] [controller_server]: Deactivating controller: FollowPath of type regulated_pure_pursuit_controller::RegulatedPurePursuitController
+[component_container_isolated-5] [INFO] [1795214398.840609517] [local_costmap.local_costmap]: Deactivating
+[component_container_isolated-5] [WARN] [1795214398.869802867] [bt_navigator]: [navigate_to_pose] [ActionServer] Aborting handle.
+[component_container_isolated-5] [ERROR] [1795214398.869973158] [bt_navigator]: Goal failed
+[component_container_isolated-5] [INFO] [1795214398.902047294] [controller_server]: Destroying bond (controller_server) to lifecycle manager.
+[component_container_isolated-5] [INFO] [1795214398.912714206] [controller_server]: Cleaning up
+[component_container_isolated-5] [INFO] [1795214398.912744656] [controller_server]: Cleaning up controller: FollowPath of type regulated_pure_pursuit_controller::RegulatedPurePursuitController
+[component_container_isolated-5] [INFO] [1795214398.912798037] [local_costmap.local_costmap]: Cleaning up
+[topic_heartbeat-13] Traceback (most recent call last):
+[topic_heartbeat-13]   File "/ws/install/oomwoo_health_kit/lib/oomwoo_health_kit/topic_heartbeat", line 33, in <module>
+[topic_heartbeat-13]     sys.exit(load_entry_point('oomwoo-health-kit==0.0.1', 'console_scripts', 'topic_heartbeat')())
+[topic_heartbeat-13]              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[topic_heartbeat-13]   File "/ws/install/oomwoo_health_kit/lib/python3.12/site-packages/oomwoo_health_kit/topic_heartbeat_node.py", line 286, in main
+[topic_heartbeat-13]     rclpy.spin(node)
+[topic_heartbeat-13]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/__init__.py", line 247, in spin
+[topic_heartbeat-13]     executor.spin_once()
+[topic_heartbeat-13]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 926, in spin_once
+[topic_heartbeat-13]     self._spin_once_impl(timeout_sec)
+[topic_heartbeat-13]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 918, in _spin_once_impl
+[topic_heartbeat-13]     raise handler.exception()
+[topic_heartbeat-13]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/task.py", line 286, in _execute_coroutine_step
+[topic_heartbeat-13]     result = coro.send(None)
+[topic_heartbeat-13]              ^^^^^^^^^^^^^^^
+[topic_heartbeat-13]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 584, in handler
+[topic_heartbeat-13]     call_coroutine = take_from_wait_list(entity)
+[topic_heartbeat-13]                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[topic_heartbeat-13]   File "/opt/ros/jazzy/lib/python3.12/site-packages/rclpy/executors.py", line 470, in _take_subscription
+[topic_heartbeat-13]     msg_info = sub.handle.take_message(sub.msg_type, sub.raw)
+[topic_heartbeat-13]                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[topic_heartbeat-13] RuntimeError: Unable to convert call argument '0' to Python object (#define PYBIND11_DETAILED_ERROR_MESSAGES or compile in debug mode for details)
+[gazebo-1] [1;36m[Dbg] [Sensors.cc:551] [0m[1;36mSensorsPrivate::RenderThread stopped[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [gz.cc:434] [0m[1;36mShutting down gz-sim-server[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:654] [0m[1;36mExiting postupdate worker thread ([0m[1;36m4[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:654] [0m[1;36mExiting postupdate worker thread ([0m[1;36m7[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:654] [Dbg] [SimulationRunner.cc:654] [0m[1;36mExiting postupdate worker thread ([0m[1;36m1[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:654] [0m[1;36mExiting postupdate worker thread ([0m[1;36m0[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:654] [0m[1;36mExiting postupdate worker thread ([0m[1;36m5[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:654] [0m[1;36mExiting postupdate worker thread ([0m[1;36m3[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:654] [0m[1;36mExiting postupdate worker thread ([0m[1;36m2[0m[1;36m)[0m[1;36m[0m
+[gazebo-1] [1;36m[Dbg] [SimulationRunner.cc:654] [0m[1;36mExiting postupdate worker thread ([0m[1;36m6[0m[1;36m)[0m[1;36m[0m
+[ERROR] [robot_state_publisher-3]: process has died [pid 22046, exit code -2, cmd '/opt/ros/jazzy/lib/robot_state_publisher/robot_state_publisher --ros-args -r __node:=robot_state_publisher --params-file /tmp/launch_params_1rv9ghwb'].
+[ERROR] [ground_truth-8]: process has died [pid 22052, exit code -2, cmd '/ros_ws/install/oomwoo_sim_support/lib/oomwoo_sim_support/ground_truth --ros-args --params-file /tmp/launch_params_6r7uwh3s -r odom:=/odom -r ~/pose:=/ground_truth/pose'].
+[ERROR] [coverage_meter-7]: process has died [pid 22051, exit code -2, cmd '/ros_ws/install/oomwoo_sim_support/lib/oomwoo_sim_support/coverage_meter --ros-args --params-file /tmp/launch_params_ufoharha -r map:=/map -r ground_truth/pose:=/ground_truth/pose -r cleaning_active:=/coverage_planner/cleaning_active'].
+[component_container_isolated-5] [INFO] [1795214398.985091307] [controller_server]: Destroying bond (controller_server) to lifecycle manager.
+[component_container_isolated-5] [INFO] [1795214398.985115597] [map_server]: Running Nav2 LifecycleNode rcl preshutdown (map_server)
+[component_container_isolated-5] [INFO] [1795214398.985135197] [map_server]: Deactivating
+[component_container_isolated-5] [INFO] [1795214398.985142687] [map_server]: Destroying bond (map_server) to lifecycle manager.
+[component_container_isolated-5] [INFO] [1795214398.995428268] [map_server]: Cleaning up
+[component_container_isolated-5] [INFO] [1795214398.995498128] [map_server]: Destroying bond (map_server) to lifecycle manager.
+[component_container_isolated-5] [INFO] [1795214398.995506458] [amcl]: Running Nav2 LifecycleNode rcl preshutdown (amcl)
+[component_container_isolated-5] [INFO] [1795214398.995522768] [amcl]: Deactivating
+[component_container_isolated-5] [INFO] [1795214398.995540888] [amcl]: Destroying bond (amcl) to lifecycle manager.
+[gazebo-1] [1;36m[Dbg] [Sensors.cc:565] [0m[1;36mSensorsPrivate::Stop[0m[1;36m[0m
+[component_container_isolated-5] [INFO] [1795214399.006008380] [amcl]: Cleaning up
+[component_container_isolated-5] [INFO] [1795214399.010732450] [amcl]: Destroying bond (amcl) to lifecycle manager.
+[component_container_isolated-5] [INFO] [1795214399.010747960] [smoother_server]: Running Nav2 LifecycleNode rcl preshutdown (smoother_server)
+[component_container_isolated-5] [INFO] [1795214399.010761230] [smoother_server]: Deactivating
+[component_container_isolated-5] [INFO] [1795214399.010771770] [smoother_server]: Destroying bond (smoother_server) to lifecycle manager.
+[component_container_isolated-5] [INFO] [1795214399.020970991] [smoother_server]: Cleaning up
+[ERROR] [gazebo-1]: process has died [pid 22044, exit code -2, cmd 'ruby /opt/ros/jazzy/opt/gz_tools_vendor/bin/gz sim -s -r --headless-rendering -v 4 /ros_ws/install/oomwoo_gazebo/share/oomwoo_gazebo/worlds/living_room.world --force-version 8'].
+[INFO] [launch]: process[gazebo-1] was required: shutting down launched system
+[ERROR] [launch]: Caught exception in launch (see debug for traceback): Cannot shutdown a ROS adapter that is not running
+[component_container_isolated-5] [INFO] [1795214399.042044355] [smoother_server]: Destroying bond (smoother_server) to lifecycle manager.
+[component_container_isolated-5] [INFO] [1795214399.042066205] [lifecycle_manager_localization]: Running Nav2 LifecycleManager rcl preshutdown (lifecycle_manager_localization)
+[component_container_isolated-5] [INFO] [1795214399.042095455] [lifecycle_manager_localization]: [34m[1mTerminating bond timer...[0m[0m
+[component_container_isolated-5] [INFO] [1795214399.067869008] [planner_server]: Running Nav2 LifecycleNode rcl preshutdown (planner_server)
+[component_container_isolated-5] [INFO] [1795214399.067911089] [planner_server]: Deactivating
+[component_container_isolated-5] [INFO] [1795214399.067933719] [global_costmap.global_costmap]: Deactivating
+[component_container_isolated-5] [INFO] [1795214399.076982367] [lifecycle_manager_navigation]: [34m[1mHave not received a heartbeat from controller_server.[0m[0m
+[component_container_isolated-5] [ERROR] [1795214399.077008017] [lifecycle_manager_navigation]: CRITICAL FAILURE: SERVER controller_server IS DOWN after not receiving a heartbeat for 4000 ms. Shutting down related nodes.
+[component_container_isolated-5] [INFO] [1795214399.077051717] [lifecycle_manager_navigation]: [34m[1mTerminating bond timer...[0m[0m
+[component_container_isolated-5] [INFO] [1795214399.077057877] [lifecycle_manager_navigation]: [34m[1mResetting managed nodes...[0m[0m
+[component_container_isolated-5] [INFO] [1795214399.077062507] [lifecycle_manager_navigation]: [34m[1mDeactivating docking_server[0m[0m
+[component_container_isolated-5] [INFO] [1795214399.077237998] [docking_server]: Deactivating docking_server
+[component_container_isolated-5] [INFO] [1795214399.088736562] [docking_server]: Destroying bond (docking_server) to lifecycle manager.
+[component_container_isolated-5] [INFO] [1795214399.202163336] [lifecycle_manager_navigation]: [34m[1mDeactivating waypoint_follower[0m[0m
+[component_container_isolated-5] [INFO] [1795214399.202345717] [waypoint_follower]: Deactivating
+[component_container_isolated-5] [INFO] [1795214399.202376997] [waypoint_follower]: Destroying bond (waypoint_follower) to lifecycle manager.
+[component_container_isolated-5] [INFO] [1795214399.315629611] [lifecycle_manager_navigation]: [34m[1mDeactivating bt_navigator[0m[0m
+[component_container_isolated-5] [INFO] [1795214399.315854932] [bt_navigator]: Deactivating
+[component_container_isolated-5] [INFO] [1795214399.315885152] [bt_navigator]: Destroying bond (bt_navigator) to lifecycle manager.
+[component_container_isolated-5] [INFO] [1795214399.429052747] [lifecycle_manager_navigation]: [34m[1mDeactivating collision_monitor[0m[0m
+[component_container_isolated-5] [INFO] [1795214399.429210937] [collision_monitor]: Deactivating
+[component_container_isolated-5] [INFO] [1795214399.429239667] [collision_monitor]: Destroying bond (collision_monitor) to lifecycle manager.
+[component_container_isolated-5] [INFO] [1795214399.517628700] [planner_server]: Deactivating plugin GridBased of type NavfnPlanner
+[component_container_isolated-5] [INFO] [1795214399.517675530] [planner_server]: Destroying bond (planner_server) to lifecycle manager.
+[component_container_isolated-5] [INFO] [1795214399.527906511] [planner_server]: Cleaning up
+[component_container_isolated-5] [INFO] [1795214399.547399211] [lifecycle_manager_navigation]: [34m[1mDeactivating velocity_smoother[0m[0m
+[component_container_isolated-5] [INFO] [1795214399.547559542] [velocity_smoother]: Deactivating
+[component_container_isolated-5] [INFO] [1795214399.547594032] [velocity_smoother]: Destroying bond (velocity_smoother) to lifecycle manager.
+[component_container_isolated-5] [INFO] [1795214399.547669312] [global_costmap.global_costmap]: Cleaning up
+[component_container_isolated-5] [INFO] [1795214399.557878973] [planner_server]: Cleaning up plugin GridBased of type NavfnPlanner
+[component_container_isolated-5] [INFO] [1795214399.558050614] [planner_server]: Destroying plugin GridBased of type NavfnPlanner
+[component_container_isolated-5] [INFO] [1795214399.586121332] [planner_server]: Destroying bond (planner_server) to lifecycle manager.
+[component_container_isolated-5] [INFO] [1795214399.586147202] [route_server]: Running Nav2 LifecycleNode rcl preshutdown (route_server)
+[component_container_isolated-5] [INFO] [1795214399.586161192] [route_server]: Deactivating
+[component_container_isolated-5] [INFO] [1795214399.586175182] [route_server]: Destroying bond (route_server) to lifecycle manager.
+[component_container_isolated-5] [INFO] [1795214399.596323623] [route_server]: Cleaning up
+[component_container_isolated-5] [INFO] [1795214399.613502058] [route_server]: Destroying bond (route_server) to lifecycle manager.
+[component_container_isolated-5] [INFO] [1795214399.613525118] [behavior_server]: Running Nav2 LifecycleNode rcl preshutdown (behavior_server)
+[component_container_isolated-5] [INFO] [1795214399.613540318] [behavior_server]: Deactivating
+[component_container_isolated-5] [INFO] [1795214399.613563138] [behavior_server]: Destroying bond (behavior_server) to lifecycle manager.
+[component_container_isolated-5] Magick: abort due to signal 11 (SIGSEGV) "Segmentation Fault"...
+[ERROR] [component_container_isolated-5]: process has died [pid 22049, exit code -6, cmd '/opt/ros/jazzy/lib/rclcpp_components/component_container_isolated --ros-args --log-level info --ros-args -r __node:=nav2_container --params-file /tmp/launch_params_i6ixhowk --params-file /tmp/launch_params_1bw1hgqy -r /tf:=tf -r /tf_static:=tf_static'].

@@ -31,3 +31,150 @@ terminate called without an active exception
 Exception in thread 2026-11-18T23:22:12+01:00   cleaned 7 stale Fast DDS shm files (0.0 MB); free now 2146 MB
 2026-11-18T23:22:13+01:00 session 1 done: valid=False goals 0/0 distance 70.427 m soft_stops 30 gaps 30 rtf 0.899 cores 3.665 INVALID: failed checks: rtf_as_requested
 2026-11-18T23:22:13+01:00 run.py exit
+2026-11-20T23:00:06+01:00 run.py start: profiles ['default'], sessions 1, duration 1800.0 sim s, rtf 1.0, gpu False, resources /results
+2026-11-20T23:00:06+01:00   cleaned 4 stale Fast DDS shm files (0.2 MB); free now 2147 MB
+2026-11-20T23:00:06+01:00 session 1: profile default, gpu False, duration 1800.0 sim s, rtf 1.0
+2026-11-20T23:00:23+01:00   coverage_planner (reactive) pid 7470 log /tmp/coverage_planner_1.log
+2026-11-20T23:00:27+01:00   coverage_planner was started before arming (in-node heartbeat in the roster)
+2026-11-20T23:30:49+01:00   goal {"idx": 0, "pose": "COVERAGE", "executor": "reactive", "result": "canceled", "note": "session ended", "planner": {"waypoints": 234, "last_waypoint": 140, "coverage_pct": 66.6, "stuck": 2, "unreachable": 3, "complete": true}, "coverage_ratio_meter": 0.9220827221870422, "duration_wall_s": 1821.84, "duration_sim_s": 1800.25, "sim_start_s": 15.69, "t0_mono": 184907.465690166, "t1_mono": 186729.307417917, "distance_odom_m": 72.418}
+terminate called without an active exception
+2026-11-20T23:30:55+01:00   cleaned 49 stale Fast DDS shm files (1.0 MB); free now 2143 MB
+2026-11-20T23:30:55+01:00 session 1 done: valid=True goals 0/0 distance 72.418 m soft_stops 14 gaps 14 rtf 0.9881 cores 3.972
+2026-11-20T23:30:55+01:00 run.py exit
+2026-11-20T23:33:03+01:00 run.py start: profiles ['default'], sessions 1, duration 300.0 sim s, rtf 1.0, gpu False, resources /results
+2026-11-20T23:33:03+01:00 run.py faults: ['sigkill_coverage_fast'] x 10, hold 5.0 s, observe 25.0 s, resources /results
+2026-11-20T23:33:03+01:00   cleaned 2 stale Fast DDS shm files (0.1 MB); free now 2147 MB
+2026-11-20T23:33:03+01:00 trial 1: sigkill_coverage_fast rep 1, profile default
+2026-11-20T23:33:19+01:00   coverage_planner (reactive) pid 13752 log /tmp/coverage_planner_1.log
+2026-11-20T23:33:23+01:00   coverage_planner was started before arming (in-node heartbeat in the roster)
+2026-11-20T23:33:36+01:00   fault sigkill_coverage_fast: signalled pid 13752 at sim 28.7
+2026-11-20T23:33:36+01:00   goal {"idx": 0, "pose": "COVERAGE", "executor": "reactive", "result": "error", "note": "planner exited with -9", "planner": {"waypoints": 234, "last_waypoint": null, "coverage_pct": null, "stuck": 0, "unreachable": 0, "complete": false}, "coverage_ratio_meter": 0.04191284999251366, "duration_wall_s": 13.51, "duration_sim_s": 13.38, "sim_start_s": 15.8, "t0_mono": 186883.460947322, "t1_mono": 186896.96741298, "distance_odom_m": 1.675}
+terminate called without an active exception
+terminate called without an active exception
+2026-11-20T23:34:04+01:00   cleaned 50 stale Fast DDS shm files (1.1 MB); free now 2141 MB
+2026-11-20T23:34:04+01:00 trial 1 done: valid=True detected=True gated_zero=0.417 standstill=0.597 dist=0.171 blamed=['coverage_planner', 'drive_supervision'] recovered=False
+2026-11-20T23:34:04+01:00 trial 2: sigkill_coverage_fast rep 2, profile default
+2026-11-20T23:34:20+01:00   coverage_planner (reactive) pid 14168 log /tmp/coverage_planner_1.log
+2026-11-20T23:34:25+01:00   coverage_planner was started before arming (in-node heartbeat in the roster)
+2026-11-20T23:34:46+01:00   fault sigkill_coverage_fast: signalled pid 14168 at sim 37.2
+2026-11-20T23:34:47+01:00   goal {"idx": 0, "pose": "COVERAGE", "executor": "reactive", "result": "error", "note": "planner exited with -9", "planner": {"waypoints": 234, "last_waypoint": null, "coverage_pct": null, "stuck": 0, "unreachable": 0, "complete": false}, "coverage_ratio_meter": 0.05040620267391205, "duration_wall_s": 21.51, "duration_sim_s": 21.18, "sim_start_s": 16.3, "t0_mono": 186945.72791014, "t1_mono": 186967.23870545, "distance_odom_m": 2.312}
+terminate called without an active exception
+terminate called without an active exception
+2026-11-20T23:35:14+01:00   cleaned 57 stale Fast DDS shm files (1.2 MB); free now 2143 MB
+2026-11-20T23:35:14+01:00 trial 2 done: valid=True detected=True gated_zero=0.408 standstill=0.587 dist=0.17 blamed=['coverage_planner', 'drive_supervision'] recovered=False
+2026-11-20T23:35:14+01:00 trial 3: sigkill_coverage_fast rep 3, profile default
+2026-11-20T23:35:30+01:00   coverage_planner (reactive) pid 14594 log /tmp/coverage_planner_1.log
+2026-11-20T23:35:35+01:00   coverage_planner was started before arming (in-node heartbeat in the roster)
+2026-11-20T23:35:50+01:00   fault sigkill_coverage_fast: signalled pid 14594 at sim 31.2
+2026-11-20T23:35:50+01:00   goal {"idx": 0, "pose": "COVERAGE", "executor": "reactive", "result": "error", "note": "planner exited with -9", "planner": {"waypoints": 234, "last_waypoint": null, "coverage_pct": null, "stuck": 0, "unreachable": 0, "complete": false}, "coverage_ratio_meter": 0.04357459396123886, "duration_wall_s": 15.01, "duration_sim_s": 14.89, "sim_start_s": 16.34, "t0_mono": 187015.442975601, "t1_mono": 187030.453885375, "distance_odom_m": 1.872}
+terminate called without an active exception
+terminate called without an active exception
+2026-11-20T23:36:17+01:00   cleaned 57 stale Fast DDS shm files (1.1 MB); free now 2146 MB
+2026-11-20T23:36:17+01:00 trial 3 done: valid=True detected=True gated_zero=0.531 standstill=0.725 dist=0.208 blamed=['coverage_planner', 'drive_supervision'] recovered=False
+2026-11-20T23:36:17+01:00 trial 4: sigkill_coverage_fast rep 4, profile default
+2026-11-20T23:36:33+01:00   coverage_planner (reactive) pid 15009 log /tmp/coverage_planner_1.log
+2026-11-20T23:36:37+01:00   coverage_planner was started before arming (in-node heartbeat in the roster)
+2026-11-20T23:36:55+01:00   fault sigkill_coverage_fast: signalled pid 15009 at sim 32.5
+2026-11-20T23:36:55+01:00   goal {"idx": 0, "pose": "COVERAGE", "executor": "reactive", "result": "error", "note": "planner exited with -9", "planner": {"waypoints": 234, "last_waypoint": null, "coverage_pct": null, "stuck": 0, "unreachable": 0, "complete": false}, "coverage_ratio_meter": 0.04117430001497269, "duration_wall_s": 18.01, "duration_sim_s": 17.74, "sim_start_s": 15.14, "t0_mono": 187077.79530574, "t1_mono": 187095.806111239, "distance_odom_m": 1.779}
+terminate called without an active exception
+terminate called without an active exception
+2026-11-20T23:37:23+01:00   cleaned 68 stale Fast DDS shm files (2.6 MB); free now 2147 MB
+2026-11-20T23:37:23+01:00 trial 4 done: valid=True detected=True gated_zero=0.397 standstill=0.582 dist=0.164 blamed=['coverage_planner', 'drive_supervision'] recovered=False
+2026-11-20T23:37:23+01:00 trial 5: sigkill_coverage_fast rep 5, profile default
+2026-11-20T23:37:38+01:00   coverage_planner (reactive) pid 15424 log /tmp/coverage_planner_1.log
+2026-11-20T23:37:42+01:00   coverage_planner was started before arming (in-node heartbeat in the roster)
+2026-11-20T23:37:55+01:00   fault sigkill_coverage_fast: signalled pid 15424 at sim 28.1
+2026-11-20T23:37:55+01:00   goal {"idx": 0, "pose": "COVERAGE", "executor": "reactive", "result": "error", "note": "planner exited with -9", "planner": {"waypoints": 234, "last_waypoint": null, "coverage_pct": null, "stuck": 0, "unreachable": 0, "complete": false}, "coverage_ratio_meter": 0.041358936578035355, "duration_wall_s": 13.01, "duration_sim_s": 12.91, "sim_start_s": 15.63, "t0_mono": 187143.058116441, "t1_mono": 187156.067309106, "distance_odom_m": 1.747}
+terminate called without an active exception
+terminate called without an active exception
+2026-11-20T23:38:22+01:00   cleaned 64 stale Fast DDS shm files (3.0 MB); free now 2147 MB
+2026-11-20T23:38:22+01:00 trial 5 done: valid=True detected=True gated_zero=0.422 standstill=0.608 dist=0.175 blamed=['coverage_planner', 'drive_supervision'] recovered=False
+2026-11-20T23:38:22+01:00 trial 6: sigkill_coverage_fast rep 6, profile default
+2026-11-20T23:38:38+01:00   coverage_planner (reactive) pid 15839 log /tmp/coverage_planner_1.log
+2026-11-20T23:38:41+01:00   coverage_planner was started before arming (in-node heartbeat in the roster)
+2026-11-20T23:38:54+01:00   fault sigkill_coverage_fast: signalled pid 15839 at sim 27.8
+2026-11-20T23:38:54+01:00   goal {"idx": 0, "pose": "COVERAGE", "executor": "reactive", "result": "error", "note": "planner exited with -9", "planner": {"waypoints": 234, "last_waypoint": null, "coverage_pct": null, "stuck": 0, "unreachable": 0, "complete": false}, "coverage_ratio_meter": 0.04154357314109802, "duration_wall_s": 13.01, "duration_sim_s": 12.92, "sim_start_s": 14.93, "t0_mono": 187201.858117485, "t1_mono": 187214.865519518, "distance_odom_m": 1.728}
+terminate called without an active exception
+terminate called without an active exception
+2026-11-20T23:39:22+01:00   cleaned 59 stale Fast DDS shm files (2.4 MB); free now 2147 MB
+2026-11-20T23:39:22+01:00 trial 6 done: valid=True detected=True gated_zero=0.51 standstill=0.698 dist=0.204 blamed=['coverage_planner', 'drive_supervision'] recovered=False
+2026-11-20T23:39:22+01:00 trial 7: sigkill_coverage_fast rep 7, profile default
+2026-11-20T23:39:38+01:00   coverage_planner (reactive) pid 16254 log /tmp/coverage_planner_1.log
+2026-11-20T23:39:42+01:00   coverage_planner was started before arming (in-node heartbeat in the roster)
+2026-11-20T23:39:54+01:00   fault sigkill_coverage_fast: signalled pid 16254 at sim 28.1
+2026-11-20T23:39:55+01:00   goal {"idx": 0, "pose": "COVERAGE", "executor": "reactive", "result": "error", "note": "planner exited with -9", "planner": {"waypoints": 234, "last_waypoint": null, "coverage_pct": null, "stuck": 0, "unreachable": 0, "complete": false}, "coverage_ratio_meter": 0.04172821342945099, "duration_wall_s": 12.51, "duration_sim_s": 12.42, "sim_start_s": 16.21, "t0_mono": 187263.118239932, "t1_mono": 187275.628462938, "distance_odom_m": 1.663}
+terminate called without an active exception
+terminate called without an active exception
+2026-11-20T23:40:22+01:00   cleaned 57 stale Fast DDS shm files (1.9 MB); free now 2147 MB
+2026-11-20T23:40:22+01:00 trial 7 done: valid=True detected=True gated_zero=0.448 standstill=0.638 dist=0.183 blamed=['coverage_planner', 'drive_supervision'] recovered=False
+2026-11-20T23:40:22+01:00 trial 8: sigkill_coverage_fast rep 8, profile default
+2026-11-20T23:40:38+01:00   coverage_planner (reactive) pid 16669 log /tmp/coverage_planner_1.log
+2026-11-20T23:40:42+01:00   coverage_planner was started before arming (in-node heartbeat in the roster)
+2026-11-20T23:41:00+01:00   fault sigkill_coverage_fast: signalled pid 16669 at sim 33.4
+2026-11-20T23:41:00+01:00   goal {"idx": 0, "pose": "COVERAGE", "executor": "reactive", "result": "error", "note": "planner exited with -9", "planner": {"waypoints": 234, "last_waypoint": null, "coverage_pct": null, "stuck": 0, "unreachable": 0, "complete": false}, "coverage_ratio_meter": 0.04228212684392929, "duration_wall_s": 18.01, "duration_sim_s": 17.96, "sim_start_s": 15.68, "t0_mono": 187322.847222238, "t1_mono": 187340.854145139, "distance_odom_m": 1.93}
+terminate called without an active exception
+terminate called without an active exception
+2026-11-20T23:41:28+01:00   cleaned 61 stale Fast DDS shm files (3.0 MB); free now 2147 MB
+2026-11-20T23:41:28+01:00 trial 8 done: valid=True detected=True gated_zero=0.387 standstill=0.574 dist=0.162 blamed=['coverage_planner', 'drive_supervision'] recovered=False
+2026-11-20T23:41:28+01:00 trial 9: sigkill_coverage_fast rep 9, profile default
+2026-11-20T23:41:44+01:00   coverage_planner (reactive) pid 17085 log /tmp/coverage_planner_1.log
+2026-11-20T23:41:51+01:00   coverage_planner was started before arming (in-node heartbeat in the roster)
+2026-11-20T23:42:09+01:00   fault sigkill_coverage_fast: signalled pid 17085 at sim 36.4
+2026-11-20T23:42:09+01:00   goal {"idx": 0, "pose": "COVERAGE", "executor": "reactive", "result": "error", "note": "planner exited with -9", "planner": {"waypoints": 234, "last_waypoint": null, "coverage_pct": null, "stuck": 0, "unreachable": 0, "complete": false}, "coverage_ratio_meter": 0.04209749028086662, "duration_wall_s": 18.51, "duration_sim_s": 18.24, "sim_start_s": 18.49, "t0_mono": 187391.382839882, "t1_mono": 187409.891325281, "distance_odom_m": 1.985}
+terminate called without an active exception
+terminate called without an active exception
+2026-11-20T23:42:36+01:00   cleaned 65 stale Fast DDS shm files (2.5 MB); free now 2147 MB
+2026-11-20T23:42:36+01:00 trial 9 done: valid=True detected=True gated_zero=0.57 standstill=0.752 dist=0.226 blamed=['coverage_planner', 'drive_supervision'] recovered=False
+2026-11-20T23:42:36+01:00 trial 10: sigkill_coverage_fast rep 10, profile default
+2026-11-20T23:42:52+01:00   coverage_planner (reactive) pid 17500 log /tmp/coverage_planner_1.log
+2026-11-20T23:42:56+01:00   coverage_planner was started before arming (in-node heartbeat in the roster)
+2026-11-20T23:43:12+01:00   fault sigkill_coverage_fast: signalled pid 17500 at sim 31.5
+2026-11-20T23:43:13+01:00   goal {"idx": 0, "pose": "COVERAGE", "executor": "reactive", "result": "error", "note": "planner exited with -9", "planner": {"waypoints": 234, "last_waypoint": null, "coverage_pct": null, "stuck": 0, "unreachable": 0, "complete": false}, "coverage_ratio_meter": 0.040066469460725784, "duration_wall_s": 17.01, "duration_sim_s": 16.71, "sim_start_s": 15.15, "t0_mono": 187456.322698228, "t1_mono": 187473.330276177, "distance_odom_m": 1.759}
+terminate called without an active exception
+2026-11-20T23:43:40+01:00   cleaned 55 stale Fast DDS shm files (1.9 MB); free now 2147 MB
+2026-11-20T23:43:40+01:00 trial 10 done: valid=True detected=True gated_zero=0.453 standstill=0.639 dist=0.19 blamed=['coverage_planner', 'drive_supervision'] recovered=False
+2026-11-20T23:43:40+01:00 run.py exit
+2026-11-20T23:43:42+01:00 run.py start: profiles ['default'], sessions 1, duration 300.0 sim s, rtf 1.0, gpu False, resources /results
+2026-11-20T23:43:42+01:00 run.py faults: ['sigstop_coverage_fast'] x 5, hold 5.0 s, observe 25.0 s, resources /results
+2026-11-20T23:43:42+01:00 trial 1: sigstop_coverage_fast rep 1, profile default
+2026-11-20T23:43:58+01:00   coverage_planner (reactive) pid 17983 log /tmp/coverage_planner_1.log
+2026-11-20T23:44:02+01:00   coverage_planner was started before arming (in-node heartbeat in the roster)
+2026-11-20T23:44:14+01:00   fault sigstop_coverage_fast: signalled pid 17983 at sim 27.8
+2026-11-20T23:44:44+01:00   goal {"idx": 0, "pose": "COVERAGE", "executor": "reactive", "result": "canceled", "note": "session ended", "planner": {"waypoints": 234, "last_waypoint": null, "coverage_pct": null, "stuck": 0, "unreachable": 0, "complete": false}, "coverage_ratio_meter": 0.12684638798236847, "duration_wall_s": 42.24, "duration_sim_s": 41.92, "sim_start_s": 16.02, "t0_mono": 187522.908801622, "t1_mono": 187565.14542883, "distance_odom_m": 5.566}
+terminate called without an active exception
+2026-11-20T23:44:47+01:00   cleaned 56 stale Fast DDS shm files (2.4 MB); free now 2147 MB
+2026-11-20T23:44:47+01:00 trial 1 done: valid=True detected=True gated_zero=0.386 standstill=0.578 dist=0.16 blamed=['coverage_planner', 'drive_supervision'] recovered=True
+2026-11-20T23:44:47+01:00 trial 2: sigstop_coverage_fast rep 2, profile default
+2026-11-20T23:45:03+01:00   coverage_planner (reactive) pid 18405 log /tmp/coverage_planner_1.log
+2026-11-20T23:45:07+01:00   coverage_planner was started before arming (in-node heartbeat in the roster)
+2026-11-20T23:45:19+01:00   fault sigstop_coverage_fast: signalled pid 18405 at sim 27.3
+terminate called without an active exception
+terminate called without an active exception
+2026-11-20T23:45:51+01:00   cleaned 64 stale Fast DDS shm files (2.0 MB); free now 2147 MB
+2026-11-20T23:45:51+01:00 trial 2 done: valid=True detected=True gated_zero=0.415 standstill=0.597 dist=0.17 blamed=['coverage_planner', 'drive_supervision'] recovered=True
+2026-11-20T23:45:51+01:00 trial 3: sigstop_coverage_fast rep 3, profile default
+2026-11-20T23:46:06+01:00   coverage_planner (reactive) pid 18827 log /tmp/coverage_planner_1.log
+2026-11-20T23:46:11+01:00   coverage_planner was started before arming (in-node heartbeat in the roster)
+2026-11-20T23:46:28+01:00   fault sigstop_coverage_fast: signalled pid 18827 at sim 32.6
+terminate called without an active exception
+terminate called without an active exception
+2026-11-20T23:47:01+01:00   cleaned 60 stale Fast DDS shm files (1.9 MB); free now 2147 MB
+2026-11-20T23:47:01+01:00 trial 3 done: valid=True detected=True gated_zero=0.394 standstill=0.59 dist=0.165 blamed=['coverage_planner', 'drive_supervision'] recovered=True
+2026-11-20T23:47:01+01:00 trial 4: sigstop_coverage_fast rep 4, profile default
+2026-11-20T23:47:16+01:00   coverage_planner (reactive) pid 19248 log /tmp/coverage_planner_1.log
+2026-11-20T23:47:21+01:00   coverage_planner was started before arming (in-node heartbeat in the roster)
+2026-11-20T23:47:38+01:00   fault sigstop_coverage_fast: signalled pid 19248 at sim 33.4
+terminate called without an active exception
+2026-11-20T23:48:08+01:00   goal {"idx": 0, "pose": "COVERAGE", "executor": "reactive", "result": "canceled", "note": "session ended", "planner": {"waypoints": 234, "last_waypoint": null, "coverage_pct": null, "stuck": 0, "unreachable": 0, "complete": false}, "coverage_ratio_meter": 0.11299852281808853, "duration_wall_s": 47.72, "duration_sim_s": 47.7, "sim_start_s": 15.97, "t0_mono": 187721.215167846, "t1_mono": 187768.940016569, "distance_odom_m": 5.122}
+terminate called without an active exception
+2026-11-20T23:48:10+01:00   cleaned 66 stale Fast DDS shm files (3.1 MB); free now 2147 MB
+2026-11-20T23:48:10+01:00 trial 4 done: valid=True detected=True gated_zero=0.583 standstill=0.772 dist=0.231 blamed=['coverage_planner', 'drive_supervision'] recovered=True
+2026-11-20T23:48:10+01:00 trial 5: sigstop_coverage_fast rep 5, profile default
+2026-11-20T23:48:26+01:00   coverage_planner (reactive) pid 19671 log /tmp/coverage_planner_1.log
+2026-11-20T23:48:30+01:00   coverage_planner was started before arming (in-node heartbeat in the roster)
+2026-11-20T23:48:56+01:00   fault sigstop_coverage_fast: signalled pid 19671 at sim 41.7
+2026-11-20T23:49:26+01:00   goal {"idx": 0, "pose": "COVERAGE", "executor": "reactive", "result": "canceled", "note": "session ended", "planner": {"waypoints": 234, "last_waypoint": null, "coverage_pct": null, "stuck": 0, "unreachable": 0, "complete": false}, "coverage_ratio_meter": 0.13164697587490082, "duration_wall_s": 56.18, "duration_sim_s": 56.14, "sim_start_s": 15.99, "t0_mono": 187790.692764438, "t1_mono": 187846.869907153, "distance_odom_m": 5.823}
+terminate called without an active exception
+2026-11-20T23:49:29+01:00   cleaned 54 stale Fast DDS shm files (1.8 MB); free now 2147 MB
+2026-11-20T23:49:29+01:00 trial 5 done: valid=True detected=True gated_zero=0.43 standstill=0.622 dist=0.18 blamed=['coverage_planner', 'drive_supervision'] recovered=True
+2026-11-20T23:49:29+01:00 run.py exit

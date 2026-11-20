@@ -38,3 +38,10 @@
 - Relay (dab4e14): refactored into the ROS-free class BeatRelay + test (cannot make a beat fresher, cannot invent one, order kept). Tests 7 passed.
 - Still to do: reactive recon (clean), roster files for coverage (nav2 0.6 s; reactive from data), coverage faults (nav2 10+5, reactive 10+5), soaks >= 6 sim h, M9_RECON.md,
   container tests, commit. Firmware PR #3 (heartbeat loss -> motors safe, rail stays on, LiDAR up): one line in M9_RECON.md; stand-in unchanged.
+- 2026-11-20 23:2x: clean reactive recon (m9_recon_retry3, valid, RTF 0.988) planner tick 0.200 s max 0.204 (same as nav2) -> ONE roster nav_rosters_amcl_inode.yaml (0.6 s) for both
+  executors. coverage nav2 soak session 1 (inst 1, m9_soak) valid, 0 soft stops, 1800 s. Coverage fault chains started (inst 1 nav2 kill10+stop5, inst 2 reactive kill10+stop5;
+  files results/fullstack/m9/_chains/faults_cov_inst{1,2}.txt). Next: soaks.
+- 2026-11-20 23:50 coverage faults DONE, all valid (nav2 kill 10/stop 5, reactive kill 10/stop 5; 10/10, 5/5 detected, blamed coverage_planner).
+  Soak chains started 23:51 (files results/fullstack/m9/_chains/soak_inst{1,2}.txt): inst 1 dock_inode 5x1800 then nav_amcl(mix) 2x1800; inst 2 coverage_inode 2x1800 then
+  coverage_reactive_inode 3x1800. Plus coverage_inode session 1 (done). Expected total 6.5 sim h, ~3.7 h wall. Do NOT run container tests until the chains are done
+  (results/fullstack/m9/{1,2}/chain.log say 'chain done').
