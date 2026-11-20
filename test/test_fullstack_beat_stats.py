@@ -95,3 +95,11 @@ def test_relay_cannot_make_a_beat_fresher_or_invent_one():
     ages = [(wall0 + 5.0 + t) - outs[-1] for t in (0.0, 1.0, 2.0)]
     assert ages == sorted(ages) and ages[-1] > 5.0
     assert r.on_beat("not json", 1.0, 2.0) is None and r.on_beat('{"stamp_sec": "x"}', 1.0, 2.0) is None and r.bad == 2 and r.n == 10
+
+
+def test_load_cuts_the_trace_where_the_next_stack_restarts_the_clock(tmp_path):
+    import json
+    f = tmp_path / "t.jsonl"
+    rows = [["beat", 1.0, 10.0, "a", 10.0, 1, "ok", ""], ["beat", 1.2, 10.2, "a", 10.2, 2, "ok", ""], ["beat", 90.0, 3.0, "a", 3.0, 1, "ok", ""]]
+    f.write_text("\n".join(json.dumps(r) for r in rows))
+    assert [r[5] for r in bs.load(str(f))] == [1, 2]

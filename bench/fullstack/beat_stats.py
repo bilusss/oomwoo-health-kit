@@ -28,7 +28,19 @@ def pct(xs, q):
 
 
 def load(path):
-    rows = [json.loads(ln) for ln in open(path) if ln.strip()]
+    """Rows of one trace file, cut at the first backward step of the sim clock: the tracer outlives the stack it was started for, and the next
+    stack in the same container (the following session or fault trial) restarts /clock at 0. Those later rows are not part of the recon."""
+    rows, last = [], None
+    for ln in open(path):
+        if not ln.strip():
+            continue
+        r = json.loads(ln)
+        sim = r[2] if r[0] in ("beat", "state") else None
+        if sim is not None and sim > 0:
+            if last is not None and sim < last - 1.0:
+                break
+            last = sim
+        rows.append(r)
     return rows
 
 
