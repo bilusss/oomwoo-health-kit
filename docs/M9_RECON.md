@@ -8,7 +8,8 @@ watchdog and hard faults cut the rail. The kit's MCU stand-in already behaves th
 ## 1. What was built
 
 Upstream patch (local only, nothing pushed): `~/projects/oomwoo-ros2-tools`, branch `health-in-node-heartbeats`, base 338e437, commits 44717b0 (package), 689e057 (dock),
-40552ff (coverage).
+40552ff (coverage); all M9 data were taken at 40552ff. Review follow-up cb088fd: `stamp_sec` is now `nanoseconds / 1e9` instead of `nanoseconds * 1e-9`
+(section 3; the value differs by at most 1 ulp, and the measurements below went through the relay, so they are unaffected).
 
 - New ament_python package `oomwoo_health_beat`: `core.py` (payload builder, no ROS imports; fields `component_id`, `health`, `stamp_sec`, `sequence`, `detail`) and
   `ros.py` (`HealthBeat`: declares the node parameter `health_component_id`, default `""` = `beat()` returns at once and no publisher is created). Topic
@@ -45,15 +46,18 @@ read (`beat_stats.py` docstring, test `test_age_before_refresh_and_recommended_m
 Commands: `python3 bench/fullstack/beat_stats.py results/fullstack/m9/1/beat_trace_dock_gpu.jsonl` (also `--json`), `.../2/beat_trace_coverage_reactive_cpu_clean.jsonl`,
 `.../1/beat_trace_coverage_nav2_cpu.jsonl .../2/beat_trace_coverage_nav2_gpu.jsonl`. Per-segment rows (moving, stationary, dock_drive state) are printed by the same command.
 
-- The idle case is covered by the stationary segments: coverage sessions finish the sweep in about 600-1000 s and then idle with the planner beating (nav2: 8871 of the
-  18013 intervals are stationary), the dock detector and driver run between attempts (dock_drive state IDLE: 4610 intervals, max 0.053 s; detector in IDLE max 0.607 s).
+- The idle case is covered by the stationary segments: coverage sessions finish the sweep (nav2 executor in about 950-1020 s, reactive in about 380-560 s) and then idle
+  with the planner beating (nav2: 8871 of the 18013 intervals are stationary), the dock detector and driver run between attempts (dock_drive state IDLE: 3953 intervals,
+  max 0.053 s; detector in IDLE max 0.607 s).
 - The ticks do not slow down while driving: the "up to 0.60 s" seen in M8 for the reactive executor was the COMMAND stream (/cmd_vel), not the planner tick. The tick itself
   never exceeded 0.204 s in 9006 intervals. The largest age before refresh in the reactive session (0.400 s) is a delivery delay of a stationary beat (age at receipt 0.196 s),
   not a slow tick.
-- The 3 x period floor decided every value (1.8, 0.15, 0.6); the 1.5 x largest-age term was smaller in all four rows.
+- The 3 x period floor decided every value (1.8, 0.15, 0.6); the 1.5 x largest-age term was smaller in three rows and equal in the reactive row (1.5 x 0.400 = 0.60).
+  For dock_detector the age term alone would give 1.15 s: 1.8 s is three fit periods by the rule, not a value the data required, and it makes the detector the slowest
+  stop in the table (section 4).
 - Failed and invalid recon sessions, kept in `results/fullstack/m9/2/sessions.jsonl` (`published/recon_sessions.jsonl`): reactive recon crashed twice 19 s after the start (gz
   SIGSEGV, GPU container that had lost GPU access, section 7); a third reactive recon (`m9_recon_retry2`) was INVALID on RTF (0.899) because it ran while another instance
-  restarted stacks every minute for fault trials (planner tick max 0.449 s there, 4 sequence gaps from the later trials, not used); the clean repeat is `m9_recon_retry3`.
+  restarted stacks every minute for fault trials (planner tick max 0.449 s there, 0 sequence gaps; not used, but the rule applied to that loaded trace would give 0.70 s instead of 0.6); the clean repeat is `m9_recon_retry3`.
 - GPU vs CPU (the requested comparison): the same task (coverage, nav2 executor, 1800 sim s) started at the same time in two containers: 4.093 cores container CPU without
   `--gpu`, 4.064 with it (RTF 0.9997 in both), i.e. 0.029 cores (0.7%) cheaper with the GPU, within run-to-run noise. The rule "use the cheaper one" selected the GPU, but
   containers lost GPU access after about 30 minutes (`nvidia-smi` in the container: "Failed to initialize NVML: Unknown Error"), after which stack starts crash, so everything
@@ -62,11 +66,21 @@ Commands: `python3 bench/fullstack/beat_stats.py results/fullstack/m9/1/beat_tra
 
 ## 3. Why the sim-clock-to-wall-clock relay (`bench/fullstack/beat_relay.py`, commit dab4e14) exists, and why it cannot hide a stale beat
 
-Needed because: the nodes stamp with their ROS clock, which in Gazebo is `/clock` (sim time) received separately by every process. The aggregator (b2b9796) treats a heartbeat
-newer than its own clock (age < 0) as stale. A beat stamped on the very `/clock` tick the sender just received and published at once (dock_drive, 20 Hz) reaches an aggregator
-whose own `/clock` is one tick behind in a small fraction of its 20 Hz evaluations; one such evaluation is a fault episode of about 0.3 s (arming window 0.25 s) = a soft
-stop. Measured with everything on sim time (`results/fullstack/m9/_smoke1`, 240 sim s, 5 s max_age): **28 soft stops, 20 blamed on dock_drive**; with the relay
-(`_smoke2`, 301 sim s): 0. It is a simulation artefact: on the robot all processes share the system clock and a message cannot arrive before it was stamped.
+Built because: with everything on sim time (`results/fullstack/m9/_smoke1`, 240 sim s, 5 s max_age) there were **28 soft stops, 27 blamed on dock_drive alone** (1 on
+`drive_supervision` + `odom`); with the relay (`_smoke2`, 301 sim s): 0. The aggregator (b2b9796, `oomwoo_health_monitor/core.py` line 131,
+`if age_sec < 0.0 or age_sec > spec.max_age_sec`) counts a beat newer than its own clock as stale; one such 20 Hz evaluation is a fault episode of about 0.3 s (arming
+window 0.25 s) = a soft stop.
+
+Mechanism (corrected in the review of 2026-11-21; the first version blamed a `/clock` tick reaching the aggregator late): float rounding on an EQUAL tick. The aggregator
+reads its clock as `nanoseconds / 1_000_000_000.0` (`health_monitor_node.py` line 82); the patch at 40552ff stamped `nanoseconds * 1e-9`, which for the same nanosecond is
+1 ulp larger for about 41% of values (150 ms: 0.15000000000000002 vs 0.15). dock_drive's 20 Hz timer and the aggregator's 20 Hz timer fire on the same `/clock` ticks
+(dock_drive stamps are exact multiples of 50 ms in 2372 of the 2374 smoke1 beats); when the aggregator takes the beat before its own timer callback of that tick, the age is
+0 exactly and -1 ulp in floats, i.e. stale. Evidence: (1) the beat tracer, a third sim-time process, received 0 of 2374 (smoke1) and 0 of 3990 (smoke2) dock_drive beats
+stamped ahead of its own clock, and 2077 of the 2374 on exactly its own tick; (2) the relay uses the same `* 1e-9` as the nodes and logged `clamped=0` in all 22 sessions long enough to
+log its 60 s counter (330 674 beats, never one ahead of its clock); (3) targeted check (`results/fullstack/m9/_review_clock/`: aggregator b2b9796 on a 1 kHz sim clock, two producers on 20 Hz
+sim timers in separate processes, 5 s max_age): 120 s unloaded, `* 1e-9` stale in 3 evaluations, `/ 1e9` in 0; 180 s with the host loaded (9 busy loops), 232 (217 fault
+onsets) vs 0. Fixed in the patch by cb088fd (`stamp_sec = nanoseconds / 1e9`). On the robot the aggregator reads its clock after the beat was stamped, so equal nanoseconds
+and this artefact do not occur.
 
 What it does: the instrumented nodes are launched with `/oomwoo/health/component` remapped to `/oomwoo/health/component_node`. The relay (sim time) forwards each beat's JSON
 unchanged except `stamp_sec_out = wall_now - max(0, sim_now - stamp_sec)` (the beat's age in sim seconds moved onto the wall clock the aggregator and watcher use, as in M7/M8).
@@ -75,15 +89,20 @@ Why it cannot hide a stale beat:
 1. It has no timer, no stored beat and no output without an input: `BeatRelay.on_beat` returns at most one message per received message (`test_relay_cannot_make_a_beat_fresher_or_invent_one`). A
    node that stops (SIGKILL, SIGSTOP, wedged loop) stops producing relayed beats and the aggregator's age of its last beat only grows (same test, last block).
 2. The age the aggregator can compute from a relayed beat is never smaller than the age at receipt in sim seconds (`wall_now - stamp_out >= sim_now - stamp_in`, same test); the
-   clamp at 0 only removes negative ages, i.e. the artefact. Order of beats and `sequence` are preserved.
+   clamp at 0 only removes negative ages. Order of beats and `sequence` are preserved. Limit: `sim_now` is the relay's own `/clock`; had the relay's clock lagged the nodes',
+   the clamp would have hidden that lag (age 0 instead of the true age). `clamped=0` in every logged counter shows this never happened. If `/clock` stalls for everyone, the
+   beats stop (all three beat points run on sim-time timers or, for the detector, a sim-time rate gate), nothing is forwarded and the beats go stale on the wall clock.
+   The unit test covers the conversion and the clamp; its "node stopped" block only checks arithmetic on outputs already produced (the property is structural: no timer,
+   no stored beat), and no test covers a lagging relay clock.
 3. The measured evidence is the fault trials below: all 45 dock_detector/dock_drive and 30 coverage_planner kills and freezes, whose only difference to a healthy run is that
    the node's beats stop, were detected and blamed on the in-node component through the relay.
 A dead relay makes every in-node component stale (fail-safe, and it is a key process of the session).
 
 Could the relay be dropped? Not without changing either the unit under test or the aggregator: (a) run the nodes on wall time: possible for the two dock nodes but not for the
 planner (its Nav2 goals are stamped with the node clock and must be in sim time for the TF lookups); (b) a tolerance for small negative ages in the aggregator changes the
-component whose behaviour is being verified; (c) putting every health process on sim time still races (the 28 stops above). The relay is the least invasive option; the
-real patch to the nodes stays contract-pure (stamp from the node's ROS clock).
+component whose behaviour is being verified; (c) putting every health process on sim time: with the 40552ff stamp it tripped (the 28 stops above); with the division stamp
+the targeted check had 0 stale evaluations (300 s emulated, plus 120 s loaded with cb088fd itself), but the full stack was not re-run that way. The relay is what the M9 numbers were measured with; the patch to the
+nodes stays contract-pure (stamp from the node's ROS clock).
 
 ## 4. Fault trials (same method as M7/M8 per-node faults: kill and SIGSTOP freeze 5 s, one stack per trial)
 
@@ -94,47 +113,61 @@ coverage reactive while >= 0.30 m/s (the planner's own pass). All trials counted
 
 | Fault | Roster | Detected / exposed | Zero at the gate s (min / med / max) | Distance to standstill m | Rotation after the fault, deg | Blamed | Baseline (M7 -> M8) |
 |---|---|---|---|---|---|---|---|
-| SIGKILL dock_detector (reversing) | dock_detector 1.8 s | **20 / 20** | 1.26 / 1.55 / 1.88 | 0.07 / 0.09 / 0.11 | 0.0 / 0.2 / 0.7 | dock_detector | M7 0/5 (zero 2.61-3.00, 0.16-0.18 m); M8 rule 10/10 (1.42-2.00, 0.09-0.12 m) |
-| SIGSTOP dock_detector 5 s | same | **10 / 10** (10 resumed) | 1.25 / 1.62 / 1.76 | 0.07 / 0.09 / 0.10 | 0.1 / 0.3 / 0.6 | dock_detector | M7 0/5; M8 10/10 (1.40-1.99) |
-| SIGKILL dock_drive (reversing) | dock_drive 0.15 s | 10 / 10 | 0.23 / 0.25 / 0.30 | 0.01 / 0.01 / 0.02 | 0.0 / 0.0 / 0.2 | dock_drive + drive_supervision | M7 5/5 (0.35-0.41, 0.02-0.03 m) |
-| SIGSTOP dock_drive 5 s | same | 5 / 5 (5 resumed) | 0.24 / 0.27 / 0.28 | 0.01 / 0.02 / 0.02 | 0.0 / 0.1 / 0.3 | dock_drive + drive_supervision | M7 5/5 (0.32-0.41) |
-| SIGKILL coverage_planner, nav2 executor (Nav2 transit) | coverage_planner 0.6 s | **10 / 10** | 0.54 / 0.62 / 0.72 | 0.12 / 0.13 / 0.15 | 4.1 / 5.5 / 6.6 | coverage_planner | M7 0/5 (zero 6.0-6.2 s, 0.49-0.51 m); not closed in M8 |
+| SIGKILL dock_detector (reversing) | dock_detector 1.8 s | **20 / 20** | 1.26 / 1.55 / 1.88 | 0.07 / 0.09 / 0.11 | 0.0 / 0.2 / 0.7 | dock_detector | M7 0/5 (zero 2.61-3.00, 0.16-0.18 m); M8 rule 10/10 (zero 1.52-2.11, 0.09-0.12 m) |
+| SIGSTOP dock_detector 5 s | same | **10 / 10** (10 resumed) | 1.25 / 1.62 / 1.76 | 0.07 / 0.09 / 0.10 | 0.1 / 0.3 / 0.6 | dock_detector | M7 0/5; M8 10/10 (zero 1.50-2.10) |
+| SIGKILL dock_drive (reversing) | dock_drive 0.15 s | 10 / 10 | 0.23 / 0.25 / 0.30 | 0.01 / 0.01 / 0.02 | 0.0 / 0.0 / 0.2 | dock_drive first (10/10), drive_supervision 0.10-0.15 s later | M7 5/5 (0.35-0.41, 0.02-0.03 m) |
+| SIGSTOP dock_drive 5 s | same | 5 / 5 (5 resumed) | 0.24 / 0.27 / 0.28 | 0.01 / 0.02 / 0.02 | 0.0 / 0.1 / 0.3 | dock_drive first (5/5), drive_supervision 0.10-0.15 s later | M7 5/5 (0.32-0.41) |
+| SIGKILL coverage_planner, nav2 executor (Nav2 transit) | coverage_planner 0.6 s | **10 / 10** | 0.54 / 0.62 / 0.72 | 0.12 / 0.13 / 0.15 | 4.1 / 5.5 / 6.6 | coverage_planner | M7 0/5 (zero 6.0-6.2 s, one 11.2 s; 0.49-0.51 m); not closed in M8 |
 | SIGSTOP coverage_planner 5 s, nav2 | same | **5 / 5** (5 resumed) | 0.53 / 0.61 / 0.71 | 0.11 / 0.13 / 0.15 | 4.1 / 6.0 / 6.2 | coverage_planner | M7 0/5 (robot still moving at the end 5/5) |
-| SIGKILL coverage_planner, reactive (>= 0.30 m/s) | same value, watch config nav_watch_amcl_reactive.yaml | 10 / 10 | 0.39 / 0.43 / 0.57 | 0.16 / 0.18 / 0.23 | 0.3 / 2.7 / 8.2 | coverage_planner + drive_supervision | M7 5/5 (0.42-0.55, 0.18-0.22 m) via drive_supervision |
-| SIGSTOP coverage_planner 5 s, reactive | same | 5 / 5 (5 resumed) | 0.39 / 0.41 / 0.58 | 0.16 / 0.17 / 0.23 | 2.1 / 5.1 / 8.3 | coverage_planner + drive_supervision | M7 5/5 (0.37-0.54) |
+| SIGKILL coverage_planner, reactive (>= 0.30 m/s) | same value, watch config nav_watch_amcl_reactive.yaml | 10 / 10 | 0.39 / 0.43 / 0.57 | 0.16 / 0.18 / 0.23 | 0.3 / 2.7 / 8.2 | drive_supervision first (10/10), coverage_planner 0.15-0.20 s later | M7 5/5 (0.42-0.55, 0.18-0.22 m) via drive_supervision |
+| SIGSTOP coverage_planner 5 s, reactive | same | 5 / 5 (5 resumed) | 0.39 / 0.41 / 0.58 | 0.16 / 0.17 / 0.23 | 2.1 / 5.1 / 8.3 | drive_supervision first (5/5), coverage_planner 0.15-0.20 s later | M7 5/5 (0.37-0.54) |
 
 Time from the fault to the first aggregator fault (min/med/max, s): dock_detector kill 1.16 / 1.45 / 1.77, freeze 1.15 / 1.52 / 1.65; planner nav2 kill 0.43 / 0.51 / 0.62; reactive
-0.28 / 0.33 / 0.46; dock_drive 0.12 / 0.14 / 0.19.
+kill 0.28 / 0.33 / 0.46 (this is `drive_supervision`; `coverage_planner` was first named at 0.43 / 0.48 / 0.63, kill and freeze, always after the stand-in had already
+stopped); dock_drive kill + freeze 0.12 / 0.15 / 0.19 (`dock_drive`; `drive_supervision` followed at 0.23-0.32).
 
 Reading the table:
-- The two rows that were blind in M7 are closed: dock_detector 30/30 (kill + freeze), nav2-executor coverage_planner 15/15. Stop times follow the roster values (the planner at 0.54-0.72 s = max_age 0.6 s plus
-  up to 0.2 s since the last beat plus aggregator and stand-in; the detector 1.26-1.88 s with max_age 1.8 s, since the beat can be up to 0.6 s old when the fault hits).
-- Against M8's `reverse_fix` the dock_detector result is the same within the spread (zero 1.26-1.88 vs 1.42-2.11 s; reversing 0.07-0.11 vs 0.09-0.13 m): the in-node beat does not stop faster, because
+- The two rows that were blind in M7 are closed: dock_detector 30/30 (kill + freeze), nav2-executor coverage_planner 15/15. Stop times follow the roster values: max_age minus the age of the last beat when the
+  fault hits, plus up to one aggregator period and the stand-in's 0.15 s (planner 0.53-0.72 s with max_age 0.6 s and beats 0.2 s apart; detector 1.25-1.88 s with max_age
+  1.8 s and beats 0.6 s apart).
+- Against M8's `reverse_fix` the dock_detector result is the same within the spread (zero at the gate 1.25-1.88 vs 1.50-2.11 s; reversing 0.07-0.11 vs 0.09-0.13 m): the in-node beat does not stop faster, because
   the 1.8 s bound follows from the 0.6 s fit period. What differs is the kind of guarantee (see the soak below: no stops from the detector beat itself, no precondition about other writers).
 - The nav2 planner kill now stops the robot in 0.13 m instead of letting it drive on for 0.5 m (kill) or indefinitely (freeze). This is a designed consequence: a dead job planner now stops the
   robot (the stop reason is "coverage_planner stale", not a motion fault).
-- Reactive and dock_drive rows were already covered by `drive_supervision`; the in-node beat adds the correct blame and is not slower (reactive 0.39-0.57 vs M7 0.42-0.55 s). The faster dock_drive times (0.23-0.30 vs
-  0.35-0.41 s) are observed, the mechanism was not isolated (load and n differ).
+- Reactive and dock_drive rows were already covered by `drive_supervision`. dock_drive: the in-node beat (0.15 s, 20 Hz) was the first fault in 15/15 trials, 0.10-0.15 s
+  before `drive_supervision`, and that is where the earlier stop comes from (0.23-0.30 vs M7 0.35-0.41 s). Reactive: `drive_supervision` was first in 15/15 and stopped the
+  robot; `coverage_planner` was named 0.15-0.20 s later, after the stop in every trial. So the reactive stop times (0.39-0.58 vs M7 0.37-0.55 s) are `drive_supervision`'s and
+  say nothing about the in-node beat's speed; on this executor the beat adds the blame, not the stop.
 - Rotation after the fault is below 9 degrees in every trial (the M7/M8 metric).
 
 ## 5. False-trip soak (6.5 sim hours, in-node rosters, CPU rendering, two instances at a time)
 
-Sessions of 1800 sim s, all valid (RTF 0.9887-0.9994, worst 30 s window 0.981, armed, key processes alive, `beat_relay` among them), label `m9_soak`; chains in `results/fullstack/m9/_chains/soak_inst{1,2}.txt` plus the first
+Sessions of 1800 sim s, all valid (RTF 0.9887-0.9994, worst 30 s window 0.981, armed, key processes alive, `beat_relay` among them in the in-node tasks), label `m9_soak`; chains in `results/fullstack/m9/_chains/soak_inst{1,2}.txt` plus the first
 nav2-coverage session (started together with the clean reactive recon). Table: `python3 bench/fullstack/summarize.py --by-task results/fullstack/m9/published/soak_m9_*.jsonl`.
 
-| Task | Roster | Sessions | Sim h (= active h) | Soft stops | Stops blamed on an in-node component | Stops not explained by an injected fault or harness action | Per active hour |
-|---|---|---|---|---|---|---|---|
-| dock (6 start poses, harness teleport between attempts) | M7 dock + dock_detector 1.8 + dock_drive 0.15 | 5 | 2.5 | 33 | **0** | **0** (all 33 within 0.5 s after a harness `set_pose`, blamed `drive_supervision`; 271 attempts docked, 9 timed out, 5 cut by the session end) | 13.2 (all harness-induced) |
-| coverage, nav2 executor | M7 AMCL + coverage_planner 0.6 | 3 | 1.5 | **0** | 0 | 0 | 0 (bound about 2.0/h at 95%, 3/T) |
-| coverage, reactive executor (proposal watch config, cmd 0.30 s) | same | 3 | 1.5 | 32 | **0** | 32, all blamed on `drive_supervision` (the known reactive-command mismatch: M7 recorded 8 and 11 per 0.5 h on this config) | 21.3 |
-| AMCL navigation, mix workload | M7 AMCL roster (no in-node component exists on this stack) | 2 | 1.0 | **0** | 0 | 0 | 0 (bound 3.0/h) |
-| Total | | 13 | 6.5 | 65 | **0** | 32 (reactive, drive_supervision) | |
+| Task | Roster | Sessions | Sim h | Active h | Soft stops | Stops blamed on an in-node component | Stops not explained by an injected fault or harness action | Per active hour |
+|---|---|---|---|---|---|---|---|---|
+| dock (6 start poses, harness teleport between attempts) | M7 dock + dock_detector 1.8 + dock_drive 0.15 | 5 | 2.5 | 2.5 | 33 | **0** | **0** (all 33 came 0.22-0.26 s after a harness `set_pose`, blamed `drive_supervision`; 271 attempts docked, 9 timed out, 5 cut by the session end) | 13.2 (all harness-induced) |
+| coverage, nav2 executor | M7 AMCL + coverage_planner 0.6 | 3 | 1.5 | 0.81 | **0** | 0 | 0 | 0 (bound about 3.7/h at 95%, 3/T) |
+| coverage, reactive executor (proposal watch config, cmd 0.30 s) | same | 3 | 1.5 | 0.35 | 32 | **0** | 32, all blamed on `drive_supervision` (the known reactive-command mismatch: M7 recorded 8 in 0.14 and 11 in 0.12 active h on this config) | 90 |
+| AMCL navigation, mix workload | M7 AMCL roster (no in-node component exists on this stack) | 2 | 1.0 | 1.0 | **0** | 0 | 0 | 0 (bound 3.0/h) |
+| Total | | 13 | 6.5 | 4.67 | 65 | **0** | 32 (reactive, drive_supervision) | |
 
-- The three in-node components were never blamed for a soft stop in 6.5 h; each also beat through the stationary/idle phases. This includes the dock detector, where a 1.8 s window is above the 0.76 s largest age.
-- The reactive-executor stops are not an M9 effect: same blame, phase ("en route") and rate as the M7 proposal-config rows (8 and 11 stops in 0.5 h sessions = 16 and 22 per active hour; here 8, 12, 12 per session = 16-24 per hour). They stay open from M7/M8 and are not solved by the in-node beat.
+Active time as in M7 (`summarize.py`, `active_seconds`): coverage jobs finish the sweep and idle, so their active time ends at the last motion evidence in the record
+(nav2 953-989 s per session; reactive 378-483 s, where the last evidence the record keeps is the last soft stop, so 0.35 h may be short: with the clean recon's ~555 s
+sweep the reactive rate would be about 70 per active hour). The first version of this table counted the whole window as active (1.5 h per coverage row, 21.3/h and a
+2.0/h bound), because `summarize.py` did not list the M9 coverage task names; fixed in commit 61beb6f.
+
+- The three in-node components were never blamed for a soft stop, and no fault episode of any length named them: dock_detector and dock_drive in 2.5 h, coverage_planner in
+  3.0 sim h (1.16 h of them active; the AMCL rows have no in-node component). Each also beat through the stationary/idle phases. This includes the dock detector, where a 1.8 s window is above the 0.76 s largest age.
+- The reactive-executor stops are not an M9 effect: same blame, phase ("en route") and rate as the M7 proposal-config rows (M7: 59 and 91 per active hour; here 12, 8, 12 per session, 90 per active hour, about 70 with the
+  recon's sweep time). They stay open from M7/M8 and are not solved by the in-node beat.
 - Soft stops "explained" by harness actions: the dock stops follow the teleport (`set_pose`) between attempts as in M7; this classification is the one `summarize.py` has used since M7 (0.0-0.5 s window).
 - Host load (1-min average sampled every 10 s, median of session medians, max): dock 15.5 / 22.0, coverage nav2 15.6 / 29.9, reactive 15.7 / 22.9, AMCL nav 3.7 / 15.3 of 12 logical cores (two instances at a time; M7: 7-10 busy cores).
-  The AMCL nav sessions ran with the other instance idle.
+  The AMCL nav sessions ran after the other instance's last session (the first one overlapped its end by about 2 minutes).
+- The stand-in's own soft-stop counter delta equals the recorder's count in every session except reactive session 3 (13 vs 12): the extra stop came after the measured
+  window, when the worker stopped the planner at the session end (`last_stack`: `coverage_planner` stale). The nav2 session started 23:50 ended in the same aggregator fault
+  with the stand-in not yet stopped when read. A teardown effect of the harness, outside the window, not counted.
 - Container CPU per session (`cpu_cores_container`): dock 3.02-3.04, coverage nav2 3.72-3.74, reactive 3.68-3.71, AMCL navigation 2.19-2.21 cores.
 
 ## 6. Commands as executed
@@ -157,8 +190,13 @@ nav2-coverage session (started together with the clean reactive recon). Table: `
 - Aggregator pinned at b2b9796; firmware not involved (the stand-in is the MCU model). Sim only: no real-time clock effects, no real load on the beat path.
 - The relay (section 3) and the pre-arm start of the planner are harness choices, both documented; the first nine dock_detector kill trials and the dock recon were rendered on the GPU, everything else on CPU.
 - Dock detector kills: 9 were taken on the GPU before it was abandoned, 11 on CPU (plus the freezes on CPU); not separated in the table, the whole series lies in 1.26-1.88 s.
-- Fault trials ran with the other instance also running trials (stack starts of one instance overlap the other's trials; host load median 7-36 in the table of section 4); M7/M8 had the same arrangement.
+- Fault trials ran with the other instance busy (the dock trials beside the reactive recon `m9_recon_retry2`, the nav2 and reactive coverage trials beside each other); host load per
+  row (median of the per-trial medians of the 1-min average) 7.4-31.9, max 36.7 of 12 logical cores; M7/M8 had the same arrangement.
 - Aborted by my SIGTERM: one dock kill trial (invalid, not counted). Invalid recon sessions listed in section 2.
-- The reactive-executor false-stop rate (21.3 per active hour) is unchanged from M7 and unrelated to the beats; the nav2-executor soak has 1.5 h and bounds the false-stop rate only to about 2/h at 95%.
+- The reactive-executor false-stop rate (90 per active hour, about 70 with the recon's sweep time) is in the M7 range (59 and 91) and unrelated to the beats; the nav2-executor
+  soak has 0.81 active h (1.5 sim h) and bounds the false-stop rate only to about 3.7 per active hour at 95%.
 - Beat placement in the planner counts waiting/idle ticks as work; a planner that is alive but cannot advance (no pose, no map) is not detected by the beat.
 - Not done: in-node beats for Nav2 and slam_toolbox (third-party, watcher fallback stays), real-hardware timing.
+- On the robot there is no relay and every process reads the system clock: the detection mechanics are the same (beats stop, the component is stale after max_age), the
+  relay's clamp was never used here (`clamped=0`), and the equal-tick artefact of section 3 cannot occur. What does not carry over: the beat periods (LiDAR scan rate, fit
+  and planning time on the robot's CPU), the stop distances, and the false-trip rates, which are sim numbers.

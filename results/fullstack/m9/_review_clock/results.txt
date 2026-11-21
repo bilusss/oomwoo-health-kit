@@ -1,0 +1,11 @@
+M9 review 2026-11-21: stale beats on a shared sim clock. Run in makerspet/oomwoo:jazzy-dev with the aggregator built at b2b9796 (volume ohk-ws),
+oomwoo_health_beat from ~/projects/oomwoo-ros2-tools mounted at /beat, this directory at /exp:
+  docker run --rm --init -v ohk-ws:/ws:ro -v $PWD:/exp:ro -v <tools>/src/oomwoo_health_beat:/beat:ro makerspet/oomwoo:jazzy-dev bash /exp/run.sh <seconds> <busy loops>
+p_mul = the package's HealthBeat; p_div = the same with stamp_sec = nanoseconds / 1e9. Roster max_age 5 s for both, so any stale entry is a negative age.
+
+run 1: 120 s, no load, oomwoo_health_beat at 40552ff (stamp = nanoseconds * 1e-9)
+{"stack_msgs_by_state": {"no_roster": 1, "arming": 20, "healthy": 2361, "fault": 3}, "stale_evaluations": {"p_mul": 3}, "stale_onsets": {"p_mul": 3}}
+run 2: 180 s, 9 busy loops (host 1-min load 2.2 -> 14.1), 40552ff
+{"stack_msgs_by_state": {"no_roster": 1, "arming": 978, "healthy": 2389, "fault": 232}, "stale_evaluations": {"p_mul": 232}, "stale_onsets": {"p_mul": 217}}
+run 3: 120 s, 9 busy loops, cb088fd (stamp = nanoseconds / 1e9; p_mul and p_div now compute the same value)
+{"stack_msgs_by_state": {"no_roster": 1, "arming": 5, "healthy": 2379}, "stale_evaluations": {}, "stale_onsets": {}}

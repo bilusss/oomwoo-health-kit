@@ -47,3 +47,12 @@
   (results/fullstack/m9/{1,2}/chain.log say 'chain done').
 - 2026-11-21 03:22 ALL RUNS DONE: soaks 13 sessions / 6.5 sim h valid (0 stops on in-node components; dock 33 all after harness set_pose; reactive 32 drive_supervision; nav2 coverage 0; AMCL 0).
   Sim containers removed. Host tests 228 passed 2 skipped; container tests 265 passed. Results in docs/M9_RECON.md; published copies results/fullstack/m9/published/.
+
+## Review 2026-11-21 (corrections; details in docs/M9_RECON.md)
+- FINDING 1 mechanism corrected: the smoke1 stops (27 of 28 on dock_drive, not 20) came from float rounding on an EQUAL sim tick (node stamp
+  nanoseconds * 1e-9 vs the aggregator's nanoseconds / 1e9, 1 ulp apart for ~41% of values), not from a late /clock tick. Evidence: tracer and relay
+  never saw a beat ahead of their own clock; targeted check results/fullstack/m9/_review_clock (232 vs 0 stale evaluations). Patch fix: cb088fd.
+- Soak active hours: summarize.py lacked the M9 coverage task names (fixed 61beb6f); nav2 coverage 0.81 active h (bound 3.7/h), reactive 0.35 h
+  (90/h; M7 had 59 and 91, not 16 and 22).
+- Fault table: M8 dock baselines were the aggregator's first fault, not zero at the gate (1.50-2.11 s); reactive stops are drive_supervision's
+  (first in 15/15), coverage_planner named 0.15-0.20 s later; dock_drive's in-node beat was first in 15/15.

@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 """Sim-clock bridge for the in-node heartbeats (M9). Runs only in the sim bench, never on a robot.
 
-Why it exists: the in-node heartbeats are stamped with the publishing node's ROS clock, which in Gazebo is /clock (sim time), received separately
-by every process. The aggregator treats a heartbeat that is NEWER than its own clock as stale (age < 0). A beat that is stamped at the very
-instant the sender's /clock tick arrives and published at once (dock_drive, 20 Hz) reaches an aggregator whose own /clock is a millisecond behind
-in about 0.6% of its 20 Hz evaluations; one such evaluation = a fault episode of 0.3 s (arming window 0.25 s) = a soft stop. First M9 smoke run:
-28 soft stops in 240 sim s, 20 blamed on dock_drive with a 5 s max_age (docs/M9_RECON.md). On the robot every process shares the system clock and
-a message cannot arrive before it was stamped, so this cannot happen there.
+Why it exists: the in-node heartbeats are stamped with the publishing node's ROS clock, which in Gazebo is /clock (sim time). The aggregator
+treats a heartbeat that is NEWER than its own clock as stale (age < 0). First M9 smoke run with everything on sim time: 28 soft stops in 240 sim s,
+27 blamed on dock_drive alone, with a 5 s max_age. Cause (found in the M9 review, docs/M9_RECON.md section 3): not a late /clock tick but float
+rounding on an EQUAL tick: the nodes stamped nanoseconds * 1e-9 (oomwoo-ros2-tools 40552ff), the aggregator reads nanoseconds / 1e9, and the
+product is 1 ulp larger for about 41% of values; dock_drive and the aggregator run 20 Hz timers on the same /clock ticks. Fixed in the patch by
+cb088fd. The relay was used for all M9 data (its clamp below never fired: clamped=0 in every logged counter). On the robot the aggregator reads its
+clock after the beat was stamped, so this cannot happen there.
 
 What it does: the instrumented nodes are launched with /oomwoo/health/component remapped to /oomwoo/health/component_node. This node (on sim time)
 subscribes there, and for each beat republishes the same JSON on /oomwoo/health/component with stamp_sec = wall_now - max(0, sim_now - stamp_sec)
