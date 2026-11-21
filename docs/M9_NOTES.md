@@ -45,3 +45,5 @@
   Soak chains started 23:51 (files results/fullstack/m9/_chains/soak_inst{1,2}.txt): inst 1 dock_inode 5x1800 then nav_amcl(mix) 2x1800; inst 2 coverage_inode 2x1800 then
   coverage_reactive_inode 3x1800. Plus coverage_inode session 1 (done). Expected total 6.5 sim h, ~3.7 h wall. Do NOT run container tests until the chains are done
   (results/fullstack/m9/{1,2}/chain.log say 'chain done').
+- 2026-11-21 03:22 ALL RUNS DONE: soaks 13 sessions / 6.5 sim h valid (0 stops on in-node components; dock 33 all after harness set_pose; reactive 32 drive_supervision; nav2 coverage 0; AMCL 0).
+  Sim containers removed. Host tests 228 passed 2 skipped; container tests 265 passed. Results in docs/M9_RECON.md; published copies results/fullstack/m9/published/.
