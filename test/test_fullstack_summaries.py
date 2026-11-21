@@ -41,6 +41,15 @@ def test_continuous_tasks_are_active_for_the_whole_window():
     assert sm.active_seconds(session(task="nav_amcl", sim_s=1800.0)) == 1800.0
 
 
+def test_every_coverage_task_idles_after_the_sweep():
+    """M9 review: the *_inode coverage tasks were missing, so their whole window counted as active (1.5 h instead of 0.81 / 0.35 h)."""
+    import tasks
+    cov = {name for name, cfg in tasks.TASKS.items() if cfg.get("workload") == "coverage"}
+    assert cov and cov <= set(sm.COVERAGE_TASKS)
+    for name in cov:
+        assert abs(sm.active_seconds(session(task=name, events=[10.0, 990.0])) - 990.06) < 1e-6
+
+
 def test_harness_window_is_forward_only():
     a = T0.timestamp() + 100.0
     assert sm.harness_related(iso(100.25), [a]) and sm.harness_related(iso(100.5), [a])

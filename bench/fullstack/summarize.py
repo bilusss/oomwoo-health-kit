@@ -84,7 +84,8 @@ def idle_event(e):
     return not moving and not fresh and "odom_v" in ctx
 
 
-COVERAGE_TASKS = ("coverage", "coverage_reactive", "coverage_reactive_cmd30")
+COVERAGE_TASKS = ("coverage", "coverage_reactive", "coverage_reactive_cmd30",   # every task whose workload is "coverage" (test checks tasks.TASKS)
+                  "coverage_inode", "coverage_reactive_inode", "coverage_inode_recon", "coverage_reactive_inode_recon")
 
 
 def harness_related(soft_wall, action_epochs):
