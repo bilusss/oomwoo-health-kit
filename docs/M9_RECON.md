@@ -227,15 +227,15 @@ Commands (every sim.sh call with `OHK_RES_SUB=m9b OHK_OVERLAY=1`):
 | SIGKILL dock_detector | 10 / 20 | 10/10 (20/20) | 1.40 / 1.56 / 1.80 (see note) | 1.26 / 1.55 / 1.88 | 0.08-0.11 (0.07-0.11) | dock_detector |
 | SIGKILL dock_drive | 5 / 10 | 5/5 (10/10) | 0.22 / 0.24 / 0.27 | 0.23 / 0.25 / 0.30 | 0.01-0.02 (0.01-0.02) | dock_drive + drive_supervision |
 | SIGKILL coverage_planner, nav2 executor | 10 / 10 | 10/10 (10/10) | 0.55 / 0.63 / 0.72 | 0.54 / 0.62 / 0.72 | 0.12-0.15 (0.12-0.15) | coverage_planner |
-| SIGKILL coverage_planner, reactive (0.8 s roster) | 5 / 10 | 5/5 (10/10) | 0.42 / 0.44 / 0.55 | 0.39 / 0.43 / 0.57 | 0.17-0.22 (0.16-0.23) | coverage_planner + drive_supervision |
+| SIGKILL coverage_planner, reactive (0.8 s roster) | 5 / 10 | 5/5 (10/10) | 0.42 / 0.44 / 0.55 | 0.39 / 0.43 / 0.57 | 0.17-0.22 (0.16-0.23) | drive_supervision first (5/5); coverage_planner at 0.68-0.79 s, after the stop |
 
 Aggregator first fault (s, min/med/max, no relay vs relay): detector 1.30 / 1.46 / 1.70 vs 1.16 / 1.45 / 1.77; dock_drive 0.11 / 0.13 / 0.17 vs 0.12 / 0.14 / 0.19; nav2 planner 0.45 / 0.53 / 0.61 vs 0.43 / 0.51 / 0.62; reactive
-0.31 / 0.33 / 0.44 vs 0.28 / 0.33 / 0.46. All 30 trials valid and exposed, robot stopped in all; rotation after the fault 0.0-8.1 degrees (relay 0.0-8.3). Note on dock_detector kill rep 10: the stand-in
+0.31 / 0.33 / 0.44 vs 0.28 / 0.33 / 0.46 (both `drive_supervision`; the in-node planner beat is not what stops the reactive executor). All 30 trials valid and exposed, robot stopped in all; rotation after the fault 0.0-8.1 degrees (relay 0.0-8.3). Note on dock_detector kill rep 10: the stand-in
 soft-stopped at 1.221 s, 0.4 s BEFORE the aggregator's first fault (1.621 s; a heartbeat gap, stand-in back in RUN at 1.321 s); the stop caused by the detector is the second one at 1.731 s, and
 that value is used in the table (the raw "gated first zero" of that trial is 1.221 s, which would make the minimum 1.22). The 1.8 s window and the relay's data agree: the in-node stops come at the roster value plus the time since the last beat, relay or not.
 Freeze (SIGSTOP) rows were not repeated; the relay-run rows (10/10 detector, 5/5 planner nav2 and reactive, 5/5 dock_drive) stand as the freeze evidence (a stopped node produces the same silence as a killed one).
 
-### Soak without relay (4.28 sim h, 13 sessions: dock 4 x 1800 s, nav2 coverage 2 x 1800 s, reactive coverage 4 x 700 s, AMCL navigation 1 x 1800 s; all valid)
+### Soak without relay (4.28 sim h, 11 sessions: dock 4 x 1800 s, nav2 coverage 2 x 1800 s, reactive coverage 4 x 700 s, AMCL navigation 1 x 1800 s; all valid)
 
 | Task | Sim h | Active h | Soft stops | Blamed on an in-node component | Blamed `drive_supervision` | No aggregator episode ("unknown" class) | Per active hour (all stops) | Relay run (section 5), same fixed active-time accounting |
 |---|---|---|---|---|---|---|---|---|
@@ -246,10 +246,14 @@ Freeze (SIGSTOP) rows were not repeated; the relay-run rows (10/10 detector, 5/5
 | Total | 4.28 | 3.74 | 66 | **0** | 61 | 5 | | 65 stops, 0 in-node |
 
 - **Stops blamed on in-node components: 0 of 66 without relay (0 of 65 with relay)**; no aggregator episode of any length named dock_detector, dock_drive or coverage_planner in either run.
-- The 61 `drive_supervision` stops are the same ones as with the relay (dock: the harness teleport; reactive: the 5 Hz command stream against the 0.30 s window, 88 vs 90 per active hour).
-- 5 stops are new: the stand-in soft-stopped ("no heartbeat for 0.150 s") with no aggregator fault episode and the recorder's last MCU heartbeat 0-1 ms old (one reactive stop 150 ms), i.e. delivery gaps on the stand-in side. They happened at host load
-  26-31 (1-min average of 12 logical cores; relay run: 15-16 in the soaks). Sim-time health nodes cost about one core per instance more: container CPU 3.76 / 4.51 / 4.50 / 3.43 cores (dock / nav2 / reactive / AMCL) against 3.03 / 3.73 / 3.70 / 2.20
-  with the wall-clock health stack, worst 30 s RTF window 0.965-0.999 (relay run 0.981-0.999; all sessions passed the harness RTF validity checks (session RTF 0.973-0.9996, every 30 s window at least 0.965)). The load is the likely cause of the 5 stops; this was not isolated or tested. They are not blamed on any component. They are counted as unexplained stops: 5 in 4.28 h (1.2 per sim hour); the relay run had none in 6.5 h.
+- The 61 `drive_supervision` stops are the same kind as with the relay (dock: the harness teleport; reactive: the 5 Hz command stream against the 0.30 s window, 88 vs 90 per active hour).
+- 5 stops are new: the stand-in soft-stopped ("no heartbeat for 0.150 s") with no aggregator fault episode. Not a delivery gap on the stand-in side: in all 5 the
+  aggregator's own stack messages (`aggregator_stack_recent`) were 150 ms apart in wall time while its sim clock advanced only 50 ms between them (healthy_for 58.40 -> 58.45
+  etc.), i.e. the sim clock the sim-time aggregator runs on stalled for about 100 ms, and the stand-in, which times out on the steady clock, counted the 150 ms (the recorder's
+  "last MCU heartbeat 0-1 ms old" is the late heartbeat arriving at the event). A clock-domain effect of this setup (sim-time aggregator, steady-clock stand-in); the relay run's
+  wall-clock aggregator could not show it. Host load around the stops (1-min average of 12 logical cores) 5-7 for the first (2-3 s after the other instance launched its
+  stack) and 25-34 for the other four (relay run: 15-16 in the soaks). Sim-time health nodes cost about one core per instance more: container CPU 3.73-3.78 / 4.51 / 4.48-4.51 / 3.43 cores (dock / nav2 / reactive / AMCL) against 3.03 / 3.73 / 3.70 / 2.20
+  with the wall-clock health stack, worst 30 s RTF window 0.965-0.999 (relay run 0.981-0.999; all sessions passed the harness RTF validity checks (session RTF 0.973-0.9996, every 30 s window at least 0.965)). Load and the neighbour launch are the likely trigger of the sim-clock stalls; this was not isolated or tested. They are not blamed on any component. They are counted as unexplained stops: 5 in 4.28 h (1.2 per sim hour); the relay run had none in 6.5 h.
 - Active time is as in section 5 (`summarize.py` at 61beb6f). The reactive row has 0.48 active h, short of the 0.5 h that was asked for (4 x 700 s sessions, the sweep ends after about 400-480 s).
 
 ### What M9b supersedes
