@@ -56,3 +56,10 @@
   (90/h; M7 had 59 and 91, not 16 and 22).
 - Fault table: M8 dock baselines were the aggregator's first fault, not zero at the gate (1.50-2.11 s); reactive stops are drive_supervision's
   (first in 15/15), coverage_planner named 0.15-0.20 s later; dock_drive's in-node beat was first in 15/15.
+
+## M9b (2026-11-21, no relay)
+- Kit commit 5ca79f7 (relay opt-in via --beat-relay, default off; run with --health-clock sim; reactive roster nav_rosters_amcl_reactive_inode.yaml 0.8 s). Overlay rebuilt from
+  oomwoo-ros2-tools 8f7bef7 (stamp via nanoseconds / 1e9). Raw data results/fullstack/m9b/, labels m9b_faults / m9b_soak, chains in m9b/_chains.
+- Fault subset DONE 04:00-04:27, 30/30 valid and detected (dock_detector kill 10, dock_drive kill 5, nav2 planner kill 10, reactive planner kill 5). One anomaly: dock_detector kill rep 10 has a stand-in
+  soft stop at 1.221 s that precedes the aggregator's first fault (1.621 s) by 0.4 s (a heartbeat gap, stand-in back in RUN at 1.321, real detection stop 1.731); use 1.731 for the detection time.
+- Soak chains started ~04:30 (inst 1: dock 4x1800 then AMCL 1x1800; inst 2: coverage nav2 2x1800 then reactive 4x700). Expected ~2.5 h wall. Do not run container tests meanwhile.
