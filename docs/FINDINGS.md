@@ -1,3 +1,28 @@
+# M9 (2026-11-18 to 21): in-node work-path heartbeats in OOMWOO's own nodes
+
+Following the maintainer's answer in makerspet/oomwoo#84 (own nodes send in-node work-path heartbeats; topic watchers are the fallback for third-party nodes), the opt-in package
+`oomwoo_health_beat` and beats in `dock_detector`, `dock_drive` and `coverage_planner` were written as a patch to makerspet/oomwoo-ros2-tools (branch `health-in-node-heartbeats`,
+9c316cc, cbada42, 8f7bef7). Every number, the method and the limits are in `docs/M9_RECON.md`; raw data in `results/fullstack/m9/` (wall-clock health stack with a relay) and
+`results/fullstack/m9b/` (everything on sim time, no relay, as on the robot: section 8, the default path now).
+
+| Fault (SIGKILL) | M7/M8 | M9b, no relay | Zero at the gate (s) | Distance |
+|---|---|---|---|---|
+| `dock_detector` while reversing | M7 0/10 (kill + freeze); M8 `reverse_fix` 20/20 at 1.50-2.11 s | 10/10 (relay run 20/20 kill, 10/10 freeze) | 1.40-1.80 | 0.08-0.11 m |
+| `coverage_planner`, nav2 executor | M7 0/10, the controller finishes the waypoint (0.5 m) | 10/10 (relay run 10/10 kill, 5/5 freeze) | 0.55-0.72 | 0.12-0.15 m |
+| `coverage_planner`, reactive | M7 detected | 5/5, but `drive_supervision` trips first; the planner is named at 0.68-0.79 s | 0.42-0.55 | 0.17-0.22 m |
+| `dock_drive` | M7 detected, 0.35-0.41 s | 5/5 | 0.22-0.27 | 0.01-0.02 m |
+
+- `max_age_sec` from the measured beat periods: dock_detector 1.8 s (one fit every ~0.6 s, so this is the slowest stop; it is no faster than M8's `reverse_fix`, but has no false stops),
+  dock_drive 0.15 s, planner 0.6 s (nav2 executor) and 0.8 s (reactive).
+- False stops blamed on an in-node component: **0 of 66 in 4.28 sim h** (no relay) and 0 of 65 in 6.5 sim h (relay). The other stops are known: `drive_supervision` after harness
+  teleports (dock) and on the reactive executor's 5 Hz command stream (88-90 per active hour, as in M7), plus 5 with no aggregator fault: the sim clock stalled ~100 ms while the
+  stand-in times out on the steady clock (a sim-only clock-domain effect).
+- Found on the way: the aggregator counts any negative age as stale (`core.py` line 131), so a producer converting `ns * 1e-9` instead of the monitor's `ns / 1e9` is "stale" on
+  about 4 in 10 shared sim-clock ticks (28 soft stops in 240 sim s even with `max_age_sec` 5 s). The patch uses `/ 1e9`; reported to the aggregator.
+- Firmware policy (makerspet/oomwoo-firmware#3, 2026-11-20): heartbeat loss makes motor outputs safe and keeps the shared motor/LiDAR rail on; only the RC watchdog and hard
+  faults cut it. The kit's MCU stand-in already behaves this way.
+- Limits: simulation only, one 6-core PC, small fault samples; the beats prove the loop runs, not that its output is right; Nav2 and slam_toolbox keep the watcher fallback.
+
 # M8 (2026-11-15 and 16): what the watcher alone can still close of the M7 gaps
 
 Raw data: `results/fullstack/faults_m8_2026-11-15_kitwip.jsonl` (fault trials), `results/fullstack/soak_m8_<task>_2026-11-15_kitwip.jsonl` (soak sessions; the two item-D runs on 2026-11-16 carry the same tag),
