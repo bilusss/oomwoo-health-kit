@@ -87,7 +87,7 @@ def key_procs_for(task, composition="true"):
             out.update(amcl="lib/nav2_amcl/amcl", controller="lib/nav2_controller/controller_server",
                        behavior="lib/nav2_behaviors/behavior_server", bt_navigator="lib/nav2_bt_navigator/bt_navigator",
                        planner="lib/nav2_planner/planner_server")
-    if t.get("inode"):
+    if t.get("inode") and os.environ.get("OHK_BEAT_RELAY") == "1":
         out["beat_relay"] = "bench/fullstack/beat_relay.py"
     if t["job"] == "dock":
         out.update(dock_drive="lib/oomwoo_dock/dock_drive", dock_detector="lib/oomwoo_dock/dock_detector")
@@ -998,6 +998,7 @@ def session_record(args, k, profile, log, windows):
            "domain_id": os.environ.get("ROS_DOMAIN_ID"), "instance": os.environ.get("OHK_INSTANCE"),
            "kit_commit": os.environ.get("OHK_KIT_COMMIT"), "aggregator_commit": os.environ.get("OHK_AGG_COMMIT"),
            "tools_commit": os.environ.get("OHK_TOOLS_COMMIT") or None, "inode_health": list(tk.TASKS[args.task].get("inode", ())),
+           "beat_relay": bool(args.beat_relay and tk.TASKS[args.task].get("inode")),
            "start": dt.datetime.now().astimezone().isoformat(timespec="seconds"), "valid": False,
            "timing_note": "sim = Gazebo /clock, wall = host monotonic; stand-in decides on wall clock (steady)"}
     if args.health_sources == "watcher":
@@ -1035,7 +1036,7 @@ def session_record(args, k, profile, log, windows):
         cmd = ["ros2", "launch", LAUNCH, f"gpu:={'true' if args.gpu else 'false'}", f"health_sources:={args.health_sources}",
                f"max_age_sec:={args.max_age}", f"rate_hz:={args.rate_hz}", f"soft_stop_timeout_s:={args.soft_stop}",
                f"health_sim_time:={'true' if args.health_clock == 'sim' else 'false'}",
-               *tk.launch_args(args.task, args.composition)]
+               *tk.launch_args(args.task, args.composition, args.beat_relay)]
         log(f"session {k}: profile {profile}, gpu {args.gpu}, duration {args.duration_sim} sim s, rtf {args.rtf}")
         progress("starting stack")
         t_launch = time.monotonic()
@@ -1155,6 +1156,7 @@ def trial_record(args, k, fault, rep, log, windows):
            "requested_rtf": args.rtf, "domain_id": os.environ.get("ROS_DOMAIN_ID"), "instance": os.environ.get("OHK_INSTANCE"),
            "kit_commit": os.environ.get("OHK_KIT_COMMIT"), "aggregator_commit": os.environ.get("OHK_AGG_COMMIT"),
            "tools_commit": os.environ.get("OHK_TOOLS_COMMIT") or None, "inode_health": list(tk.TASKS[args.task].get("inode", ())),
+           "beat_relay": bool(args.beat_relay and tk.TASKS[args.task].get("inode")),
            "start": dt.datetime.now().astimezone().isoformat(timespec="seconds"), "valid": False,
            "soft_stop_timeout_s": args.soft_stop, "workload": "plain", "task": args.task, "composition": args.composition,
            "config_sha256": config_sha256(args.task),
@@ -1179,7 +1181,7 @@ def trial_record(args, k, fault, rep, log, windows):
         cmd = ["ros2", "launch", LAUNCH, f"gpu:={'true' if args.gpu else 'false'}", f"health_sources:={args.health_sources}",
                f"max_age_sec:={args.max_age}", f"rate_hz:={args.rate_hz}", f"soft_stop_timeout_s:={args.soft_stop}",
                f"health_sim_time:={'true' if args.health_clock == 'sim' else 'false'}",
-               *tk.launch_args(args.task, args.composition)]
+               *tk.launch_args(args.task, args.composition, args.beat_relay)]
         log(f"trial {k}: {fault} rep {rep}, profile {profile}")
         t_launch = time.monotonic()
         stack = subprocess.Popen(cmd, stdout=stack_log, stderr=subprocess.STDOUT, start_new_session=True, preexec_fn=b.die_with_parent)
@@ -1273,10 +1275,16 @@ def parent_main(args):
     for p in profiles:
         if p not in s.PROFILES:
             raise SystemExit(f"unknown profile {p!r}; known: {', '.join(s.PROFILES)}")
+    if args.beat_relay:
+        os.environ["OHK_BEAT_RELAY"] = "1"
     set_task(args.task, args.composition)
     if tk.TASKS[args.task].get("inode"):
-        if args.health_clock != "wall":
-            raise SystemExit("in-node heartbeats are moved onto the wall clock by bench/fullstack/beat_relay.py: use --health-clock wall")
+        want = "wall" if args.beat_relay else "sim"
+        if args.health_clock != want:
+            raise SystemExit(f"in-node heartbeats are stamped with the node's ROS clock (sim time): use --health-clock {want}"
+                             + ("" if args.beat_relay else " (or --beat-relay with --health-clock wall)"))
+        if args.beat_relay:
+            os.environ["OHK_BEAT_RELAY"] = "1"
         if not os.environ.get("OHK_TOOLS_COMMIT"):
             raise SystemExit("in-node heartbeat tasks need the overlay: OHK_OVERLAY=1 tools/sim.sh up N && tools/sim.sh overlay-build")
     if args.composition == "true" and any(f.strip() in tk.M7_FAULTS and tk.M7_FAULTS[f.strip()][0].startswith("/nav2_")
@@ -1378,6 +1386,8 @@ def main():
     ap.add_argument("--health-sources", default="fake", choices=["fake", "watcher"])
     ap.add_argument("--health-clock", default="wall", choices=["wall", "sim"],
                     help="clock of the health nodes (aggregator, watcher, stand-in sources): wall (default, see docs/SPEC.md M6c) or sim")
+    ap.add_argument("--beat-relay", action="store_true",
+                    help="M9 first runs: route the in-node beats through bench/fullstack/beat_relay.py (needs --health-clock wall); default off (M9b)")
     ap.add_argument("--max-age", type=float, default=0.15, help="roster max_age_sec for the health components (default 0.15)")
     ap.add_argument("--rate-hz", type=float, default=20.0, help="fake component beat rate (default 20)")
     ap.add_argument("--soft-stop", type=float, default=0.15, help="stand-in soft stop timeout s (default 0.15)")

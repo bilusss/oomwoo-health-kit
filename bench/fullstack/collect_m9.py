@@ -21,6 +21,12 @@ import os
 
 def route(rec, mode):
     label, task = rec.get("label") or "", rec.get("task")
+    if label.startswith("m9b_"):   # M9b (no relay): m9b_faults, m9b_soak, m9b_*
+        if mode == "faults" and label == "m9b_faults":
+            return "faults_m9b.jsonl"
+        if mode == "soak" and label == "m9b_soak":
+            return f"soak_m9b_{task}.jsonl"
+        return "other_records.jsonl"
     if label.startswith("m9_recon"):
         return "recon_sessions.jsonl"
     if mode == "faults" and label == "m9_faults":

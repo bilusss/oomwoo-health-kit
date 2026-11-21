@@ -49,6 +49,9 @@ def generate_launch_description():
         # M9: true = set health_component_id on dock_detector / dock_drive (needs the oomwoo_health_beat overlay, tools/sim.sh overlay-build);
         # the coverage planner is started by the bench worker (jobs.planner_cmd). Needs health_sim_time:=false: beats are stamped with sim time and moved onto the wall clock by beat_relay.py.
         DeclareLaunchArgument("inode_health", default_value="false", choices=["true", "false"]),
+        # M9 (first runs): true = nodes publish to /oomwoo/health/component_node and bench/fullstack/beat_relay.py forwards (needs health_sim_time:=false).
+        # M9b: default false = beats go straight to the aggregator, everything on sim time (health_sim_time:=true), as on the robot.
+        DeclareLaunchArgument("beat_relay", default_value="false", choices=["true", "false"]),
         # amcl only: true = unmodified oomwoo_clean nav.launch.py (ONE composed nav2_container); false = the same nav2_bringup
         # bringup_launch.py call with use_composition:=False (one process per Nav2 node, needed for per-node SIGKILL/SIGSTOP)
         DeclareLaunchArgument("composition", default_value="true", choices=["true", "false"]),
@@ -140,6 +143,7 @@ def generate_launch_description():
         if context.perform_substitution(LC("job")) != "dock":
             return []
         beat = context.perform_substitution(LC("inode_health")) == "true"
+        remap = BEAT_REMAP if beat and context.perform_substitution(LC("beat_relay")) == "true" else []
         return [
             Node(package="oomwoo_sim_support", executable="ir_beacon_sim", name="ir_beacon_sim", output="screen",
                  parameters=[{"use_sim_time": True, "dock_x": -2.11, "dock_y": -0.5, "dock_yaw_deg": 180.0}],
@@ -147,16 +151,16 @@ def generate_launch_description():
             Node(package="oomwoo_dock", executable="dock_detector", name="dock_detector", output="screen",
                  parameters=[{"use_sim_time": True, "prior_x": 0.6, "prior_y": 0.0, "prior_yaw_deg": 0.0,
                               **({"health_component_id": "dock_detector"} if beat else {})}],
-                 remappings=BEAT_REMAP if beat else []),
+                 remappings=remap),
             Node(package="oomwoo_dock", executable="dock_drive", name="dock_drive", output="screen",
                  parameters=[{"use_sim_time": True, "auto_start": False, "exit_when_done": False,
                               **({"health_component_id": "dock_drive"} if beat else {})}],
-                 remappings=[("~/dock_pose", "/dock_detector/dock_pose")] + (BEAT_REMAP if beat else [])),
+                 remappings=[("~/dock_pose", "/dock_detector/dock_pose")] + remap),
         ]
     jobs += [OpaqueFunction(function=dock_nodes)]
     # M9: sim-clock bridge for the in-node heartbeats (see its docstring); the coverage planner is remapped in jobs.planner_cmd
     relay = [ExecuteProcess(cmd=[sys.executable, "-u", os.path.join(HERE, "beat_relay.py")], output="screen",
-                            condition=LaunchConfigurationEquals("inode_health", "true"))]
+                            condition=IfCondition(PythonExpression(["'", LC("inode_health"), "' == 'true' and '", LC("beat_relay"), "' == 'true'"])))]
     health = [
         Node(package="oomwoo_health_monitor", executable="health_monitor_node", name="health_monitor",
              parameters=[{"use_sim_time": ParameterValue(LC("health_sim_time"), value_type=bool)}]),

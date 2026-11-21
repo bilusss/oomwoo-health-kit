@@ -47,7 +47,7 @@ TASKS = {
                      watch="nav_watch_dock_fix.yaml", roster="nav_rosters_dock_fix.yaml", nav=False, planner=None),
     "dock": dict(localization="none", world="kitchen_dining.world", spawn=DOCK_SPAWN, job="dock", workload="dock",
                  watch="nav_watch_dock.yaml", roster="nav_rosters_dock.yaml", nav=False, planner=None),
-    # M9: in-node heartbeats (oomwoo_health_beat overlay). inode=<component ids the task's roster lists as critical>; needs --health-clock wall (beat_relay.py).
+    # M9: in-node heartbeats (oomwoo_health_beat overlay). inode=<component ids the task's roster lists as critical>; M9b: default needs --health-clock sim (beats straight to the aggregator); with --beat-relay (first M9 runs) --health-clock wall.
     # The `*_recon` tasks list the same components with a generous max_age_sec (5 s) so that a recon session measures the beat periods
     # without the loop reacting; the others carry the per-component max_age_sec derived from that recon (docs/M9_RECON.md).
     "dock_inode_recon": dict(localization="none", world="kitchen_dining.world", spawn=DOCK_SPAWN, job="dock", workload="dock",
@@ -68,19 +68,19 @@ TASKS = {
                                           roster="nav_rosters_amcl_inode_recon.yaml", nav=True, planner="reactive",
                                           inode=("coverage_planner",)),
     "coverage_reactive_inode": dict(localization="amcl", world="living_room.world", spawn=LIVING_ROOM_SPAWN, job="coverage_support",
-                                    workload="coverage", watch="nav_watch_amcl_reactive.yaml", roster="nav_rosters_amcl_inode.yaml",
+                                    workload="coverage", watch="nav_watch_amcl_reactive.yaml", roster="nav_rosters_amcl_reactive_inode.yaml",
                                     nav=True, planner="reactive", inode=("coverage_planner",)),
     "recovery": dict(localization="amcl", world="living_room.world", spawn=LIVING_ROOM_SPAWN, job="none", workload="recovery",
                      watch="nav_watch_amcl.yaml", roster="nav_rosters_amcl.yaml", nav=True, planner=None),
 }
 
 
-def launch_args(task, composition="true"):
+def launch_args(task, composition="true", relay=False):
     """`ros2 launch stack.launch.py` arguments (list of 'k:=v') that select the task's stack."""
     t = TASKS[task]
     x, y, yaw = t["spawn"]
     inode = "true" if t.get("inode") else "false"
-    return [f"inode_health:={inode}", f"localization:={t['localization']}", f"world:={t['world']}", f"job:={t['job']}", f"x_pose:={x}", f"y_pose:={y}",
+    return [f"inode_health:={inode}", f"beat_relay:={'true' if relay else 'false'}", f"localization:={t['localization']}", f"world:={t['world']}", f"job:={t['job']}", f"x_pose:={x}", f"y_pose:={y}",
             f"yaw:={yaw}", f"composition:={composition}",
             f"watch_config:={os.path.join(CONFIG, t['watch'])}", f"roster_config:={os.path.join(CONFIG, t['roster'])}"]
 

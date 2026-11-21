@@ -103,3 +103,10 @@ def test_load_cuts_the_trace_where_the_next_stack_restarts_the_clock(tmp_path):
     rows = [["beat", 1.0, 10.0, "a", 10.0, 1, "ok", ""], ["beat", 1.2, 10.2, "a", 10.2, 2, "ok", ""], ["beat", 90.0, 3.0, "a", 3.0, 1, "ok", ""]]
     f.write_text("\n".join(json.dumps(r) for r in rows))
     assert [r[5] for r in bs.load(str(f))] == [1, 2]
+
+
+def test_collect_m9b_routes():
+    import collect_m9 as c
+    assert c.route({"label": "m9b_faults", "task": "dock_inode"}, "faults") == "faults_m9b.jsonl"
+    assert c.route({"label": "m9b_soak", "task": "coverage_inode"}, "soak") == "soak_m9b_coverage_inode.jsonl"
+    assert c.route({"label": "m9b_smoke"}, "soak") == "other_records.jsonl"

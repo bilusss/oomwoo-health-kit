@@ -46,6 +46,20 @@ def test_inode_tasks_select_inode_launch_arg_and_other_tasks_do_not():
         assert ("inode_health:=true" in tk.launch_args(name)) == bool(t.get("inode")), name
 
 
+def test_beat_relay_is_opt_in_and_reactive_roster_has_margin():
+    assert "beat_relay:=false" in tk.launch_args("dock_inode") and "beat_relay:=true" in tk.launch_args("dock_inode", "true", True)
+    yaml_ = pytest.importorskip("yaml")
+    from oomwoo_health_kit.job_logic import parse_job_config
+    for task, want in (("coverage_inode", 0.6), ("coverage_reactive_inode", 0.8), ("dock_inode", None)):
+        (rs,) = parse_job_config(yaml_.safe_load((ROOT / "config" / tk.TASKS[task]["roster"]).read_text())).rosters.values()
+        c = {x["component_id"]: x["max_age_sec"] for x in rs.components}
+        if want:
+            assert c["coverage_planner"] == want, task
+        else:
+            assert c["dock_detector"] == 1.8 and c["dock_drive"] == 0.15
+        assert not any("coverage_planner" in x["component_id"] and x["max_age_sec"] < 0.6 for x in rs.components)
+
+
 def test_planner_cmd_health_component_id_is_opt_in():
     sys.path.insert(0, str(ROOT / "bench"))
     sys.path.insert(0, str(ROOT / "bench" / "fullstack"))
